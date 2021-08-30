@@ -1,6 +1,7 @@
 package io.github.raffaeleflorio.boggle.hamcrest;
 
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Collection;
@@ -30,7 +31,7 @@ public final class IsCollectionWithMaximumFrequencies<T> extends TypeSafeMatcher
     );
   }
 
-  public static <X> TypeSafeMatcher<Collection<X>> hasMaximumFrequencies(final Map<X, Long> frequencies) {
+  public static <X> Matcher<Collection<X>> hasMaximumFrequencies(final Map<X, Long> frequencies) {
     return new IsCollectionWithMaximumFrequencies<>(frequencies);
   }
 
