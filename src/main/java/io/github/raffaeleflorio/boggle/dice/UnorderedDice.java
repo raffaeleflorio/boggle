@@ -14,14 +14,14 @@ import java.util.stream.Collectors;
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-final class UnorderedDice<T> implements Dice<T> {
+public final class UnorderedDice<T> implements Dice<T> {
   /**
    * Builds an unordered dice
    *
    * @param dice The dice
    * @since 1.0.0
    */
-  UnorderedDice(final Collection<Die<T>> dice) {
+  public UnorderedDice(final Collection<Die<T>> dice) {
     this(
       dice,
       max -> ThreadLocalRandom.current().nextInt(max)

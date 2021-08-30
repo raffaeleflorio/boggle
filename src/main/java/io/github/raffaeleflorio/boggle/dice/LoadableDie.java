@@ -10,14 +10,14 @@ import java.util.function.Function;
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-final class LoadableDie<T> implements Die<T> {
+public final class LoadableDie<T> implements Die<T> {
   /**
    * Builds a loadable die
    *
    * @param sides The sides
    * @since 1.0.0
    */
-  LoadableDie(final List<T> sides) {
+  public LoadableDie(final List<T> sides) {
     this(
       sides,
       max -> ThreadLocalRandom.current().nextInt(max)

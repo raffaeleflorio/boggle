@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-final class AlignedDice<T> implements Dice<T> {
+public final class AlignedDice<T> implements Dice<T> {
   /**
    * Builds an aligned dice
    *
    * @param dice The dice
    * @since 1.0.0
    */
-  AlignedDice(final List<Die<T>> dice) {
+  public AlignedDice(final List<Die<T>> dice) {
     this.dice = dice;
   }
 
