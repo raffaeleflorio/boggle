@@ -6,6 +6,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.oneOf;
 
 class LoadableDieTest {
   @Test
@@ -19,8 +20,8 @@ class LoadableDieTest {
   @Test
   void testRolled() {
     assertThat(
-      new LoadableDie<>(List.of(1, 2, 3, 42, 5), x -> 3).rolled().value(),
-      equalTo(42)
+      new LoadableDie<>(List.of(1, 2, 3, 42, 5)).rolled().value(),
+      oneOf(1, 2, 3, 42, 5)
     );
   }
 }
