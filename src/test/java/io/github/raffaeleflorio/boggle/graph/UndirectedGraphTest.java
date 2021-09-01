@@ -30,6 +30,14 @@ class UndirectedGraphTest {
   }
 
   @Test
+  void testNoConnection() {
+    assertThat(
+      new UndirectedGraph<>().connected(7, 8),
+      equalTo(false)
+    );
+  }
+
+  @Test
   void testUndirectedAdjacency() {
     assertThat(
       new UndirectedGraph<>()
@@ -47,6 +55,14 @@ class UndirectedGraphTest {
         .edge(42, -42)
         .adjacent(42, -42),
       equalTo(true)
+    );
+  }
+
+  @Test
+  void testNoAdjacency() {
+    assertThat(
+      new UndirectedGraph<>().adjacent("A", "C"),
+      equalTo(false)
     );
   }
 }
