@@ -1,9 +1,7 @@
 package io.github.raffaeleflorio.boggle.graph;
 
-import java.util.List;
-
 /**
- * A math graph
+ * A directed math graph
  *
  * @param <T> The vertx type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
@@ -12,13 +10,14 @@ import java.util.List;
  */
 public interface Graph<T> {
   /**
-   * Builds a true boolean if the path is traversable
+   * Builds a true boolean if the first vertex is connected to second
    *
-   * @param path The path
-   * @return True if valid
+   * @param first  The first vertex
+   * @param second The second vertex
+   * @return True if connected
    * @since 1.0.0
    */
-  Boolean path(List<T> path);
+  Boolean connected(T first, T second);
 
   /**
    * Builds a graph with a directed edge from one to two
