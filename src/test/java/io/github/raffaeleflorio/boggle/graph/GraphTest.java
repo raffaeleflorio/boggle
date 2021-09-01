@@ -20,16 +20,46 @@ class GraphTest {
     @Test
     void testConnectedWithCustomFn() {
       assertThat(
-        new Graph.Fake<>((x, y) -> true).connected("x", "y"),
+        new Graph.Fake<>(
+          (x, y) -> true,
+          (x, y) -> false
+        ).connected("x", "y"),
         equalTo(true)
       );
     }
 
     @Test
-    void testEdgeWithoutConnectedFn() {
+    void testConnectedWithoutConnectedFn() {
       assertThat(
         new Graph.Fake<>().edge("x", "y").connected("x", "y"),
         equalTo(false)
+      );
+    }
+
+    @Test
+    void testDefaultAdjacent() {
+      assertThat(
+        new Graph.Fake<>().adjacent("any", "vertices"),
+        equalTo(false)
+      );
+    }
+
+    @Test
+    void testAdjacentWithoutCustomFn() {
+      assertThat(
+        new Graph.Fake<>().edge("x", "y").adjacent("x", "y"),
+        equalTo(false)
+      );
+    }
+
+    @Test
+    void testAdjacentWithCustomFn() {
+      assertThat(
+        new Graph.Fake<>(
+          (x, y) -> false,
+          (x, y) -> true
+        ).edge("x", "y").adjacent("x", "y"),
+        equalTo(true)
       );
     }
   }

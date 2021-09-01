@@ -121,4 +121,37 @@ class DFSGraphTest {
       equalTo(true)
     );
   }
+
+  @Test
+  void testAdjacency() {
+    assertThat(
+      new DFSGraph<>()
+        .edge(1, 2)
+        .adjacent(1, 2),
+      equalTo(true)
+    );
+  }
+
+  @Test
+  void testUndirectedAdjacency() {
+    assertThat(
+      new DFSGraph<>()
+        .edge(1, 2)
+        .adjacent(2, 1),
+      equalTo(false)
+    );
+  }
+
+  @Test
+  void testConnectedButNotAdjacent() {
+    assertThat(
+      new DFSGraph<>()
+        .edge(1, 2)
+        .edge(2, 3)
+        .edge(3, 4)
+        .edge(4, 1)
+        .adjacent(1, 4),
+      equalTo(false)
+    );
+  }
 }

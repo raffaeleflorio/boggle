@@ -45,7 +45,7 @@ public final class DFSGraph<T> implements Graph<T> {
 
   private Set<T> dfs(final Set<T> discovered, final T root) {
     discovered.add(root);
-    for (var adj : adjList.getOrDefault(root, setFn.get())) {
+    for (var adj : adjacents(root)) {
       if (!discovered.contains(adj)) {
         dfs(discovered, adj);
       }
@@ -53,9 +53,18 @@ public final class DFSGraph<T> implements Graph<T> {
     return discovered;
   }
 
+  private Set<T> adjacents(final T first) {
+    return adjList.getOrDefault(first, setFn.get());
+  }
+
+  @Override
+  public Boolean adjacent(final T first, final T second) {
+    return adjacents(first).contains(second);
+  }
+
   @Override
   public Graph<T> edge(final T one, final T two) {
-    var newSet = setCloneFn.apply(adjList.getOrDefault(one, setFn.get()));
+    var newSet = setCloneFn.apply(adjacents(one));
     newSet.add(two);
     var newAdjList = mapCloneFn.apply(adjList);
     newAdjList.put(one, newSet);

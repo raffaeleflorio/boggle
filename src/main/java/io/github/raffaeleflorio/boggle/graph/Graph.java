@@ -22,6 +22,16 @@ public interface Graph<T> {
   Boolean connected(T first, T second);
 
   /**
+   * Builds a true boolean if the first vertex is adjacent to the second
+   *
+   * @param first  The first vertex
+   * @param second The second vertex
+   * @return True if adjacent
+   * @since 1.0.0
+   */
+  Boolean adjacent(T first, T second);
+
+  /**
    * Builds a graph with a directed edge from one to two
    *
    * @param one The first vertex
@@ -45,17 +55,22 @@ public interface Graph<T> {
      * @since 1.0.0
      */
     public Fake() {
-      this((x, y) -> false);
+      this((x, y) -> false, (x, y) -> false);
     }
 
     /**
      * Builds a fake
      *
      * @param connectedFn The function that verifies vertices connection
+     * @param adjacentFn  The function that verifies vertices adjacency
      * @since 1.0.0
      */
-    public Fake(final BiFunction<T, T, Boolean> connectedFn) {
+    public Fake(
+      final BiFunction<T, T, Boolean> connectedFn,
+      final BiFunction<T, T, Boolean> adjacentFn
+    ) {
       this.connectedFn = connectedFn;
+      this.adjacentFn = adjacentFn;
     }
 
     @Override
@@ -64,10 +79,16 @@ public interface Graph<T> {
     }
 
     @Override
+    public Boolean adjacent(final T first, final T second) {
+      return adjacentFn.apply(first, second);
+    }
+
+    @Override
     public Graph<T> edge(final T one, final T two) {
       return this;
     }
 
     private final BiFunction<T, T, Boolean> connectedFn;
+    private final BiFunction<T, T, Boolean> adjacentFn;
   }
 }
