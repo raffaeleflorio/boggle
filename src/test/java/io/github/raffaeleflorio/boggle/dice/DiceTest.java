@@ -7,6 +7,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
 
 class DiceTest {
   @Nested
@@ -32,6 +33,14 @@ class DiceTest {
       assertThat(
         new Dice.Fake<>(List.of(1, 2, 3), x -> List.of(2, 4, 6)).shuffled().values(),
         contains(2, 4, 6)
+      );
+    }
+
+    @Test
+    void testEmptyFake() {
+      assertThat(
+        new Dice.Fake<>().shuffled().values(),
+        hasSize(0)
       );
     }
   }

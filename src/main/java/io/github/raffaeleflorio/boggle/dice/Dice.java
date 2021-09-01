@@ -1,6 +1,7 @@
 package io.github.raffaeleflorio.boggle.dice;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -35,6 +36,15 @@ public interface Dice<T> {
    * @since 1.0.0
    */
   final class Fake<T> implements Dice<T> {
+    /**
+     * Builds an empty fake
+     *
+     * @since 1.0.0
+     */
+    public Fake() {
+      this(List.of());
+    }
+
     /**
      * Builds a fake
      *
