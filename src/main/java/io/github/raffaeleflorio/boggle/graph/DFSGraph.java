@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -41,19 +40,14 @@ public final class DFSGraph<T> implements Graph<T> {
 
   @Override
   public Boolean connected(final T first, final T second) {
-    return dfs(first).contains(second);
+    return dfs(setFn.get(), first).contains(second);
   }
 
-  private Set<T> dfs(final T root) {
-    return dfs(setFn.get(), root, x -> {
-    });
-  }
-
-  private Set<T> dfs(final Set<T> discovered, final T root, final Consumer<T> discoverFn) {
-    discoverFn.accept(root);
+  private Set<T> dfs(final Set<T> discovered, final T root) {
+    discovered.add(root);
     for (var adj : adjList.getOrDefault(root, setFn.get())) {
       if (!discovered.contains(adj)) {
-        dfs(discovered, adj, discovered::add);
+        dfs(discovered, adj);
       }
     }
     return discovered;

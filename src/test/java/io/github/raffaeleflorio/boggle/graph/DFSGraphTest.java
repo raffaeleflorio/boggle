@@ -96,7 +96,7 @@ class DFSGraphTest {
         .edge(1, 2)
         .edge(2, 3)
         .connected(1, 1),
-      equalTo(false)
+      equalTo(true)
     );
   }
 
