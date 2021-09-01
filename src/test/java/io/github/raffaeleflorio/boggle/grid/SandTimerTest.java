@@ -31,7 +31,7 @@ class SandTimerTest {
   }
 
   @Test
-  void testScoreWhenExpired() {
+  void testScoreAfterExpiration() {
     var timer = new SandTimer(new Grid.Fake(), Duration.ofMillis(10));
     assertThat(
       () -> timer.score("any"),
@@ -43,7 +43,7 @@ class SandTimerTest {
   }
 
   @Test
-  void testShuffledWhenExpired() {
+  void testShuffledAfterExpiration() {
     var timer = new SandTimer(new Grid.Fake(), Duration.ofMillis(5));
     assertThat(
       timer::shuffled,
