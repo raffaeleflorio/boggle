@@ -1,5 +1,6 @@
 package io.github.raffaeleflorio.boggle.grid;
 
+import io.github.raffaeleflorio.boggle.dice.Dice;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,7 @@ class GridTest {
     @Test
     void testDescription() {
       assertThat(
-        new Grid.Fake().description(),
+        new Grid.Fake<>().description(),
         equalTo(Map.of("id", "fake grid"))
       );
     }
@@ -22,7 +23,7 @@ class GridTest {
     @Test
     void testShuffled() {
       assertThat(
-        new Grid.Fake().shuffled().description(),
+        new Grid.Fake<>().shuffled().description(),
         equalTo(Map.of("id", "fake grid"))
       );
     }
@@ -30,7 +31,7 @@ class GridTest {
     @Test
     void testDefaultScore() {
       assertThat(
-        new Grid.Fake().score("any word"),
+        new Grid.Fake<>().score(new Dice.Fake<>()),
         equalTo(0)
       );
     }
@@ -38,7 +39,7 @@ class GridTest {
     @Test
     void testScoreWithScoreFn() {
       assertThat(
-        new Grid.Fake(x -> 42).score("any word"),
+        new Grid.Fake<>(x -> 42).score(new Dice.Fake<>()),
         equalTo(42)
       );
     }

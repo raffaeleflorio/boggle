@@ -1,22 +1,25 @@
 package io.github.raffaeleflorio.boggle.grid;
 
+import io.github.raffaeleflorio.boggle.dice.Dice;
+
 import java.util.Map;
 import java.util.function.Function;
 
 /**
  * A boggle grid
  *
+ * @param <T> The grid dice mark type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public interface Grid {
+public interface Grid<T> {
   /**
    * Shuffles the grid
    *
    * @return The shuffled grid
    * @since 1.0.0
    */
-  Grid shuffled();
+  Grid<T> shuffled();
 
   /**
    * Builds a non-negative score of a word
@@ -25,7 +28,7 @@ public interface Grid {
    * @return The score
    * @since 1.0.0
    */
-  Integer score(CharSequence word);
+  Integer score(Dice<T> word);
 
   /**
    * Builds the description
@@ -41,7 +44,7 @@ public interface Grid {
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
    * @since 1.0.0
    */
-  final class Fake implements Grid {
+  final class Fake<T> implements Grid<T> {
     /**
      * Builds a fake
      *
@@ -57,7 +60,7 @@ public interface Grid {
      * @param scoreFn The function to build score
      * @since 1.0.0
      */
-    public Fake(final Function<CharSequence, Integer> scoreFn) {
+    public Fake(final Function<Dice<T>, Integer> scoreFn) {
       this(scoreFn, Map.of("id", "fake grid"));
     }
 
@@ -69,7 +72,7 @@ public interface Grid {
      * @since 1.0.0
      */
     public Fake(
-      final Function<CharSequence, Integer> scoreFn,
+      final Function<Dice<T>, Integer> scoreFn,
       final Map<CharSequence, CharSequence> description
     ) {
       this.scoreFn = scoreFn;
@@ -77,12 +80,12 @@ public interface Grid {
     }
 
     @Override
-    public Grid shuffled() {
+    public Grid<T> shuffled() {
       return this;
     }
 
     @Override
-    public Integer score(final CharSequence word) {
+    public Integer score(final Dice<T> word) {
       return scoreFn.apply(word);
     }
 
@@ -91,7 +94,7 @@ public interface Grid {
       return description;
     }
 
-    private final Function<CharSequence, Integer> scoreFn;
+    private final Function<Dice<T>, Integer> scoreFn;
     private final Map<CharSequence, CharSequence> description;
   }
 }

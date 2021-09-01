@@ -1,14 +1,16 @@
 package io.github.raffaeleflorio.boggle.grid;
 
+import io.github.raffaeleflorio.boggle.dice.Dice;
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static io.github.raffaeleflorio.boggle.hamcrest.After.after;
 import static io.github.raffaeleflorio.boggle.hamcrest.IsThrowedWithMessage.throwsWithMessage;
+import static java.time.Duration.ofMillis;
+import static java.time.Duration.ofMinutes;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -16,11 +18,7 @@ class SandTimerTest {
   @Test
   void testDescription() {
     assertThat(
-      new SandTimer(
-        new Grid.Fake(),
-        Duration.ofMinutes(2),
-        () -> Instant.EPOCH
-      ).description(),
+      new SandTimer<>(new Grid.Fake<>(), ofMinutes(2), () -> Instant.EPOCH).description(),
       equalTo(
         Map.of(
           "id", "fake grid",
@@ -32,9 +30,9 @@ class SandTimerTest {
 
   @Test
   void testScoreAfterExpiration() {
-    var timer = new SandTimer(new Grid.Fake(), Duration.ofMillis(10));
+    var timer = new SandTimer<>(new Grid.Fake<>(), ofMillis(10));
     assertThat(
-      () -> timer.score("any"),
+      () -> timer.score(new Dice.Fake<>()),
       after(
         20, TimeUnit.MILLISECONDS,
         throwsWithMessage(IllegalStateException.class, "Deadline reached")
@@ -44,7 +42,7 @@ class SandTimerTest {
 
   @Test
   void testShuffledAfterExpiration() {
-    var timer = new SandTimer(new Grid.Fake(), Duration.ofMillis(5));
+    var timer = new SandTimer<>(new Grid.Fake<>(), ofMillis(5));
     assertThat(
       timer::shuffled,
       after(
@@ -57,7 +55,7 @@ class SandTimerTest {
   @Test
   void testScoreBeforeExpiration() {
     assertThat(
-      new SandTimer(new Grid.Fake(x -> 100), Duration.ofMinutes(10)).score("any"),
+      new SandTimer<>(new Grid.Fake<>(x -> 100), ofMinutes(10)).score(new Dice.Fake<>()),
       after(
         20, TimeUnit.MILLISECONDS,
         equalTo(100)
@@ -68,7 +66,7 @@ class SandTimerTest {
   @Test
   void testShuffledBeforeExpiration() {
     assertThat(
-      new SandTimer(new Grid.Fake(x -> 100), Duration.ofMinutes(10)).shuffled().score("any"),
+      new SandTimer<>(new Grid.Fake<>(x -> 100), ofMinutes(10)).shuffled().score(new Dice.Fake<>()),
       after(
         20, TimeUnit.MILLISECONDS,
         equalTo(100)

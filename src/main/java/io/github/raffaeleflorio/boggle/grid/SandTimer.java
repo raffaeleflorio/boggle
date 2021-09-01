@@ -1,5 +1,7 @@
 package io.github.raffaeleflorio.boggle.grid;
 
+import io.github.raffaeleflorio.boggle.dice.Dice;
+
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
 import java.util.Collections;
@@ -14,7 +16,7 @@ import java.util.function.Supplier;
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class SandTimer implements Grid {
+public final class SandTimer<T> implements Grid<T> {
   /**
    * Builds a grid with a timer
    *
@@ -22,7 +24,7 @@ public final class SandTimer implements Grid {
    * @param duration The duration
    * @since 1.0.0
    */
-  public SandTimer(final Grid origin, final TemporalAmount duration) {
+  public SandTimer(final Grid<T> origin, final TemporalAmount duration) {
     this(origin, duration, Instant::now);
   }
 
@@ -34,7 +36,7 @@ public final class SandTimer implements Grid {
    * @param now      The supplier of now
    * @since 1.0.0
    */
-  SandTimer(final Grid origin, final TemporalAmount duration, final Supplier<Instant> now) {
+  SandTimer(final Grid<T> origin, final TemporalAmount duration, final Supplier<Instant> now) {
     this(origin, now.get().plus(duration), now);
   }
 
@@ -46,7 +48,7 @@ public final class SandTimer implements Grid {
    * @param now      The supplier of now
    * @since 1.0.0
    */
-  SandTimer(final Grid origin, final Instant deadline, final Supplier<Instant> now) {
+  SandTimer(final Grid<T> origin, final Instant deadline, final Supplier<Instant> now) {
     this(origin, deadline, now, new IllegalStateException("Deadline reached"), HashMap::new);
   }
 
@@ -61,7 +63,7 @@ public final class SandTimer implements Grid {
    * @since 1.0.0
    */
   SandTimer(
-    final Grid origin,
+    final Grid<T> origin,
     final Instant deadline,
     final Supplier<Instant> now,
     final RuntimeException exception,
@@ -75,11 +77,11 @@ public final class SandTimer implements Grid {
   }
 
   @Override
-  public Grid shuffled() {
+  public Grid<T> shuffled() {
     return beforeDeadline(origin::shuffled);
   }
 
-  private <T> T beforeDeadline(final Supplier<T> action) {
+  private <X> X beforeDeadline(final Supplier<X> action) {
     if (deadlineReached()) {
       throw exception;
     }
@@ -91,7 +93,7 @@ public final class SandTimer implements Grid {
   }
 
   @Override
-  public Integer score(final CharSequence word) {
+  public Integer score(final Dice<T> word) {
     return beforeDeadline(() -> origin.score(word));
   }
 
@@ -102,7 +104,7 @@ public final class SandTimer implements Grid {
     return Collections.unmodifiableMap(clone);
   }
 
-  private final Grid origin;
+  private final Grid<T> origin;
   private final Instant deadline;
   private final Supplier<Instant> now;
   private final RuntimeException exception;
