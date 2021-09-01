@@ -1,6 +1,6 @@
 package io.github.raffaeleflorio.boggle.vocabulary;
 
-import io.reactivex.rxjava3.core.SingleSource;
+import java.util.concurrent.Future;
 
 /**
  * Set of words
@@ -16,5 +16,5 @@ public interface Vocabulary {
    * @return The asynchronous boolean
    * @since 1.0.0
    */
-  SingleSource<Boolean> contains(CharSequence word);
+  Future<Boolean> contains(CharSequence word);
 }
