@@ -111,4 +111,14 @@ class DFSGraphTest {
       equalTo(true)
     );
   }
+
+  @Test
+  void testConnectionWithALoop() {
+    assertThat(
+      new DFSGraph<>()
+        .edge(1, 1)
+        .connected(1, 1),
+      equalTo(true)
+    );
+  }
 }
