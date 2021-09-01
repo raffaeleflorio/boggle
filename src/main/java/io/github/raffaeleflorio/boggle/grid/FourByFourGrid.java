@@ -10,7 +10,6 @@ import io.github.raffaeleflorio.boggle.graph.UndirectedGraph;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -18,17 +17,18 @@ import java.util.stream.IntStream;
 /**
  * A 4x4 boggle {@link Grid}
  *
+ * @param <T> The grid dice mark type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class FourByFourGrid implements Grid<CharSequence> {
+public final class FourByFourGrid<T> implements Grid<T> {
   /**
    * Builds a 4x4 grid
    *
    * @param dice The backed dice
    * @since 1.0.0
    */
-  public FourByFourGrid(final Dice<CharSequence> dice) {
+  public FourByFourGrid(final Dice<T> dice) {
     this(dice, new DFSGraph<>());
   }
 
@@ -39,47 +39,25 @@ public final class FourByFourGrid implements Grid<CharSequence> {
    * @param graph An empty graph
    * @since 1.0.0
    */
-  FourByFourGrid(final Dice<CharSequence> dice, final Graph<CharSequence> graph) {
-    this(dice, graph, elements -> String.join("", elements));
-  }
-
-  /**
-   * Builds a 4x4 grid
-   *
-   * @param dice     The backed dice
-   * @param graph    An empty graph
-   * @param concatFn A function to concatenate strings
-   * @since 1.0.0
-   */
-  FourByFourGrid(
-    final Dice<CharSequence> dice,
-    final Graph<CharSequence> graph,
-    final Function<Iterable<CharSequence>, String> concatFn
-  ) {
+  FourByFourGrid(final Dice<T> dice, final Graph<T> graph) {
     this(
       new StrictDiceCount<>(dice, 16),
-      new UndirectedGraph<>(graph),
-      concatFn
+      new UndirectedGraph<>(graph)
     );
   }
 
-  private FourByFourGrid(
-    final ValidatedDice<CharSequence> dice,
-    final Graph<CharSequence> graph,
-    final Function<Iterable<CharSequence>, String> concatFn
-  ) {
+  private FourByFourGrid(final ValidatedDice<T> dice, final Graph<T> graph) {
     this.dice = dice;
     this.graph = graph;
-    this.concatFn = concatFn;
   }
 
   @Override
-  public Grid<CharSequence> shuffled() {
-    return new FourByFourGrid(dice.shuffled(), graph, concatFn);
+  public Grid<T> shuffled() {
+    return new FourByFourGrid<>(dice.shuffled(), graph);
   }
 
   @Override
-  public Integer score(final Dice<CharSequence> word) {
+  public Integer score(final Dice<T> word) {
     var values = word.values();
     return contained(asList(values)) ? score(values.size()) : 0;
   }
@@ -100,19 +78,19 @@ public final class FourByFourGrid implements Grid<CharSequence> {
       .orElse(0);
   }
 
-  private <T> List<T> asList(final Collection<T> from) {
+  private <X> List<X> asList(final Collection<X> from) {
     return from.stream().collect(Collectors.toUnmodifiableList());
   }
 
-  private Boolean contained(final List<CharSequence> word) {
+  private Boolean contained(final List<T> word) {
     var graph = asGraph();
     return IntStream
       .range(0, word.size() - 1)
       .allMatch(i -> graph.adjacent(word.get(i), word.get(i + 1)));
   }
 
-  private Graph<CharSequence> asGraph() {
-    var values = values();
+  private Graph<T> asGraph() {
+    var values = asList(dice.values());
     return graph
       .edge(values.get(0), values.get(1))
       .edge(values.get(0), values.get(4))
@@ -158,19 +136,11 @@ public final class FourByFourGrid implements Grid<CharSequence> {
       .edge(values.get(14), values.get(15));
   }
 
-  private List<CharSequence> values() {
-    return asList(dice.values());
-  }
-
   @Override
   public Map<CharSequence, CharSequence> description() {
-    return Map.of(
-      "size", "4x4",
-      "layout", concatFn.apply(values())
-    );
+    return Map.of("size", "4x4");
   }
 
-  private final ValidatedDice<CharSequence> dice;
-  private final Graph<CharSequence> graph;
-  private final Function<Iterable<CharSequence>, String> concatFn;
+  private final ValidatedDice<T> dice;
+  private final Graph<T> graph;
 }

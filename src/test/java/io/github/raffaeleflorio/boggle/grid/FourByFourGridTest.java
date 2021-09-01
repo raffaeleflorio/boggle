@@ -13,7 +13,7 @@ class FourByFourGridTest {
   @Test
   void testDescription() {
     assertThat(
-      new FourByFourGrid(
+      new FourByFourGrid<>(
         new Dice.Fake<>(
           List.of(
             "1", "2", "3", "4",
@@ -24,10 +24,7 @@ class FourByFourGridTest {
         )
       ).description(),
       equalTo(
-        Map.of(
-          "size", "4x4",
-          "layout", "1234567890ABCDEF"
-        )
+        Map.of("size", "4x4")
       )
     );
   }
@@ -35,7 +32,7 @@ class FourByFourGridTest {
   @Test
   void testShuffled() {
     assertThat(
-      new FourByFourGrid(
+      new FourByFourGrid<>(
         new Dice.Fake<>(
           List.of(),
           x -> List.of(
@@ -47,10 +44,7 @@ class FourByFourGridTest {
         )
       ).shuffled().description(),
       equalTo(
-        Map.of(
-          "size", "4x4",
-          "layout", "ABCDEFGHIJKLMNOP"
-        )
+        Map.of("size", "4x4")
       )
     );
   }
@@ -58,7 +52,7 @@ class FourByFourGridTest {
   @Test
   void testScoreOfAMissingWord() {
     assertThat(
-      new FourByFourGrid(
+      new FourByFourGrid<>(
         new Dice.Fake<>(
           List.of(
             "D", "D", "D", "D",
@@ -79,7 +73,7 @@ class FourByFourGridTest {
   @Test
   void testScoreOfAWordOfTwoCharacters() {
     assertThat(
-      new FourByFourGrid(
+      new FourByFourGrid<>(
         new Dice.Fake<>(
           List.of(
             "O", "F", "-", "-",
@@ -100,7 +94,7 @@ class FourByFourGridTest {
   @Test
   void testOneScoreThreeCharacters() {
     assertThat(
-      new FourByFourGrid(
+      new FourByFourGrid<>(
         new Dice.Fake<>(
           List.of(
             "F", "O", "R", "-",
@@ -121,7 +115,7 @@ class FourByFourGridTest {
   @Test
   void testOneScoreFourCharacters() {
     assertThat(
-      new FourByFourGrid(
+      new FourByFourGrid<>(
         new Dice.Fake<>(
           List.of(
             "W", "-", "-", "-",
@@ -142,7 +136,7 @@ class FourByFourGridTest {
   @Test
   void testTwoScore() {
     assertThat(
-      new FourByFourGrid(
+      new FourByFourGrid<>(
         new Dice.Fake<>(
           List.of(
             "W", "-", "-", "-",
@@ -163,7 +157,7 @@ class FourByFourGridTest {
   @Test
   void testThreeScore() {
     assertThat(
-      new FourByFourGrid(
+      new FourByFourGrid<>(
         new Dice.Fake<>(
           List.of(
             "N", "E", "-", "-",
@@ -184,7 +178,7 @@ class FourByFourGridTest {
   @Test
   void testFiveScore() {
     assertThat(
-      new FourByFourGrid(
+      new FourByFourGrid<>(
         new Dice.Fake<>(
           List.of(
             "P", "Z", "L", "-",
@@ -205,7 +199,7 @@ class FourByFourGridTest {
   @Test
   void testElevenScore() {
     assertThat(
-      new FourByFourGrid(
+      new FourByFourGrid<>(
         new Dice.Fake<>(
           List.of(
             "I", "Qu", "E", "Y",
@@ -222,6 +216,27 @@ class FourByFourGridTest {
         )
       ),
       equalTo(11)
+    );
+  }
+
+  @Test
+  void testThreeScoreWithNumbers() {
+    assertThat(
+      new FourByFourGrid<>(
+        new Dice.Fake<>(
+          List.of(
+            1, 2, 3, 4,
+            5, 6, 7, 8,
+            9, 10, 11, 12,
+            13, 14, 15, 16
+          )
+        )
+      ).score(
+        new Dice.Fake<>(
+          List.of(6, 10, 15, 12, 8, 4)
+        )
+      ),
+      equalTo(3)
     );
   }
 }
