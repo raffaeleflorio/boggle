@@ -34,7 +34,7 @@ public final class SandTimer implements Grid {
    * @param now      The supplier of now
    * @since 1.0.0
    */
-  public SandTimer(final Grid origin, final TemporalAmount duration, final Supplier<Instant> now) {
+  SandTimer(final Grid origin, final TemporalAmount duration, final Supplier<Instant> now) {
     this(origin, now.get().plus(duration), now);
   }
 

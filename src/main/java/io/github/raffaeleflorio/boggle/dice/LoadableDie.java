@@ -56,11 +56,7 @@ public final class LoadableDie<T> implements Die<T> {
 
   @Override
   public Die<T> rolled() {
-    return new LoadableDie<>(
-      sides,
-      randomFn,
-      randomFn.apply(sides.size())
-    );
+    return new LoadableDie<>(sides, randomFn, randomFn.apply(sides.size()));
   }
 
   private final List<T> sides;
