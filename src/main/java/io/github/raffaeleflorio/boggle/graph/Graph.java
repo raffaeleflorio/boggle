@@ -1,9 +1,11 @@
 package io.github.raffaeleflorio.boggle.graph;
 
+import java.util.function.BiFunction;
+
 /**
  * A directed math graph
  *
- * @param <T> The vertx type
+ * @param <T> The vertex type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @see <a href="https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)">Wikipedia definition</a>
  * @since 1.0.0
@@ -28,4 +30,44 @@ public interface Graph<T> {
    * @since 1.0.0
    */
   Graph<T> edge(T one, T two);
+
+  /**
+   * A {@link Graph} useful for testing purpose
+   *
+   * @param <T> The vertex type
+   * @author Raffaele Florio (raffaeleflorio@protonmail.com)
+   * @since 1.0.0
+   */
+  final class Fake<T> implements Graph<T> {
+    /**
+     * Builds a fake that never makes an edge
+     *
+     * @since 1.0.0
+     */
+    public Fake() {
+      this((x, y) -> false);
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param connectedFn The function that verifies vertices connection
+     * @since 1.0.0
+     */
+    public Fake(final BiFunction<T, T, Boolean> connectedFn) {
+      this.connectedFn = connectedFn;
+    }
+
+    @Override
+    public Boolean connected(final T first, final T second) {
+      return connectedFn.apply(first, second);
+    }
+
+    @Override
+    public Graph<T> edge(final T one, final T two) {
+      return this;
+    }
+
+    private final BiFunction<T, T, Boolean> connectedFn;
+  }
 }
