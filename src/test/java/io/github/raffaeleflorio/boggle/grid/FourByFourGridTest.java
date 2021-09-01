@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 
 class FourByFourGridTest {
@@ -237,6 +238,23 @@ class FourByFourGridTest {
         )
       ),
       equalTo(3)
+    );
+  }
+
+  @Test
+  void testValues() {
+    assertThat(
+      new FourByFourGrid<>(
+        new Dice.Fake<>(
+          List.of(
+            1, 2, 3, 4,
+            5, 6, 7, 8,
+            9, 10, 11, 12,
+            13, 14, 15, 0
+          )
+        )
+      ).values(),
+      contains(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0)
     );
   }
 }

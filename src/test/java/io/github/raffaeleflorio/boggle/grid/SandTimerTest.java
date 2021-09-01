@@ -4,6 +4,7 @@ import io.github.raffaeleflorio.boggle.dice.Dice;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +13,7 @@ import static io.github.raffaeleflorio.boggle.hamcrest.IsThrowedWithMessage.thro
 import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofMinutes;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 
 class SandTimerTest {
@@ -70,6 +72,32 @@ class SandTimerTest {
       after(
         20, TimeUnit.MILLISECONDS,
         equalTo(100)
+      )
+    );
+  }
+
+  @Test
+  void testValuesAfterExpiration() {
+    var timer = new SandTimer<>(new Grid.Fake<>(), ofMillis(42));
+    assertThat(
+      timer::values,
+      after(
+        100, TimeUnit.MILLISECONDS,
+        throwsWithMessage(IllegalStateException.class, "Deadline reached")
+      )
+    );
+  }
+
+  @Test
+  void testValuesBeforeExpiration() {
+    assertThat(
+      new SandTimer<>(
+        new Grid.Fake<>(new Dice.Fake<>(List.of(1))),
+        ofMinutes(1)
+      ).values(),
+      after(
+        100, TimeUnit.MILLISECONDS,
+        contains(1)
       )
     );
   }

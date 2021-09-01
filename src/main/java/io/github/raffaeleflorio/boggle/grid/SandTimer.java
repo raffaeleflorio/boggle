@@ -4,6 +4,7 @@ import io.github.raffaeleflorio.boggle.dice.Dice;
 
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,8 +78,8 @@ public final class SandTimer<T> implements Grid<T> {
   }
 
   @Override
-  public Grid<T> shuffled() {
-    return beforeDeadline(origin::shuffled);
+  public Collection<T> values() {
+    return beforeDeadline(origin::values);
   }
 
   private <X> X beforeDeadline(final Supplier<X> action) {
@@ -86,6 +87,11 @@ public final class SandTimer<T> implements Grid<T> {
       throw exception;
     }
     return action.get();
+  }
+
+  @Override
+  public Grid<T> shuffled() {
+    return beforeDeadline(origin::shuffled);
   }
 
   private Boolean deadlineReached() {

@@ -52,6 +52,11 @@ public final class FourByFourGrid<T> implements Grid<T> {
   }
 
   @Override
+  public Collection<T> values() {
+    return dice.values();
+  }
+
+  @Override
   public Grid<T> shuffled() {
     return new FourByFourGrid<>(dice.shuffled(), graph);
   }
@@ -90,7 +95,7 @@ public final class FourByFourGrid<T> implements Grid<T> {
   }
 
   private Graph<T> asGraph() {
-    var values = asList(dice.values());
+    var values = asList(values());
     return graph
       .edge(values.get(0), values.get(1))
       .edge(values.get(0), values.get(4))

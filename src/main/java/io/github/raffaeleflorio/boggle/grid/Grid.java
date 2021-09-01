@@ -2,6 +2,7 @@ package io.github.raffaeleflorio.boggle.grid;
 
 import io.github.raffaeleflorio.boggle.dice.Dice;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -12,7 +13,7 @@ import java.util.function.Function;
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public interface Grid<T> {
+public interface Grid<T> extends Dice<T> {
   /**
    * Shuffles the grid
    *
@@ -51,7 +52,28 @@ public interface Grid<T> {
      * @since 1.0.0
      */
     public Fake() {
-      this(x -> 0);
+      this(new Dice.Fake<>());
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param dice The dice
+     * @since 1.0.0
+     */
+    public Fake(final Dice<T> dice) {
+      this(dice, x -> 0);
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param dice    The dice
+     * @param scoreFn The function to build score
+     * @since 1.0.0
+     */
+    public Fake(final Dice<T> dice, final Function<Dice<T>, Integer> scoreFn) {
+      this(dice, scoreFn, Map.of("id", "fake grid"));
     }
 
     /**
@@ -61,27 +83,35 @@ public interface Grid<T> {
      * @since 1.0.0
      */
     public Fake(final Function<Dice<T>, Integer> scoreFn) {
-      this(scoreFn, Map.of("id", "fake grid"));
+      this(new Dice.Fake<>(), scoreFn);
     }
 
     /**
      * Builds a fake
      *
+     * @param dice        The dice
      * @param scoreFn     The function to build score
      * @param description The description
      * @since 1.0.0
      */
     public Fake(
+      final Dice<T> dice,
       final Function<Dice<T>, Integer> scoreFn,
       final Map<CharSequence, CharSequence> description
     ) {
+      this.dice = dice;
       this.scoreFn = scoreFn;
       this.description = description;
     }
 
     @Override
+    public Collection<T> values() {
+      return dice.values();
+    }
+
+    @Override
     public Grid<T> shuffled() {
-      return this;
+      return new Grid.Fake<>(dice.shuffled(), scoreFn, description);
     }
 
     @Override
@@ -94,6 +124,7 @@ public interface Grid<T> {
       return description;
     }
 
+    private final Dice<T> dice;
     private final Function<Dice<T>, Integer> scoreFn;
     private final Map<CharSequence, CharSequence> description;
   }
