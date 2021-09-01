@@ -56,7 +56,7 @@ class FourByFourGridTest {
   }
 
   @Test
-  void testZeroScore() {
+  void testScoreOfAMissingWord() {
     assertThat(
       new FourByFourGrid(
         new Dice.Fake<>(
@@ -70,6 +70,27 @@ class FourByFourGridTest {
       ).score(
         new Dice.Fake<>(
           List.of("W", "O", "R", "D")
+        )
+      ),
+      equalTo(0)
+    );
+  }
+
+  @Test
+  void testScoreOfAWordOfTwoCharacters() {
+    assertThat(
+      new FourByFourGrid(
+        new Dice.Fake<>(
+          List.of(
+            "O", "F", "-", "-",
+            "-", "-", "-", "-",
+            "-", "-", "-", "-",
+            "-", "-", "-", "-"
+          )
+        )
+      ).score(
+        new Dice.Fake<>(
+          List.of("O", "F")
         )
       ),
       equalTo(0)
