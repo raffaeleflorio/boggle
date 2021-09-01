@@ -24,7 +24,8 @@ public final class After<T> extends TypeSafeDiagnosingMatcher<T> {
       return matches;
     } catch (InterruptedException e) {
       description.appendText(String.format("was thrown %s", e));
-      return false;
+      Thread.currentThread().interrupt();
+      throw new RuntimeException(e);
     }
   }
 
