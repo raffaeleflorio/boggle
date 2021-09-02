@@ -2,11 +2,9 @@ package io.github.raffaeleflorio.boggle.grid;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Map;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 
 class PairDescriptionTest {
   @Test
@@ -14,6 +12,14 @@ class PairDescriptionTest {
     assertThat(
       new PairDescription("name", "single value").feature("name"),
       contains("single value")
+    );
+  }
+
+  @Test
+  void testMissingFEature() {
+    assertThat(
+      new PairDescription("name", "single value").feature("missing"),
+      empty()
     );
   }
 }
