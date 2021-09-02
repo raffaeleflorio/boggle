@@ -30,7 +30,7 @@ class CryptoDieTest {
     var min = 2;
     var bound = 16;
     assertThat(
-      new RandomDie<>(Function.identity(), min, bound).rolled().value(),
+      new CryptoDie<>(Function.identity(), min, bound).rolled().value(),
       allOf(
         lessThan(bound),
         greaterThanOrEqualTo(min)

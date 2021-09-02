@@ -54,7 +54,7 @@ public final class CryptoDie<T> implements Die<T> {
 
   @Override
   public Die<T> rolled() {
-    return new CryptoDie<>(origin.rolled());
+    return origin.rolled();
   }
 
   private final Die<T> origin;
