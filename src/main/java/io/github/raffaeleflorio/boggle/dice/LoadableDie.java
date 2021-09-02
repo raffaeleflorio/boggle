@@ -31,7 +31,7 @@ public final class LoadableDie<T> implements Die<T> {
    * @param randomFn The function to build bounded random ints
    * @since 1.0.0
    */
-  LoadableDie(final List<T> sides, final Function<Integer, Integer> randomFn) {
+  public LoadableDie(final List<T> sides, final Function<Integer, Integer> randomFn) {
     this(sides, randomFn, 0);
   }
 

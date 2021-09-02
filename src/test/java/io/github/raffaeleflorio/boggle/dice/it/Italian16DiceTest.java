@@ -1,4 +1,4 @@
-package io.github.raffaeleflorio.boggle.dice;
+package io.github.raffaeleflorio.boggle.dice.it;
 
 import org.junit.jupiter.api.RepeatedTest;
 

@@ -1,4 +1,8 @@
-package io.github.raffaeleflorio.boggle.dice;
+package io.github.raffaeleflorio.boggle.dice.it;
+
+import io.github.raffaeleflorio.boggle.dice.Dice;
+import io.github.raffaeleflorio.boggle.dice.LoadableDie;
+import io.github.raffaeleflorio.boggle.dice.UnorderedDice;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,7 +33,7 @@ public final class Italian16Dice implements Dice<CharSequence> {
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
    * @since 1.0.0
    */
-  Italian16Dice(final Function<Integer, Integer> randomFn) {
+  public Italian16Dice(final Function<Integer, Integer> randomFn) {
     this(
       new UnorderedDice<>(
         List.of(

@@ -36,7 +36,7 @@ public final class StrictDiceCount<T> implements ValidatedDice<T> {
    * @param exceptionFn The function used to build the exception
    * @since 1.0.0
    */
-  StrictDiceCount(
+  public StrictDiceCount(
     final Dice<T> origin,
     final Integer expected,
     final BiFunction<Integer, Integer, RuntimeException> exceptionFn

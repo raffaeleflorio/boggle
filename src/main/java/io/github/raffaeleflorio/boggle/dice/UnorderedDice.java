@@ -35,7 +35,7 @@ public final class UnorderedDice<T> implements Dice<T> {
    * @param randomFn The function to builds bounded random ints
    * @since 1.0.0
    */
-  UnorderedDice(final Collection<Die<T>> dice, final Function<Integer, Integer> randomFn) {
+  public UnorderedDice(final Collection<Die<T>> dice, final Function<Integer, Integer> randomFn) {
     this(dice, randomFn, ArrayList::new);
   }
 
