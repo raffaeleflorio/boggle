@@ -12,39 +12,18 @@ externalDocs:
 tags:
   - name: grid
     description: Endpoints about grid
-#  - name: admin
-#    description: Endpoints for admin
+  - name: organizer
+    description: Endpoints for organizer
+  - name: player
+    description: Endpoints for player
 
 paths:
   /grids:
-    get:
-      summary: Find all the playable grid
-      operationId: findGrids
-      parameters:
-        - name: lang
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/Lang'
-        - name: size
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/Size'
-      responses:
-        200:
-          description: Grids gotten
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Grids'
-      tags:
-        - grid
     post:
       summary: Creates a grid
       operationId: createGrid
-      #      security:
-      #        - xApiKey: [ ]
+      security:
+        - xApiKey: [ ]
       requestBody:
         $ref: '#/components/requestBodies/GridSpec'
       responses:
@@ -64,13 +43,13 @@ paths:
           $ref: '#/components/responses/Forbidden'
       tags:
         - grid
-  #        - admin
-  /grids/{id}:
+        - organizer
+  /grids/{grid}:
     get:
       summary: Gets a grid
       operationId: getGrid
       parameters:
-        - $ref: '#/components/parameters/GridId'
+        - $ref: '#/components/parameters/Grid'
       responses:
         200:
           description: Grid found
@@ -82,13 +61,14 @@ paths:
           $ref: '#/components/responses/GridNotFound'
       tags:
         - grid
+        - player
     delete:
       summary: Deletes a grid
       operationId: deleteGrid
-      #      security:
-      #        - xApiKey: [ ]
+      security:
+        - xApiKey: [ ]
       parameters:
-        - $ref: '#/components/parameters/GridId'
+        - $ref: '#/components/parameters/Grid'
       responses:
         204:
           description: Grid deleted
@@ -96,15 +76,15 @@ paths:
           $ref: '#/components/responses/GridNotFound'
       tags:
         - grid
-  #        - admin
-  /grids/{id}/score:
+        - organizer
+  /grids/{grid}/score:
     post:
       summary: Builds a score
-      operationId: postWord
-      #      security:
-      #        - xApiKey: [ ]
+      operationId: postScore
+      security:
+        - xApiKey: [ ]
       parameters:
-        - $ref: '#/components/parameters/GridId'
+        - $ref: '#/components/parameters/Grid'
       requestBody:
         $ref: '#/components/requestBodies/Word'
       responses:
@@ -122,7 +102,32 @@ paths:
           $ref: '#/components/responses/GridNotFound'
       tags:
         - grid
-#        - admin
+        - organizer
+  /players/{player}/grids/{grid}/score:
+    post:
+      summary: Builds a score
+      operationId: postScorePlayer
+      parameters:
+        - $ref: '#/components/parameters/Player'
+        - $ref: '#/components/parameters/Grid'
+      requestBody:
+        $ref: '#/components/requestBodies/Word'
+      responses:
+        200:
+          description: Score built
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Score'
+        404:
+          $ref: '#/components/responses/GridNotFound'
+        410:
+          $ref: '#/components/responses/GridExpired'
+        429:
+          $ref: '#/components/responses/TooManyAttempts'
+      tags:
+        - grid
+        - player
 
 components:
   securitySchemes:
@@ -137,6 +142,10 @@ components:
       description: Expired API key
     GridNotFound:
       description: Grid didn't found
+    GridExpired:
+      description: Grid expired
+    TooManyAttempts:
+      description: Too many attempts
   requestBodies:
     GridSpec:
       description: A specification to create a grid
@@ -147,15 +156,17 @@ components:
             required:
               - lang
               - size
+              - duration
             properties:
               lang:
                 $ref: '#/components/schemas/Lang'
               size:
                 $ref: '#/components/schemas/Size'
               duration:
+                description: Duration in minutes
                 type: integer
                 minimum: 1
-                maximum: 60
+                maximum: 10
                 default: 3
     Word:
       description: A word
@@ -172,15 +183,22 @@ components:
                   type: string
                   example: [ W, O, R, D ]
   parameters:
-    GridId:
-      name: id
+    Grid:
+      name: grid
       in: path
       required: true
       description: The grid UUID
       schema:
-        $ref: '#/components/schemas/GridId'
+        $ref: '#/components/schemas/Id'
+    Player:
+      name: player
+      in: path
+      required: true
+      description: The player UUID
+      schema:
+        $ref: '#/components/schemas/Id'
   schemas:
-    GridId:
+    Id:
       type: string
       format: uuid
     Lang:
@@ -195,10 +213,6 @@ components:
     Deadline:
       type: string
       format: date-time
-    Grids:
-      type: array
-      items:
-        $ref: '#/components/schemas/Grid'
     Grid:
       type: object
       required:
@@ -209,7 +223,7 @@ components:
         - deadline
       properties:
         id:
-          $ref: '#/components/schemas/GridId'
+          $ref: '#/components/schemas/Id'
         size:
           $ref: '#/components/schemas/Size'
         lang:
