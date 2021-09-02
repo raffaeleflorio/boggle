@@ -116,7 +116,7 @@ public final class Italian16Dice implements Dice<CharSequence> {
 
   @Override
   public Dice<CharSequence> shuffled() {
-    return origin.shuffled();
+    return new Italian16Dice(origin.shuffled());
   }
 
   private final Dice<CharSequence> origin;
