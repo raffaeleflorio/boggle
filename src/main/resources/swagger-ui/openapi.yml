@@ -1,0 +1,228 @@
+openapi: '3.0.3'
+
+info:
+  title: Boggle HTTP API
+  version: 1.0.0-SNAPSHOT
+  description: Boggle is a word game where the objective is to find the as many words as possibile in a grid
+
+externalDocs:
+  url: https://en.wikipedia.org/wiki/Boggle
+  description: Wikipedia about Boggle
+
+tags:
+  - name: grid
+    description: Endpoints about grid
+#  - name: admin
+#    description: Endpoints for admin
+
+paths:
+  /grids:
+    get:
+      summary: Find all the playable grid
+      operationId: findGrids
+      parameters:
+        - name: lang
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Lang'
+        - name: size
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Size'
+      responses:
+        200:
+          description: Grids gotten
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Grids'
+      tags:
+        - grid
+    post:
+      summary: Creates a grid
+      operationId: createGrid
+      #      security:
+      #        - xApiKey: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/GridSpec'
+      responses:
+        201:
+          description: Grid created
+          headers:
+            Location:
+              description: The created grid URI
+              schema:
+                type: string
+                format: uri
+        400:
+          description: Bad specification
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - grid
+  #        - admin
+  /grids/{id}:
+    get:
+      summary: Gets a grid
+      operationId: getGrid
+      parameters:
+        - $ref: '#/components/parameters/GridId'
+      responses:
+        200:
+          description: Grid found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Grid'
+        404:
+          $ref: '#/components/responses/GridNotFound'
+      tags:
+        - grid
+    delete:
+      summary: Deletes a grid
+      operationId: deleteGrid
+      #      security:
+      #        - xApiKey: [ ]
+      parameters:
+        - $ref: '#/components/parameters/GridId'
+      responses:
+        204:
+          description: Grid deleted
+        404:
+          $ref: '#/components/responses/GridNotFound'
+      tags:
+        - grid
+  #        - admin
+  /grids/{id}/score:
+    post:
+      summary: Builds a score
+      operationId: postWord
+      #      security:
+      #        - xApiKey: [ ]
+      parameters:
+        - $ref: '#/components/parameters/GridId'
+      requestBody:
+        $ref: '#/components/requestBodies/Word'
+      responses:
+        200:
+          description: Score built
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Score'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/GridNotFound'
+      tags:
+        - grid
+#        - admin
+
+components:
+  securitySchemes:
+    xApiKey:
+      type: apiKey
+      name: X-API-KEY
+      in: header
+  responses:
+    Unauthorized:
+      description: Missing API key
+    Forbidden:
+      description: Expired API key
+    GridNotFound:
+      description: Grid didn't found
+  requestBodies:
+    GridSpec:
+      description: A specification to create a grid
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - lang
+              - size
+            properties:
+              lang:
+                $ref: '#/components/schemas/Lang'
+              size:
+                $ref: '#/components/schemas/Size'
+              duration:
+                type: integer
+                minimum: 1
+                maximum: 60
+                default: 3
+    Word:
+      description: A word
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - dice
+            properties:
+              dice:
+                type: array
+                items:
+                  type: string
+                  example: [ W, O, R, D ]
+  parameters:
+    GridId:
+      name: id
+      in: path
+      required: true
+      description: The grid UUID
+      schema:
+        $ref: '#/components/schemas/GridId'
+  schemas:
+    GridId:
+      type: string
+      format: uuid
+    Lang:
+      type: string
+      example: it
+    Size:
+      type: string
+      example: '4x4'
+    Layout:
+      type: string
+      example: ABCDEFGHILMNOPQuR
+    Deadline:
+      type: string
+      format: date-time
+    Grids:
+      type: array
+      items:
+        $ref: '#/components/schemas/Grid'
+    Grid:
+      type: object
+      required:
+        - id
+        - size
+        - lang
+        - layout
+        - deadline
+      properties:
+        id:
+          $ref: '#/components/schemas/GridId'
+        size:
+          $ref: '#/components/schemas/Size'
+        lang:
+          $ref: '#/components/schemas/Lang'
+        layout:
+          $ref: '#/components/schemas/Layout'
+        deadline:
+          $ref: '#/components/schemas/Deadline'
+    Score:
+      type: object
+      required:
+        - score
+      properties:
+        score:
+          type: integer
+          minimum: 0
