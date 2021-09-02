@@ -6,12 +6,11 @@ import org.junit.jupiter.api.Test;
 import java.util.function.Function;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.*;
 
 class RandomDieTest {
   @Test
-  void testInitialValue() {
+  void testDefaultInitialValue() {
     assertThat(
       new RandomDie<>(Function.identity()).value(),
       equalTo(0)
@@ -28,10 +27,14 @@ class RandomDieTest {
 
   @RepeatedTest(128)
   void testRolledWithBound() {
+    var min = 16;
     var bound = 32;
     assertThat(
-      new RandomDie<>(Function.identity(), 0, bound).rolled().value(),
-      lessThan(bound)
+      new RandomDie<>(Function.identity(), min, bound).rolled().value(),
+      allOf(
+        lessThan(bound),
+        greaterThanOrEqualTo(min)
+      )
     );
   }
 }
