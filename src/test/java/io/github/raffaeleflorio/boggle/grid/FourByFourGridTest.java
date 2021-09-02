@@ -4,7 +4,6 @@ import io.github.raffaeleflorio.boggle.dice.Dice;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -23,10 +22,8 @@ class FourByFourGridTest {
             "C", "D", "E", "F"
           )
         )
-      ).description(),
-      equalTo(
-        Map.of("size", "4x4")
-      )
+      ).description().feature("size"),
+      contains("4x4")
     );
   }
 
@@ -43,9 +40,12 @@ class FourByFourGridTest {
             "M", "N", "O", "P"
           )
         )
-      ).shuffled().description(),
-      equalTo(
-        Map.of("size", "4x4")
+      ).shuffled().values(),
+      contains(
+        "A", "B", "C", "D",
+        "E", "F", "G", "H",
+        "I", "J", "K", "L",
+        "M", "N", "O", "P"
       )
     );
   }

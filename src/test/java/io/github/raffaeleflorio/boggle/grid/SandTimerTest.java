@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static io.github.raffaeleflorio.boggle.hamcrest.After.after;
@@ -19,13 +18,10 @@ class SandTimerTest {
   @Test
   void testDescription() {
     assertThat(
-      new SandTimer<>(new Grid.Fake<>(), ofMinutes(2), () -> Instant.EPOCH).description(),
-      equalTo(
-        Map.of(
-          "id", "fake grid",
-          "deadline", "1970-01-01T00:02:00Z"
-        )
-      )
+      new SandTimer<>(new Grid.Fake<>(), ofMinutes(2), () -> Instant.EPOCH)
+        .description()
+        .feature("deadline"),
+      contains("1970-01-01T00:02:00Z")
     );
   }
 

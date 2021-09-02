@@ -5,10 +5,9 @@ import io.github.raffaeleflorio.boggle.dice.Dice;
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
@@ -50,7 +49,7 @@ public final class SandTimer<T> implements Grid<T> {
    * @since 1.0.0
    */
   SandTimer(final Grid<T> origin, final Instant deadline, final Supplier<Instant> now) {
-    this(origin, deadline, now, new IllegalStateException("Deadline reached"), HashMap::new);
+    this(origin, deadline, now, new IllegalStateException("Deadline reached"));
   }
 
   /**
@@ -60,7 +59,25 @@ public final class SandTimer<T> implements Grid<T> {
    * @param deadline  The deadline
    * @param now       The supplier of now
    * @param exception The exception to throw
-   * @param cloneFn   The function to clone a map
+   * @since 1.0.0
+   */
+  SandTimer(
+    final Grid<T> origin,
+    final Instant deadline,
+    final Supplier<Instant> now,
+    final RuntimeException exception
+  ) {
+    this(origin, deadline, now, exception, AugmentedDescription::new);
+  }
+
+  /**
+   * Builds a grid with a timer
+   *
+   * @param origin        The grid to decorate
+   * @param deadline      The deadline
+   * @param now           The supplier of now
+   * @param exception     The exception to throw
+   * @param descriptionFn A function to append a feature to a description
    * @since 1.0.0
    */
   SandTimer(
@@ -68,13 +85,13 @@ public final class SandTimer<T> implements Grid<T> {
     final Instant deadline,
     final Supplier<Instant> now,
     final RuntimeException exception,
-    final Function<Map<CharSequence, CharSequence>, Map<CharSequence, CharSequence>> cloneFn
+    final BiFunction<Description, Map.Entry<CharSequence, List<CharSequence>>, Description> descriptionFn
   ) {
     this.origin = origin;
     this.deadline = deadline;
     this.now = now;
     this.exception = exception;
-    this.cloneFn = cloneFn;
+    this.descriptionFn = descriptionFn;
   }
 
   @Override
@@ -104,15 +121,16 @@ public final class SandTimer<T> implements Grid<T> {
   }
 
   @Override
-  public Map<CharSequence, CharSequence> description() {
-    var clone = cloneFn.apply(origin.description());
-    clone.put("deadline", deadline.toString());
-    return Collections.unmodifiableMap(clone);
+  public Description description() {
+    return descriptionFn.apply(
+      origin.description(),
+      Map.entry("deadline", List.of(deadline.toString()))
+    );
   }
 
   private final Grid<T> origin;
   private final Instant deadline;
   private final Supplier<Instant> now;
   private final RuntimeException exception;
-  private final Function<Map<CharSequence, CharSequence>, Map<CharSequence, CharSequence>> cloneFn;
+  private final BiFunction<Description, Map.Entry<CharSequence, List<CharSequence>>, Description> descriptionFn;
 }

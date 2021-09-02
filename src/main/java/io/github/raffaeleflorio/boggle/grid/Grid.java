@@ -3,7 +3,6 @@ package io.github.raffaeleflorio.boggle.grid;
 import io.github.raffaeleflorio.boggle.dice.Dice;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.function.Predicate;
 
 /**
@@ -37,7 +36,7 @@ public interface Grid<T> extends Dice<T> {
    * @return The description
    * @since 1.0.0
    */
-  Map<CharSequence, CharSequence> description();
+  Description description();
 
   /**
    * A {@link Grid} useful for testing purpose
@@ -73,7 +72,7 @@ public interface Grid<T> extends Dice<T> {
      * @since 1.0.0
      */
     public Fake(final Dice<T> dice, final Predicate<Dice<T>> compatibleFn) {
-      this(dice, compatibleFn, Map.of("id", "fake grid"));
+      this(dice, compatibleFn, new Description.Fake());
     }
 
     /**
@@ -97,7 +96,7 @@ public interface Grid<T> extends Dice<T> {
     public Fake(
       final Dice<T> dice,
       final Predicate<Dice<T>> compatibleFn,
-      final Map<CharSequence, CharSequence> description
+      final Description description
     ) {
       this.dice = dice;
       this.compatibleFn = compatibleFn;
@@ -120,12 +119,12 @@ public interface Grid<T> extends Dice<T> {
     }
 
     @Override
-    public Map<CharSequence, CharSequence> description() {
+    public Description description() {
       return description;
     }
 
     private final Dice<T> dice;
     private final Predicate<Dice<T>> compatibleFn;
-    private final Map<CharSequence, CharSequence> description;
+    private final Description description;
   }
 }

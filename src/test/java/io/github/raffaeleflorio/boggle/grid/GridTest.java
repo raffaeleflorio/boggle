@@ -5,11 +5,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 class GridTest {
   @Nested
@@ -17,16 +15,8 @@ class GridTest {
     @Test
     void testDescription() {
       assertThat(
-        new Grid.Fake<>().description(),
-        equalTo(Map.of("id", "fake grid"))
-      );
-    }
-
-    @Test
-    void testDefaultShuffled() {
-      assertThat(
-        new Grid.Fake<>().shuffled().description(),
-        equalTo(Map.of("id", "fake grid"))
+        new Grid.Fake<>().description().feature("any"),
+        empty()
       );
     }
 
