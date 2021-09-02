@@ -1,6 +1,5 @@
 package io.github.raffaeleflorio.boggle.dice;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -24,7 +23,7 @@ public final class AlignedDice<T> implements Dice<T> {
   }
 
   @Override
-  public Collection<T> values() {
+  public List<T> values() {
     return mappedDice(Die::value);
   }
 
