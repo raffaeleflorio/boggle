@@ -3,18 +3,17 @@ package io.github.raffaeleflorio.boggle.grid;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
-class SimpleDescriptionTest {
+class PairDescriptionTest {
   @Test
   void testFeature() {
     assertThat(
-      new SimpleDescription()
-        .feature("a feature", List.of("a", "feature", "value"))
-        .feature("a feature"),
-      contains("a", "feature", "value")
+      new PairDescription("name", "single value").feature("name"),
+      contains("single value")
     );
   }
 }

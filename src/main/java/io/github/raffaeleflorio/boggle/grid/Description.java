@@ -10,21 +10,12 @@ import java.util.List;
  */
 public interface Description {
   /**
-   * Builds a description with another feature
+   * Builds feature by its name
    *
-   * @param id     The feature id
-   * @param values The values
-   * @return The new description
-   */
-  Description feature(CharSequence id, List<CharSequence> values);
-
-  /**
-   * Builds feature by its id
-   *
-   * @param id The feature id
+   * @param name The feature name
    * @return The feature values or an empty list if absent
    */
-  List<CharSequence> feature(CharSequence id);
+  List<CharSequence> feature(CharSequence name);
 
   /**
    * A permanent empty {@link Description}, useful for testing
@@ -34,12 +25,7 @@ public interface Description {
    */
   final class Fake implements Description {
     @Override
-    public Description feature(final CharSequence id, final List<CharSequence> values) {
-      return this;
-    }
-
-    @Override
-    public List<CharSequence> feature(final CharSequence id) {
+    public List<CharSequence> feature(final CharSequence name) {
       return List.of();
     }
   }
