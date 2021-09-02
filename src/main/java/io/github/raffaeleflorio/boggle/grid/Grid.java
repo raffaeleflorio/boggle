@@ -4,7 +4,7 @@ import io.github.raffaeleflorio.boggle.dice.Dice;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * A boggle grid
@@ -23,13 +23,13 @@ public interface Grid<T> extends Dice<T> {
   Grid<T> shuffled();
 
   /**
-   * Builds a non-negative score of a word
+   * Builds a true boolean if the grid is compatible with the word
    *
    * @param word The word
-   * @return The score
+   * @return True if compatible
    * @since 1.0.0
    */
-  Integer score(Dice<T> word);
+  Boolean compatible(Dice<T> word);
 
   /**
    * Builds the description
@@ -62,45 +62,45 @@ public interface Grid<T> extends Dice<T> {
      * @since 1.0.0
      */
     public Fake(final Dice<T> dice) {
-      this(dice, x -> 0);
+      this(dice, x -> false);
     }
 
     /**
      * Builds a fake
      *
-     * @param dice    The dice
-     * @param scoreFn The function to build score
+     * @param dice         The dice
+     * @param compatibleFn The function to build compatibility
      * @since 1.0.0
      */
-    public Fake(final Dice<T> dice, final Function<Dice<T>, Integer> scoreFn) {
-      this(dice, scoreFn, Map.of("id", "fake grid"));
+    public Fake(final Dice<T> dice, final Predicate<Dice<T>> compatibleFn) {
+      this(dice, compatibleFn, Map.of("id", "fake grid"));
     }
 
     /**
      * Builds a fake
      *
-     * @param scoreFn The function to build score
+     * @param compatibleFn The function to build compatibility
      * @since 1.0.0
      */
-    public Fake(final Function<Dice<T>, Integer> scoreFn) {
-      this(new Dice.Fake<>(), scoreFn);
+    public Fake(final Predicate<Dice<T>> compatibleFn) {
+      this(new Dice.Fake<>(), compatibleFn);
     }
 
     /**
      * Builds a fake
      *
-     * @param dice        The dice
-     * @param scoreFn     The function to build score
-     * @param description The description
+     * @param dice         The dice
+     * @param compatibleFn The function to build compatibility
+     * @param description  The description
      * @since 1.0.0
      */
     public Fake(
       final Dice<T> dice,
-      final Function<Dice<T>, Integer> scoreFn,
+      final Predicate<Dice<T>> compatibleFn,
       final Map<CharSequence, CharSequence> description
     ) {
       this.dice = dice;
-      this.scoreFn = scoreFn;
+      this.compatibleFn = compatibleFn;
       this.description = description;
     }
 
@@ -111,12 +111,12 @@ public interface Grid<T> extends Dice<T> {
 
     @Override
     public Grid<T> shuffled() {
-      return new Grid.Fake<>(dice.shuffled(), scoreFn, description);
+      return new Grid.Fake<>(dice.shuffled(), compatibleFn, description);
     }
 
     @Override
-    public Integer score(final Dice<T> word) {
-      return scoreFn.apply(word);
+    public Boolean compatible(final Dice<T> word) {
+      return compatibleFn.test(word);
     }
 
     @Override
@@ -125,7 +125,7 @@ public interface Grid<T> extends Dice<T> {
     }
 
     private final Dice<T> dice;
-    private final Function<Dice<T>, Integer> scoreFn;
+    private final Predicate<Dice<T>> compatibleFn;
     private final Map<CharSequence, CharSequence> description;
   }
 }

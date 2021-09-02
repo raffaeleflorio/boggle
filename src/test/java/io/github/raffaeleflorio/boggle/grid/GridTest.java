@@ -31,18 +31,18 @@ class GridTest {
     }
 
     @Test
-    void testDefaultScore() {
+    void testDefaultCompatibility() {
       assertThat(
-        new Grid.Fake<>().score(new Dice.Fake<>()),
-        equalTo(0)
+        new Grid.Fake<>().compatible(new Dice.Fake<>()),
+        equalTo(false)
       );
     }
 
     @Test
-    void testScoreWithScoreFn() {
+    void testCompatibilityWithCustomFn() {
       assertThat(
-        new Grid.Fake<>(x -> 42).score(new Dice.Fake<>()),
-        equalTo(42)
+        new Grid.Fake<>(x -> true).compatible(new Dice.Fake<>()),
+        equalTo(true)
       );
     }
 

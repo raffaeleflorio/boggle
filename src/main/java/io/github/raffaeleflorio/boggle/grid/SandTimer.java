@@ -99,8 +99,8 @@ public final class SandTimer<T> implements Grid<T> {
   }
 
   @Override
-  public Integer score(final Dice<T> word) {
-    return beforeDeadline(() -> origin.score(word));
+  public Boolean compatible(final Dice<T> word) {
+    return beforeDeadline(() -> origin.compatible(word));
   }
 
   @Override

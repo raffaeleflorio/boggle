@@ -51,7 +51,7 @@ class FourByFourGridTest {
   }
 
   @Test
-  void testScoreOfAMissingWord() {
+  void testCompatibilityWithAMissingWord() {
     assertThat(
       new FourByFourGrid<>(
         new Dice.Fake<>(
@@ -62,17 +62,17 @@ class FourByFourGridTest {
             "D", "-", "R", "-"
           )
         )
-      ).score(
+      ).compatible(
         new Dice.Fake<>(
           List.of("W", "O", "R", "D")
         )
       ),
-      equalTo(0)
+      equalTo(false)
     );
   }
 
   @Test
-  void testScoreOfAWordOfTwoCharacters() {
+  void testCompatibilityWithAWordOfTwoCharacters() {
     assertThat(
       new FourByFourGrid<>(
         new Dice.Fake<>(
@@ -83,17 +83,17 @@ class FourByFourGridTest {
             "-", "-", "-", "-"
           )
         )
-      ).score(
+      ).compatible(
         new Dice.Fake<>(
           List.of("O", "F")
         )
       ),
-      equalTo(0)
+      equalTo(true)
     );
   }
 
   @Test
-  void testOneScoreThreeCharacters() {
+  void testCompatibilityWithAWordOfThreeCharacters() {
     assertThat(
       new FourByFourGrid<>(
         new Dice.Fake<>(
@@ -104,101 +104,17 @@ class FourByFourGridTest {
             "-", "-", "-", "-"
           )
         )
-      ).score(
+      ).compatible(
         new Dice.Fake<>(
           List.of("F", "O", "R")
         )
       ),
-      equalTo(1)
+      equalTo(true)
     );
   }
 
   @Test
-  void testOneScoreFourCharacters() {
-    assertThat(
-      new FourByFourGrid<>(
-        new Dice.Fake<>(
-          List.of(
-            "W", "-", "-", "-",
-            "-", "O", "-", "-",
-            "-", "-", "R", "D",
-            "-", "-", "-", "-"
-          )
-        )
-      ).score(
-        new Dice.Fake<>(
-          List.of("W", "O", "R", "D")
-        )
-      ),
-      equalTo(1)
-    );
-  }
-
-  @Test
-  void testTwoScore() {
-    assertThat(
-      new FourByFourGrid<>(
-        new Dice.Fake<>(
-          List.of(
-            "W", "-", "-", "-",
-            "-", "O", "-", "-",
-            "R", "-", "S", "-",
-            "-", "D", "-", "-"
-          )
-        )
-      ).score(
-        new Dice.Fake<>(
-          List.of("W", "O", "R", "D", "S")
-        )
-      ),
-      equalTo(2)
-    );
-  }
-
-  @Test
-  void testThreeScore() {
-    assertThat(
-      new FourByFourGrid<>(
-        new Dice.Fake<>(
-          List.of(
-            "N", "E", "-", "-",
-            "-", "A", "Y", "-",
-            "-", "R", "L", "-",
-            "-", "-", "-", "-"
-          )
-        )
-      ).score(
-        new Dice.Fake<>(
-          List.of("N", "E", "A", "R", "L", "Y")
-        )
-      ),
-      equalTo(3)
-    );
-  }
-
-  @Test
-  void testFiveScore() {
-    assertThat(
-      new FourByFourGrid<>(
-        new Dice.Fake<>(
-          List.of(
-            "P", "Z", "L", "-",
-            "U", "Z", "E", "-",
-            "-", "-", "-", "S",
-            "-", "-", "-", "-"
-          )
-        )
-      ).score(
-        new Dice.Fake<>(
-          List.of("P", "U", "Z", "Z", "L", "E", "S")
-        )
-      ),
-      equalTo(5)
-    );
-  }
-
-  @Test
-  void testElevenScore() {
+  void testCompatibilityWithMaximumLengthWord() {
     assertThat(
       new FourByFourGrid<>(
         new Dice.Fake<>(
@@ -209,19 +125,19 @@ class FourByFourGridTest {
             "O", "N", "I", "A"
           )
         )
-      ).score(
+      ).compatible(
         new Dice.Fake<>(
           List.of(
             "I", "N", "C", "O", "N", "S", "E", "Qu", "E", "N", "T", "I", "A", "L", "L", "Y"
           )
         )
       ),
-      equalTo(11)
+      equalTo(true)
     );
   }
 
   @Test
-  void testThreeScoreWithNumbers() {
+  void testCompatibilityWithNumbers() {
     assertThat(
       new FourByFourGrid<>(
         new Dice.Fake<>(
@@ -232,17 +148,17 @@ class FourByFourGridTest {
             13, 14, 15, 16
           )
         )
-      ).score(
+      ).compatible(
         new Dice.Fake<>(
           List.of(6, 10, 15, 12, 8, 4)
         )
       ),
-      equalTo(3)
+      equalTo(true)
     );
   }
 
   @Test
-  void testValues() {
+  void testValuesWithNumbers() {
     assertThat(
       new FourByFourGrid<>(
         new Dice.Fake<>(
@@ -255,6 +171,48 @@ class FourByFourGridTest {
         )
       ).values(),
       contains(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0)
+    );
+  }
+
+  @Test
+  void testCompatibilityWithAWordOfSeventeenCharacters() {
+    assertThat(
+      new FourByFourGrid<>(
+        new Dice.Fake<>(
+          List.of(
+            1, 2, 3, 4,
+            5, 6, 7, 8,
+            9, 10, 11, 12,
+            13, 14, 15, 16
+          )
+        )
+      ).compatible(
+        new Dice.Fake<>(
+          List.of(
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16
+          )
+        )
+      ),
+      equalTo(false)
+    );
+  }
+
+  @Test
+  void testCompatibilityWithAWordOfZeroCharacters() {
+    assertThat(
+      new FourByFourGrid<>(
+        new Dice.Fake<>(
+          List.of(
+            1, 2, 3, 4,
+            5, 6, 7, 8,
+            9, 10, 11, 12,
+            13, 14, 15, 16
+          )
+        )
+      ).compatible(
+        new Dice.Fake<>()
+      ),
+      equalTo(true)
     );
   }
 }

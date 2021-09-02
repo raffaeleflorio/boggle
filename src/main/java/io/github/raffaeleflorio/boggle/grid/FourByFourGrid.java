@@ -10,7 +10,6 @@ import io.github.raffaeleflorio.boggle.graph.UndirectedGraph;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -62,32 +61,11 @@ public final class FourByFourGrid<T> implements Grid<T> {
   }
 
   @Override
-  public Integer score(final Dice<T> word) {
-    var values = word.values();
-    return contained(asList(values)) ? score(values.size()) : 0;
+  public Boolean compatible(final Dice<T> word) {
+    return compatible(asList(word.values()));
   }
 
-  private Integer score(final Integer size) {
-    return Map.<Integer, Predicate<Integer>>of(
-        1, x -> x == 3 || x == 4,
-        2, x -> x == 5,
-        3, x -> x == 6,
-        5, x -> x == 7,
-        11, x -> x >= 8
-      )
-      .entrySet()
-      .stream()
-      .filter(entry -> entry.getValue().test(size))
-      .map(Map.Entry::getKey)
-      .findFirst()
-      .orElse(0);
-  }
-
-  private <X> List<X> asList(final Collection<X> from) {
-    return from.stream().collect(Collectors.toUnmodifiableList());
-  }
-
-  private Boolean contained(final List<T> word) {
+  private Boolean compatible(final List<T> word) {
     var graph = asGraph();
     return IntStream
       .range(0, word.size() - 1)
@@ -139,6 +117,10 @@ public final class FourByFourGrid<T> implements Grid<T> {
       .edge(values.get(12), values.get(13))
       .edge(values.get(13), values.get(14))
       .edge(values.get(14), values.get(15));
+  }
+
+  private <X> List<X> asList(final Collection<X> from) {
+    return from.stream().collect(Collectors.toUnmodifiableList());
   }
 
   @Override

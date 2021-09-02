@@ -13,8 +13,7 @@ import static io.github.raffaeleflorio.boggle.hamcrest.IsThrowedWithMessage.thro
 import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofMinutes;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 class SandTimerTest {
   @Test
@@ -31,13 +30,24 @@ class SandTimerTest {
   }
 
   @Test
-  void testScoreAfterExpiration() {
+  void testCompatibilityAfterExpiration() {
     var timer = new SandTimer<>(new Grid.Fake<>(), ofMillis(10));
     assertThat(
-      () -> timer.score(new Dice.Fake<>()),
+      () -> timer.compatible(new Dice.Fake<>()),
       after(
         20, TimeUnit.MILLISECONDS,
         throwsWithMessage(IllegalStateException.class, "Deadline reached")
+      )
+    );
+  }
+
+  @Test
+  void testCompatibilityBeforeExpiration() {
+    assertThat(
+      new SandTimer<>(new Grid.Fake<>(x -> true), ofMinutes(10)).compatible(new Dice.Fake<>()),
+      after(
+        20, TimeUnit.MILLISECONDS,
+        equalTo(true)
       )
     );
   }
@@ -55,23 +65,12 @@ class SandTimerTest {
   }
 
   @Test
-  void testScoreBeforeExpiration() {
-    assertThat(
-      new SandTimer<>(new Grid.Fake<>(x -> 100), ofMinutes(10)).score(new Dice.Fake<>()),
-      after(
-        20, TimeUnit.MILLISECONDS,
-        equalTo(100)
-      )
-    );
-  }
-
-  @Test
   void testShuffledBeforeExpiration() {
     assertThat(
-      new SandTimer<>(new Grid.Fake<>(x -> 100), ofMinutes(10)).shuffled().score(new Dice.Fake<>()),
+      () -> new SandTimer<>(new Grid.Fake<>(), ofMinutes(10)).shuffled(),
       after(
         20, TimeUnit.MILLISECONDS,
-        equalTo(100)
+        not(throwsWithMessage(IllegalStateException.class, "Deadline reached"))
       )
     );
   }
