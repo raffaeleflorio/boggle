@@ -1,12 +1,10 @@
 package io.github.raffaeleflorio.boggle.dice.it;
 
-import io.github.raffaeleflorio.boggle.dice.Dice;
-import io.github.raffaeleflorio.boggle.dice.LoadableDie;
-import io.github.raffaeleflorio.boggle.dice.UnorderedDice;
+import io.github.raffaeleflorio.boggle.dice.*;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -17,92 +15,92 @@ import java.util.function.Function;
  */
 public final class Italian16Dice implements Dice<CharSequence> {
   /**
-   * Builds an italian boggle 16 dice
+   * Builds a non cryptographically strong italian boggle 16 dice
    *
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
    * @since 1.0.0
    */
   public Italian16Dice() {
-    this(max -> ThreadLocalRandom.current().nextInt(max));
+    this((min, bound) -> new RandomDie<>(Function.identity(), min, bound));
   }
 
   /**
    * Builds an italian boggle 16 dice
    *
-   * @param randomFn The function to build bounded random ints
+   * @param dieFn The function to build bounded die
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
    * @since 1.0.0
    */
-  public Italian16Dice(final Function<Integer, Integer> randomFn) {
+  public Italian16Dice(final BiFunction<Integer, Integer, Die<Integer>> dieFn) {
     this(
       new UnorderedDice<>(
         List.of(
           new LoadableDie<>(
             List.of("A", "A", "E", "I", "O", "T"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("A", "B", "O", "O", "M", "Qu"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("A", "B", "I", "L", "R", "T"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("A", "C", "E", "L", "R", "S"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("A", "C", "D", "E", "M", "P"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("A", "C", "F", "I", "O", "R"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("A", "D", "E", "N", "V", "Z"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("A", "I", "M", "O", "R", "S"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("C", "E", "N", "O", "T", "U"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("D", "E", "N", "O", "S", "T"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("E", "E", "F", "H", "I", "S"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("E", "G", "L", "N", "O", "U"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("E", "G", "I", "N", "T", "V"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("E", "H", "I", "N", "R", "S"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("E", "I", "L", "O", "R", "U"),
-            randomFn
+            dieFn
           ),
           new LoadableDie<>(
             List.of("E", "L", "P", "S", "T", "U"),
-            randomFn
+            dieFn
           )
         ),
-        randomFn
+        dieFn
       )
     );
   }
@@ -118,7 +116,7 @@ public final class Italian16Dice implements Dice<CharSequence> {
 
   @Override
   public Dice<CharSequence> shuffled() {
-    return new Italian16Dice(origin.shuffled());
+    return origin.shuffled();
   }
 
   private final Dice<CharSequence> origin;

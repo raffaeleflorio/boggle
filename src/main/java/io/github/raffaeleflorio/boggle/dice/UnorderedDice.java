@@ -3,7 +3,7 @@ package io.github.raffaeleflorio.boggle.dice;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public final class UnorderedDice<T> implements Dice<T> {
   /**
-   * Builds an unordered dice
+   * Builds a non cryptographically strong dice
    *
    * @param dice The dice
    * @since 1.0.0
@@ -24,36 +24,36 @@ public final class UnorderedDice<T> implements Dice<T> {
   public UnorderedDice(final Collection<Die<T>> dice) {
     this(
       dice,
-      max -> ThreadLocalRandom.current().nextInt(max)
+      (min, bound) -> new RandomDie<>(Function.identity(), min, bound)
     );
   }
 
   /**
    * Builds an unordered dice
    *
-   * @param dice     The dice
-   * @param randomFn The function to builds bounded random ints
+   * @param dice  The dice
+   * @param dieFn The function to builds a bounded die
    * @since 1.0.0
    */
-  public UnorderedDice(final Collection<Die<T>> dice, final Function<Integer, Integer> randomFn) {
-    this(dice, randomFn, ArrayList::new);
+  public UnorderedDice(final Collection<Die<T>> dice, final BiFunction<Integer, Integer, Die<Integer>> dieFn) {
+    this(dice, dieFn, ArrayList::new);
   }
 
   /**
    * Builds an unordered dice
    *
-   * @param dice     The dice
-   * @param randomFn The function to build bounded random ints
-   * @param cloneFn  The function to clone list of die
+   * @param dice    The dice
+   * @param dieFn   The function to build bounded die
+   * @param cloneFn The function to clone list of die
    * @since 1.0.0
    */
   UnorderedDice(
     final Collection<Die<T>> dice,
-    final Function<Integer, Integer> randomFn,
+    final BiFunction<Integer, Integer, Die<Integer>> dieFn,
     final Function<Collection<Die<T>>, List<Die<T>>> cloneFn
   ) {
     this.dice = dice;
-    this.randomFn = randomFn;
+    this.dieFn = dieFn;
     this.cloneFn = cloneFn;
   }
 
@@ -69,18 +69,22 @@ public final class UnorderedDice<T> implements Dice<T> {
   private List<Die<T>> shuffledDice() {
     var x = cloneFn.apply(dice);
     for (var i = dice.size() - 1; i > 0; i--) {
-      var j = randomFn.apply(i + 1);
+      var j = rolledDie(i + 1).value();
       x.set(i, x.set(j, x.get(i)));
     }
     return x;
   }
 
+  private Die<Integer> rolledDie(final Integer bound) {
+    return dieFn.apply(0, bound).rolled();
+  }
+
   @Override
   public Dice<T> shuffled() {
-    return new UnorderedDice<>(mappedDice(Die::rolled), randomFn);
+    return new UnorderedDice<>(mappedDice(Die::rolled), dieFn);
   }
 
   private final Collection<Die<T>> dice;
-  private final Function<Integer, Integer> randomFn;
+  private final BiFunction<Integer, Integer, Die<Integer>> dieFn;
   private final Function<Collection<Die<T>>, List<Die<T>>> cloneFn;
 }

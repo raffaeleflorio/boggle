@@ -1,7 +1,7 @@
 package io.github.raffaeleflorio.boggle.dice;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -12,7 +12,7 @@ import java.util.function.Function;
  */
 public final class LoadableDie<T> implements Die<T> {
   /**
-   * Builds a loadable die
+   * Builds a non cryptographically strong loadable die
    *
    * @param sides The sides
    * @since 1.0.0
@@ -20,33 +20,33 @@ public final class LoadableDie<T> implements Die<T> {
   public LoadableDie(final List<T> sides) {
     this(
       sides,
-      max -> ThreadLocalRandom.current().nextInt(max)
+      (min, bound) -> new RandomDie<>(Function.identity(), min, bound)
     );
   }
 
   /**
    * Builds a loadable die
    *
-   * @param sides    The sides
-   * @param randomFn The function to build bounded random ints
+   * @param sides The sides
+   * @param dieFn The function to build a bounded die
    * @since 1.0.0
    */
-  public LoadableDie(final List<T> sides, final Function<Integer, Integer> randomFn) {
-    this(sides, randomFn, 0);
+  public LoadableDie(final List<T> sides, final BiFunction<Integer, Integer, Die<Integer>> dieFn) {
+    this(sides, dieFn, 0);
   }
 
   /**
    * Builds a loadable die
    *
-   * @param sides    The sides
-   * @param randomFn The function to build a bounded random value
-   * @param current  The current side
+   * @param sides   The sides
+   * @param dieFn   The function to build a bounded die
+   * @param current The current side
    * @since 1.0.0
    */
-  LoadableDie(final List<T> sides, final Function<Integer, Integer> randomFn, final Integer current) {
+  LoadableDie(final List<T> sides, final BiFunction<Integer, Integer, Die<Integer>> dieFn, final Integer current) {
     this.sides = sides;
     this.current = current;
-    this.randomFn = randomFn;
+    this.dieFn = dieFn;
   }
 
   @Override
@@ -56,10 +56,14 @@ public final class LoadableDie<T> implements Die<T> {
 
   @Override
   public Die<T> rolled() {
-    return new LoadableDie<>(sides, randomFn, randomFn.apply(sides.size()));
+    return new LoadableDie<>(sides, dieFn, rolledDie(sides.size()).value());
+  }
+
+  private Die<Integer> rolledDie(final Integer bound) {
+    return dieFn.apply(0, bound).rolled();
   }
 
   private final List<T> sides;
-  private final Function<Integer, Integer> randomFn;
+  private final BiFunction<Integer, Integer, Die<Integer>> dieFn;
   private final Integer current;
 }
