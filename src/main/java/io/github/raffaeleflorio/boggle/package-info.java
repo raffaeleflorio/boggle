@@ -1,5 +1,5 @@
 /**
- * Objects about boggle game
+ * Objects about boggle with a HTTP interface
  *
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @see <a href="https://en.wikipedia.org/wiki/Boggle">Wikipedia definition</a>
