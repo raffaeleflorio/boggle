@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 /**
  * A more descriptive grid
@@ -23,6 +24,20 @@ public final class ChattierGrid<T> implements Grid<T> {
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
    */
   public ChattierGrid(final Grid<T> origin, final Map<CharSequence, List<CharSequence>> features) {
+    this(origin, () -> features, AugmentedDescription::new);
+  }
+
+  /**
+   * Builds a grid
+   *
+   * @param origin   The grid to decorate
+   * @param features The new features supplier
+   * @author Raffaele Florio (raffaeleflorio@protonmail.com)
+   */
+  public ChattierGrid(
+    final Grid<T> origin,
+    final Supplier<Map<CharSequence, List<CharSequence>>> features
+  ) {
     this(origin, features, AugmentedDescription::new);
   }
 
@@ -36,7 +51,7 @@ public final class ChattierGrid<T> implements Grid<T> {
    */
   ChattierGrid(
     final Grid<T> origin,
-    final Map<CharSequence, List<CharSequence>> features,
+    final Supplier<Map<CharSequence, List<CharSequence>>> features,
     final BiFunction<Description, Map<CharSequence, List<CharSequence>>, Description> descriptionFn
   ) {
     this.origin = origin;
@@ -61,10 +76,10 @@ public final class ChattierGrid<T> implements Grid<T> {
 
   @Override
   public Description description() {
-    return descriptionFn.apply(origin.description(), features);
+    return descriptionFn.apply(origin.description(), features.get());
   }
 
   private final Grid<T> origin;
-  private final Map<CharSequence, List<CharSequence>> features;
+  private final Supplier<Map<CharSequence, List<CharSequence>>> features;
   private final BiFunction<Description, Map<CharSequence, List<CharSequence>>, Description> descriptionFn;
 }
