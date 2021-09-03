@@ -1,8 +1,10 @@
 package io.github.raffaeleflorio.boggle.score;
 
 import io.github.raffaeleflorio.boggle.dice.Dice;
+import io.smallrye.mutiny.Uni;
 
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -46,30 +48,49 @@ public final class FourByFourScore<T> implements Score<T> {
    */
   public FourByFourScore() {
     this(
+      item -> Uni.createFrom().item(item)
+    );
+  }
+
+  /**
+   * Builds a score function
+   *
+   * @param uniFn The function to build an Uni with one item
+   * @since 1.0.0
+   */
+  FourByFourScore(final Function<Integer, Uni<Integer>> uniFn) {
+    this(
+      uniFn,
       Map.of(
         1, x -> x == 3 || x == 4,
         2, x -> x == 5,
         3, x -> x == 6,
         5, x -> x == 7,
         11, x -> x >= 8
-      )
-    );
+      ));
   }
 
-  private FourByFourScore(final Map<Integer, Predicate<Integer>> scoreMap) {
+  private FourByFourScore(
+    final Function<Integer, Uni<Integer>> uniFn,
+    final Map<Integer, Predicate<Integer>> scoreMap
+  ) {
+    this.uniFn = uniFn;
     this.scoreMap = scoreMap;
   }
 
   @Override
-  public Integer apply(final Dice<T> dice) {
-    var size = dice.values().size();
-    return scoreMap.entrySet()
-      .stream()
-      .filter(entry -> entry.getValue().test(size))
-      .findAny()
-      .map(Map.Entry::getKey)
-      .orElse(0);
+  public Uni<Integer> score(final Dice<T> word) {
+    var size = word.values().size();
+    return uniFn.apply(
+      scoreMap.entrySet()
+        .stream()
+        .filter(entry -> entry.getValue().test(size))
+        .findAny()
+        .map(Map.Entry::getKey)
+        .orElse(0)
+    );
   }
 
+  private final Function<Integer, Uni<Integer>> uniFn;
   private final Map<Integer, Predicate<Integer>> scoreMap;
 }
