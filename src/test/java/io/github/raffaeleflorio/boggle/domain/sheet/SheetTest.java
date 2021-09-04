@@ -26,7 +26,7 @@ class SheetTest {
   void testWord() {
     assertThat(
       new Sheet.Fake<>().word(new Dice.Fake<>()),
-      emits(nullValue(Void.class))
+      emits(nullValue())
     );
   }
 
