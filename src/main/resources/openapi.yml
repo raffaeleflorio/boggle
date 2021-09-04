@@ -235,13 +235,13 @@ components:
       required:
         - size
         - lang
-        - dice
+        - layout
       properties:
         size:
           $ref: '#/components/schemas/Size'
         lang:
           $ref: '#/components/schemas/Lang'
-        dice:
+        layout:
           $ref: '#/components/schemas/Dice'
     Score:
       type: array
