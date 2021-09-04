@@ -4,6 +4,7 @@ import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.github.raffaeleflorio.boggle.domain.sandtimer.SandTimer;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import static io.github.raffaeleflorio.boggle.hamcrest.IsThrowedWithMessage.throwsWithMessage;
@@ -51,7 +52,7 @@ class SandTimerSheetTest {
     assertThat(
       () -> new SandTimerSheet<>(
         new Sheet.Fake<>(UUID.randomUUID()),
-        new SandTimer.Fake(true)
+        Instant.EPOCH
       ).description(),
       throwsWithMessage(IllegalStateException.class, "Deadline reached")
     );

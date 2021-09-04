@@ -3,9 +3,11 @@ package io.github.raffaeleflorio.boggle.domain.sheet;
 import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.github.raffaeleflorio.boggle.domain.sandtimer.SandTimer;
+import io.github.raffaeleflorio.boggle.domain.sandtimer.SimpleSandTimer;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
+import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -16,6 +18,17 @@ import java.util.function.Supplier;
  * @since 1.0.0
  */
 public final class SandTimerSheet<T> implements Sheet<T> {
+  /**
+   * Builds a sand timer sheet
+   *
+   * @param origin   The sheet to decorate
+   * @param deadline The deadline
+   * @since 1.0.0
+   */
+  public SandTimerSheet(final Sheet<T> origin, final Instant deadline) {
+    this(origin, new SimpleSandTimer(deadline, Instant::now));
+  }
+
   /**
    * Builds a sand timer sheet
    *
