@@ -75,6 +75,26 @@ paths:
       tags:
         - match
         - organizer
+  /matches/{match}/sheet:
+    post:
+      summary: Joins a match
+      operationId: joinMatch
+      parameters:
+        - $ref: '#/components/parameters/Match'
+      requestBody:
+        $ref: '#/components/requestBodies/Player'
+      responses:
+        200:
+          description: Match joined
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sheet'
+        404:
+          $ref: '#/components/responses/MatchNotFound'
+      tags:
+        - match
+        - player
   /matches/{match}/score:
     get:
       summary: Builds the final match score
@@ -188,6 +208,17 @@ components:
             properties:
               dice:
                 $ref: '#/components/schemas/Dice'
+    Player:
+      description: A player
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                $ref: '#/components/schemas/Id'
   parameters:
     Match:
       name: match
@@ -224,8 +255,11 @@ components:
     Sheet:
       type: object
       required:
+        - id
         - words
       properties:
+        id:
+          $ref: '#/components/schemas/Id'
         words:
           type: array
           items:
@@ -268,4 +302,4 @@ components:
         players:
           type: array
           items:
-            $ref: '#/components/schemas/Id'
+            $ref: '#/components/schemas/Player'
