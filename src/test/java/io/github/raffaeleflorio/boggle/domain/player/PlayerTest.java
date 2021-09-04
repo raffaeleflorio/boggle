@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.nullValue;
 class PlayerTest {
   @Test
   void testId() {
-    var expected = UUID.fromString("6b47aefc-85e6-4125-b930-dd15e9227377");
+    var expected = UUID.randomUUID();
     assertThat(
       new Player.Fake<>(expected).id(),
       equalTo(expected)
@@ -31,7 +31,7 @@ class PlayerTest {
 
   @Test
   void testCustomSheet() {
-    var expected = UUID.fromString("6b47aefc-85e6-4125-b930-dd15e9227377");
+    var expected = UUID.randomUUID();
     assertThat(
       new Player.Fake<>(
         UUID.randomUUID(),

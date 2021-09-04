@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.*;
 class SheetTest {
   @Test
   void testId() {
-    var expected = UUID.fromString("6b47aefc-85e6-4125-b930-dd15e9227377");
+    var expected = UUID.randomUUID();
     assertThat(
       new Sheet.Fake<>(expected).id(),
       equalTo(expected)
