@@ -1,6 +1,6 @@
 package io.github.raffaeleflorio.boggle.domain.vocabulary;
 
-import java.util.concurrent.Future;
+import io.smallrye.mutiny.Uni;
 
 /**
  * Set of words
@@ -16,5 +16,5 @@ public interface Vocabulary {
    * @return The asynchronous boolean
    * @since 1.0.0
    */
-  Future<Boolean> contains(CharSequence word);
+  Uni<Boolean> contains(CharSequence word);
 }
