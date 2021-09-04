@@ -1,5 +1,6 @@
 package io.github.raffaeleflorio.boggle.domain.sheet;
 
+import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -47,6 +48,13 @@ public interface Sheet<T> {
    */
   Uni<Void> word(Dice<T> word);
 
+  /**
+   * Builds the sheet description
+   *
+   * @return The description
+   * @since 1.0.0
+   */
+  Description description();
 
   /**
    * A {@link Sheet} useful for testing purpose
@@ -70,21 +78,28 @@ public interface Sheet<T> {
      * @since 1.0.0
      */
     public Fake(final UUID id) {
-      this(id, Multi.createFrom().empty(), Multi.createFrom().empty());
+      this(id, Multi.createFrom().empty(), Multi.createFrom().empty(), new Description.Fake());
     }
 
     /**
      * Builds a fake
      *
-     * @param id     The id
-     * @param words  The words
-     * @param unique The  unique word
+     * @param id          The id
+     * @param words       The words
+     * @param unique      The  unique word
+     * @param description The description
      * @since 1.0.0
      */
-    public Fake(final UUID id, final Multi<Dice<T>> words, final Multi<Dice<T>> unique) {
+    public Fake(
+      final UUID id,
+      final Multi<Dice<T>> words,
+      final Multi<Dice<T>> unique,
+      final Description description
+    ) {
       this.id = id;
       this.words = words;
       this.unique = unique;
+      this.description = description;
     }
 
     @Override
@@ -107,8 +122,14 @@ public interface Sheet<T> {
       return Uni.createFrom().voidItem();
     }
 
+    @Override
+    public Description description() {
+      return description;
+    }
+
     private final UUID id;
     private final Multi<Dice<T>> words;
     private final Multi<Dice<T>> unique;
+    private final Description description;
   }
 }

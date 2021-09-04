@@ -1,5 +1,6 @@
 package io.github.raffaeleflorio.boggle.infrastructure.sheet;
 
+import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,7 @@ class InMemorySheetsTest {
   @Test
   void testSheetCreation() {
     assertThat(
-      new InMemorySheets<>().sheet(),
+      new InMemorySheets<>().sheet(new Description.Fake()),
       emits(notNullValue())
     );
   }
@@ -27,7 +28,9 @@ class InMemorySheetsTest {
     assertThat(
       new InMemorySheets<>(
         new ConcurrentHashMap<>(
-          Map.of(existingSheet, new Sheet.Fake<>())
+          Map.of(
+            existingSheet, Map.entry(new Sheet.Fake<>(), new Description.Fake())
+          )
         )
       ).sheet(existingSheet),
       emits(notNullValue())

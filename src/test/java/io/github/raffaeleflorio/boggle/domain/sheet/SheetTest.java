@@ -1,5 +1,6 @@
 package io.github.raffaeleflorio.boggle.domain.sheet;
 
+import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.github.raffaeleflorio.boggle.hamcrest.AreEmitted;
 import io.smallrye.mutiny.Multi;
@@ -48,7 +49,8 @@ class SheetTest {
           new Dice.Fake<>(List.of(2, 43)),
           new Dice.Fake<>(List.of(3, 44))
         ),
-        Multi.createFrom().empty()
+        Multi.createFrom().empty(),
+        new Description.Fake()
       ).words().onItem().transform(Dice::values),
       AreEmitted.emits(
         contains(
@@ -66,13 +68,27 @@ class SheetTest {
       new Sheet.Fake<>(
         UUID.randomUUID(),
         Multi.createFrom().empty(),
-        Multi.createFrom().items(new Dice.Fake<>(List.of("UNIQUE")))
+        Multi.createFrom().items(new Dice.Fake<>(List.of("UNIQUE"))),
+        new Description.Fake()
       ).words(new Sheet.Fake<>()).onItem().transform(Dice::values),
       AreEmitted.emits(
         contains(
           List.of("UNIQUE")
         )
       )
+    );
+  }
+
+  @Test
+  void testDescription() {
+    assertThat(
+      new Sheet.Fake<>(
+        UUID.randomUUID(),
+        Multi.createFrom().empty(),
+        Multi.createFrom().empty(),
+        new Description.Fake("existing", List.of("feature", "value"))
+      ).description().feature("existing"),
+      contains("feature", "value")
     );
   }
 }

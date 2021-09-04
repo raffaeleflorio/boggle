@@ -1,5 +1,6 @@
 package io.github.raffaeleflorio.boggle.infrastructure.sheet;
 
+import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
 import io.smallrye.mutiny.Multi;
@@ -17,12 +18,12 @@ final class InMemorySheet<T> implements Sheet<T> {
   /**
    * Builds an in memory sheet
    *
-   * @param id The id
+   * @param description The description
    * @since 1.0.0
    */
-  InMemorySheet(final UUID id) {
+  InMemorySheet(final Description description) {
     this(
-      id,
+      description,
       Collections.synchronizedSet(new HashSet<>())
     );
   }
@@ -30,31 +31,31 @@ final class InMemorySheet<T> implements Sheet<T> {
   /**
    * Builds an in memory sheet
    *
-   * @param id    The id
-   * @param words The word set
+   * @param description The description
+   * @param words       The word set
    * @since 1.0.0
    */
-  InMemorySheet(final UUID id, final Set<Dice<T>> words) {
-    this(id, words, (o1, o2) -> o1.values().equals(o2.values()) ? 0 : 1);
+  InMemorySheet(final Description description, final Set<Dice<T>> words) {
+    this(description, words, (o1, o2) -> o1.values().equals(o2.values()) ? 0 : 1);
   }
 
   /**
    * Builds an in memory sheet
    *
-   * @param id          The id
+   * @param description The description
    * @param words       The word set
    * @param equalityCmp The equality comparator
    * @since 1.0.0
    */
-  InMemorySheet(final UUID id, final Set<Dice<T>> words, final Comparator<Dice<T>> equalityCmp) {
-    this.id = id;
+  InMemorySheet(final Description description, final Set<Dice<T>> words, final Comparator<Dice<T>> equalityCmp) {
+    this.description = description;
     this.words = words;
     this.equalityCmp = equalityCmp;
   }
 
   @Override
   public UUID id() {
-    return id;
+    return UUID.fromString(description.feature("id").get(0).toString());
   }
 
   @Override
@@ -82,7 +83,12 @@ final class InMemorySheet<T> implements Sheet<T> {
     return Uni.createFrom().voidItem();
   }
 
-  private final UUID id;
+  @Override
+  public Description description() {
+    return description;
+  }
+
+  private final Description description;
   private final Set<Dice<T>> words;
   private final Comparator<Dice<T>> equalityCmp;
 }

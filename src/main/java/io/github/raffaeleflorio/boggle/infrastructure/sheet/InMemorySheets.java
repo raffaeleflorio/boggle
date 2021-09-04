@@ -1,9 +1,12 @@
 package io.github.raffaeleflorio.boggle.infrastructure.sheet;
 
+import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
 import io.github.raffaeleflorio.boggle.domain.sheet.Sheets;
 import io.smallrye.mutiny.Uni;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -32,7 +35,7 @@ public final class InMemorySheets<T> implements Sheets<T> {
    * @param map The backed map
    * @since 1.0.0
    */
-  public InMemorySheets(final ConcurrentMap<UUID, Sheet<T>> map) {
+  InMemorySheets(final ConcurrentMap<UUID, Map.Entry<Sheet<T>, Description>> map) {
     this(map, UUID::randomUUID);
   }
 
@@ -43,7 +46,7 @@ public final class InMemorySheets<T> implements Sheets<T> {
    * @param randomId The supplier of random UUID
    * @since 1.0.0
    */
-  InMemorySheets(final ConcurrentMap<UUID, Sheet<T>> map, final Supplier<UUID> randomId) {
+  InMemorySheets(final ConcurrentMap<UUID, Map.Entry<Sheet<T>, Description>> map, final Supplier<UUID> randomId) {
     this(map, randomId, InMemorySheet::new);
   }
 
@@ -56,9 +59,9 @@ public final class InMemorySheets<T> implements Sheets<T> {
    * @since 1.0.0
    */
   InMemorySheets(
-    final ConcurrentMap<UUID, Sheet<T>> map,
+    final ConcurrentMap<UUID, Map.Entry<Sheet<T>, Description>> map,
     final Supplier<UUID> randomId,
-    final Function<UUID, Sheet<T>> sheetFn
+    final Function<Description, Sheet<T>> sheetFn
   ) {
     this.map = map;
     this.randomId = randomId;
@@ -66,18 +69,23 @@ public final class InMemorySheets<T> implements Sheets<T> {
   }
 
   @Override
-  public Uni<Sheet<T>> sheet() {
-    Sheet<T> sheet = sheetFn.apply(randomId.get());
-    map.put(sheet.id(), sheet);
+  public Uni<Sheet<T>> sheet(final Description description) {
+    Sheet<T> sheet = sheetFn.apply(
+      description.feature("id", List.of(randomId.get().toString()))
+    );
+    map.put(sheet.id(), Map.entry(sheet, description));
     return Uni.createFrom().item(sheet);
   }
 
   @Override
   public Uni<Sheet<T>> sheet(final UUID id) {
-    return Uni.createFrom().item(map.get(id));
+    return Uni
+      .createFrom()
+      .item(map.get(id))
+      .onItem().ifNotNull().transform(Map.Entry::getKey);
   }
 
-  private final ConcurrentMap<UUID, Sheet<T>> map;
+  private final ConcurrentMap<UUID, Map.Entry<Sheet<T>, Description>> map;
   private final Supplier<UUID> randomId;
-  private final Function<UUID, Sheet<T>> sheetFn;
+  private final Function<Description, Sheet<T>> sheetFn;
 }

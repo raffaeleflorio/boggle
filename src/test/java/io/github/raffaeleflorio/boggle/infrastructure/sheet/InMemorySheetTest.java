@@ -1,5 +1,6 @@
 package io.github.raffaeleflorio.boggle.infrastructure.sheet;
 
+import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.github.raffaeleflorio.boggle.hamcrest.AreEmitted;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,9 @@ class InMemorySheetTest {
   void testId() {
     var expected = UUID.randomUUID();
     assertThat(
-      new InMemorySheet<>(expected).id(),
+      new InMemorySheet<>(
+        new Description.Fake("id", expected.toString())
+      ).id(),
       equalTo(expected)
     );
   }
@@ -25,7 +28,7 @@ class InMemorySheetTest {
   @Test
   void testWord() {
     assertThat(
-      new InMemorySheet<>(UUID.randomUUID()).word(new Dice.Fake<>()),
+      new InMemorySheet<>(new Description.Fake()).word(new Dice.Fake<>()),
       emits(nullValue())
     );
   }
@@ -34,7 +37,7 @@ class InMemorySheetTest {
   void testWordsWithoutDuplicates() {
     assertThat(
       new InMemorySheet<>(
-        UUID.randomUUID(),
+        new Description.Fake(),
         Set.of(
           new Dice.Fake<>(
             List.of(1, 2, 3)
@@ -52,14 +55,14 @@ class InMemorySheetTest {
   void testUniqueWords() {
     assertThat(
       new InMemorySheet<>(
-        UUID.randomUUID(),
+        new Description.Fake(),
         Set.of(
           new Dice.Fake<>(List.of(1)),
           new Dice.Fake<>(List.of(1, 2, 3))
         )
       ).words(
         new InMemorySheet<>(
-          UUID.randomUUID(),
+          new Description.Fake(),
           Set.of(
             new Dice.Fake<>(List.of(1, 2, 3))
           )
@@ -77,15 +80,25 @@ class InMemorySheetTest {
   void testUniqueWordsWithEmptyOther() {
     assertThat(
       new InMemorySheet<>(
-        UUID.randomUUID(),
+        new Description.Fake(),
         Set.of(
           new Dice.Fake<>(List.of(1)),
           new Dice.Fake<>(List.of(1, 2, 3))
         )
       ).words(
-        new InMemorySheet<>(UUID.randomUUID())
+        new InMemorySheet<>(new Description.Fake())
       ).onItem().transform(Dice::values),
       AreEmitted.emits(hasSize(2))
+    );
+  }
+
+  @Test
+  void testDescription() {
+    assertThat(
+      new InMemorySheet<>(new Description.Fake("fake", "value"))
+        .description()
+        .feature("fake"),
+      contains("value")
     );
   }
 }

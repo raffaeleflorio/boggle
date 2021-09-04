@@ -1,5 +1,6 @@
 package io.github.raffaeleflorio.boggle.domain.sheet;
 
+import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.smallrye.mutiny.Uni;
 
 import java.util.UUID;
@@ -13,12 +14,13 @@ import java.util.UUID;
  */
 public interface Sheets<T> {
   /**
-   * Builds asynchronously a new sheet
+   * Builds asynchronously a new sheet by its description
    *
+   * @param description The sheet description
    * @return The sheet
    * @since 1.0.0
    */
-  Uni<Sheet<T>> sheet();
+  Uni<Sheet<T>> sheet(Description description);
 
   /**
    * Builds asynchronously a sheet from its id
