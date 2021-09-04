@@ -15,8 +15,8 @@ class GridTest {
     @Test
     void testDescription() {
       assertThat(
-        new Grid.Fake<>().description().feature("any"),
-        empty()
+        new Grid.Fake<>().description().feature("id"),
+        contains("fake grid")
       );
     }
 

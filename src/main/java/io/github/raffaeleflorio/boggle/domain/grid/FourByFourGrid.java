@@ -1,5 +1,7 @@
 package io.github.raffaeleflorio.boggle.domain.grid;
 
+import io.github.raffaeleflorio.boggle.domain.description.Description;
+import io.github.raffaeleflorio.boggle.domain.description.SimpleDescription;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.github.raffaeleflorio.boggle.domain.dice.StrictDiceCount;
 import io.github.raffaeleflorio.boggle.domain.dice.ValidatedDice;
@@ -9,7 +11,6 @@ import io.github.raffaeleflorio.boggle.domain.graph.UndirectedGraph;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -38,38 +39,31 @@ public final class FourByFourGrid<T> implements Grid<T> {
    * @param graph An empty graph
    * @since 1.0.0
    */
-  FourByFourGrid(final Dice<T> dice, final Graph<T> graph) {
-    this(dice, graph, PairDescription::new);
+  public FourByFourGrid(final Dice<T> dice, final Graph<T> graph) {
+    this(dice, graph, new SimpleDescription());
   }
 
   /**
    * Builds a 4x4 grid
    *
-   * @param dice          The backed dice
-   * @param graph         An empty graph
-   * @param descriptionFn A function to build a description
+   * @param dice    The backed dice
+   * @param graph   An empty graph
+   * @param initial An initial empty description
    * @since 1.0.0
    */
-  FourByFourGrid(
-    final Dice<T> dice,
-    final Graph<T> graph,
-    final BiFunction<CharSequence, CharSequence, Description> descriptionFn
-  ) {
+  FourByFourGrid(final Dice<T> dice, final Graph<T> graph, final Description initial) {
     this(
       new StrictDiceCount<>(dice, 16),
       new UndirectedGraph<>(graph),
-      descriptionFn
+      initial
     );
   }
 
-  private FourByFourGrid(
-    final ValidatedDice<T> dice,
-    final Graph<T> graph,
-    final BiFunction<CharSequence, CharSequence, Description> descriptionFn
+  private FourByFourGrid(final ValidatedDice<T> dice, final Graph<T> graph, final Description initial
   ) {
     this.dice = dice;
     this.graph = graph;
-    this.descriptionFn = descriptionFn;
+    this.initial = initial;
   }
 
   @Override
@@ -147,10 +141,10 @@ public final class FourByFourGrid<T> implements Grid<T> {
 
   @Override
   public Description description() {
-    return descriptionFn.apply("size", "4x4");
+    return initial.feature("size", List.of("4x4"));
   }
 
   private final ValidatedDice<T> dice;
   private final Graph<T> graph;
-  private final BiFunction<CharSequence, CharSequence, Description> descriptionFn;
+  private final Description initial;
 }

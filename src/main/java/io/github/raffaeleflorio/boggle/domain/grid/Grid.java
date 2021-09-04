@@ -1,5 +1,6 @@
 package io.github.raffaeleflorio.boggle.domain.grid;
 
+import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 
 import java.util.Collection;
@@ -19,6 +20,7 @@ public interface Grid<T> extends Dice<T> {
    * @return The shuffled grid
    * @since 1.0.0
    */
+  @Override
   Grid<T> shuffled();
 
   /**
@@ -72,7 +74,7 @@ public interface Grid<T> extends Dice<T> {
      * @since 1.0.0
      */
     public Fake(final Dice<T> dice, final Predicate<Dice<T>> compatibleFn) {
-      this(dice, compatibleFn, new Description.Fake());
+      this(dice, compatibleFn, new Description.Fake("id", "fake grid"));
     }
 
     /**
