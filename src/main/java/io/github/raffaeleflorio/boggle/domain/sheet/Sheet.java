@@ -78,23 +78,34 @@ public interface Sheet<T> {
      * @since 1.0.0
      */
     public Fake(final UUID id) {
-      this(id, Multi.createFrom().empty(), Multi.createFrom().empty(), new Description.Fake());
+      this(id, new Description.Fake());
+    }
+
+    /**
+     * Builds an empty fake
+     *
+     * @param id          The id
+     * @param description The description
+     * @since 1.0.0
+     */
+    public Fake(final UUID id, final Description description) {
+      this(id, description, Multi.createFrom().empty(), Multi.createFrom().empty());
     }
 
     /**
      * Builds a fake
      *
      * @param id          The id
+     * @param description The description
      * @param words       The words
      * @param unique      The  unique word
-     * @param description The description
      * @since 1.0.0
      */
     public Fake(
       final UUID id,
+      final Description description,
       final Multi<Dice<T>> words,
-      final Multi<Dice<T>> unique,
-      final Description description
+      final Multi<Dice<T>> unique
     ) {
       this.id = id;
       this.words = words;
@@ -128,8 +139,8 @@ public interface Sheet<T> {
     }
 
     private final UUID id;
+    private final Description description;
     private final Multi<Dice<T>> words;
     private final Multi<Dice<T>> unique;
-    private final Description description;
   }
 }

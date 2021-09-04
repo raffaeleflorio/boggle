@@ -47,13 +47,13 @@ class SheetTest {
       assertThat(
         new Sheet.Fake<>(
           UUID.randomUUID(),
+          new Description.Fake(),
           Multi.createFrom().items(
             new Dice.Fake<>(List.of(1, 42)),
             new Dice.Fake<>(List.of(2, 43)),
             new Dice.Fake<>(List.of(3, 44))
           ),
-          Multi.createFrom().empty(),
-          new Description.Fake()
+          Multi.createFrom().empty()
         ).words().onItem().transform(Dice::values),
         AreEmitted.emits(
           contains(
@@ -70,9 +70,9 @@ class SheetTest {
       assertThat(
         new Sheet.Fake<>(
           UUID.randomUUID(),
+          new Description.Fake(),
           Multi.createFrom().empty(),
-          Multi.createFrom().items(new Dice.Fake<>(List.of("UNIQUE"))),
-          new Description.Fake()
+          Multi.createFrom().items(new Dice.Fake<>(List.of("UNIQUE")))
         ).words(new Sheet.Fake<>()).onItem().transform(Dice::values),
         AreEmitted.emits(
           contains(
@@ -87,8 +87,6 @@ class SheetTest {
       assertThat(
         new Sheet.Fake<>(
           UUID.randomUUID(),
-          Multi.createFrom().empty(),
-          Multi.createFrom().empty(),
           new Description.Fake("existing", List.of("feature", "value"))
         ).description().feature("existing"),
         contains("feature", "value")
