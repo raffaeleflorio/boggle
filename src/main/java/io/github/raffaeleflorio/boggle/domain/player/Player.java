@@ -22,7 +22,7 @@ public interface Player<T> {
   UUID id();
 
   /**
-   * Builds asynchronously a sheet asynchronously by its id
+   * Builds asynchronously a sheet by its id
    *
    * @param id The sheet id
    * @return The sheet
