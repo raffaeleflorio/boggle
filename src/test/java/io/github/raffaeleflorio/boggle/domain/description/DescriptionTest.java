@@ -34,4 +34,12 @@ class DescriptionTest {
       empty()
     );
   }
+
+  @Test
+  void testEmptyCtor() {
+    assertThat(
+      new Description.Fake().feature(""),
+      empty()
+    );
+  }
 }

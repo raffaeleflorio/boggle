@@ -37,6 +37,15 @@ public interface Description {
    */
   final class Fake implements Description {
     /**
+     * Builds a fake with empty name and empty value
+     *
+     * @since 1.0.0
+     */
+    public Fake() {
+      this("", List.of());
+    }
+
+    /**
      * Builds a fake
      *
      * @param name  The feature name
