@@ -30,4 +30,52 @@ public interface Sheets<T> {
    * @since 1.0.0
    */
   Uni<Sheet<T>> sheet(UUID id);
+
+  /**
+   * A {@link Sheets} useful for testing
+   *
+   * @param <T> The word type
+   * @since 1.0.0
+   */
+  final class Fake<T> implements Sheets<T> {
+    /**
+     * Builds a fake with one element
+     *
+     * @since 1.0.0
+     */
+    public Fake() {
+      this(new Sheet.Fake<>());
+    }
+
+    /**
+     * Builds a fake with one element
+     *
+     * @since 1.0.0
+     */
+    public Fake(final Sheet<T> sheet) {
+      this(Uni.createFrom().item(sheet));
+    }
+
+    /**
+     * Builds a fake with one element
+     *
+     * @param sheet The sheet
+     * @since 1.0.0
+     */
+    public Fake(final Uni<Sheet<T>> sheet) {
+      this.sheet = sheet;
+    }
+
+    @Override
+    public Uni<Sheet<T>> sheet(final Description description) {
+      return sheet;
+    }
+
+    @Override
+    public Uni<Sheet<T>> sheet(final UUID id) {
+      return sheet;
+    }
+
+    private final Uni<Sheet<T>> sheet;
+  }
 }
