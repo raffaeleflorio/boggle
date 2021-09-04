@@ -1,0 +1,271 @@
+openapi: '3.0.3'
+
+info:
+  title: Boggle HTTP API
+  version: 1.0.0-SNAPSHOT
+  description: Boggle is a word game where the objective is to find the as many words as possibile in a grid
+
+externalDocs:
+  url: https://en.wikipedia.org/wiki/Boggle
+  description: Wikipedia about Boggle
+
+tags:
+  - name: match
+    description: Endpoints about match
+  - name: organizer
+    description: Endpoints for organizer
+  - name: player
+    description: Endpoints for player
+
+paths:
+  /matches:
+    post:
+      summary: Creates a match
+      operationId: createMatch
+      security:
+        - xApiKey: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/MatchSpec'
+      responses:
+        200:
+          description: Match created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+        400:
+          description: Bad specification
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - match
+        - organizer
+  /matches/{match}:
+    get:
+      summary: Gets a match
+      operationId: getMatch
+      parameters:
+        - $ref: '#/components/parameters/Match'
+      responses:
+        200:
+          description: Match found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+        404:
+          $ref: '#/components/responses/MatchNotFound'
+      tags:
+        - match
+        - player
+    delete:
+      summary: Deletes a match
+      operationId: deleteMatch
+      security:
+        - xApiKey: [ ]
+      parameters:
+        - $ref: '#/components/parameters/Match'
+      responses:
+        204:
+          description: Match deleted
+        404:
+          $ref: '#/components/responses/MatchNotFound'
+      tags:
+        - match
+        - organizer
+  /matches/{match}/score:
+    get:
+      summary: Builds the final match score
+      operationId: getMatchScore
+      parameters:
+        - $ref: '#/components/parameters/Match'
+      responses:
+        200:
+          description: Score built
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Score'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/ScoreNotFound'
+      tags:
+        - match
+        - player
+  /sheets/{sheet}:
+    post:
+      summary: Writes a word
+      operationId: writeWord
+      parameters:
+        - $ref: '#/components/parameters/Sheet'
+      requestBody:
+        $ref: '#/components/requestBodies/Word'
+      responses:
+        204:
+          description: Word written
+        404:
+          $ref: '#/components/responses/SheetNotFound'
+        410:
+          $ref: '#/components/responses/SheetExpired'
+        429:
+          $ref: '#/components/responses/TooManyAttempts'
+      tags:
+        - player
+    get:
+      summary: Gets the sheet
+      parameters:
+        - $ref: '#/components/parameters/Sheet'
+      responses:
+        200:
+          description: Sheet found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sheet'
+        404:
+          $ref: '#/components/responses/SheetNotFound'
+        410:
+          $ref: '#/components/responses/SheetExpired'
+      tags:
+        - player
+
+components:
+  securitySchemes:
+    xApiKey:
+      type: apiKey
+      name: X-API-KEY
+      in: header
+  responses:
+    Unauthorized:
+      description: Missing API key
+    Forbidden:
+      description: Expired API key
+    MatchNotFound:
+      description: Match didn't found
+    ScoreNotFound:
+      description: Score didn't found
+    SheetExpired:
+      description: Sheet expired
+    SheetNotFound:
+      description: Sheet didn't found
+    TooManyAttempts:
+      description: Too many attempts
+  requestBodies:
+    MatchSpec:
+      description: A specification to create a match
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - lang
+              - size
+              - duration
+            properties:
+              lang:
+                $ref: '#/components/schemas/Lang'
+              size:
+                $ref: '#/components/schemas/Size'
+              duration:
+                description: Duration in minutes
+                type: integer
+                minimum: 1
+                maximum: 10
+                default: 3
+    Word:
+      description: A word
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - dice
+            properties:
+              dice:
+                $ref: '#/components/schemas/Dice'
+  parameters:
+    Match:
+      name: match
+      in: path
+      required: true
+      description: The match id
+      schema:
+        $ref: '#/components/schemas/Id'
+    Sheet:
+      name: sheet
+      in: path
+      required: true
+      description: The sheet id
+      schema:
+        $ref: '#/components/schemas/Id'
+  schemas:
+    Id:
+      type: string
+      format: uuid
+    Lang:
+      type: string
+      example: it
+    Size:
+      type: string
+      example: '4x4'
+    Deadline:
+      type: string
+      format: date-time
+    Dice:
+      type: array
+      items:
+        type: string
+        example: [ W, O, R, D ]
+    Sheet:
+      type: object
+      required:
+        - words
+      properties:
+        words:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dice'
+    Grid:
+      type: object
+      required:
+        - size
+        - lang
+        - dice
+      properties:
+        size:
+          $ref: '#/components/schemas/Size'
+        lang:
+          $ref: '#/components/schemas/Lang'
+        dice:
+          $ref: '#/components/schemas/Dice'
+    Score:
+      type: array
+      items:
+        type: object
+        description: Map players id to their score
+        additionalProperties:
+          type: integer
+          minimum: 1
+    Match:
+      type: object
+      required:
+        - id
+        - grid
+        - deadline
+        - players
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        grid:
+          $ref: '#/components/schemas/Grid'
+        deadline:
+          $ref: '#/components/schemas/Deadline'
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
