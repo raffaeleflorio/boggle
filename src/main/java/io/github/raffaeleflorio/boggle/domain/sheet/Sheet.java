@@ -46,4 +46,69 @@ public interface Sheet<T> {
    * @since 1.0.0
    */
   Uni<Void> word(Dice<T> word);
+
+
+  /**
+   * A {@link Sheet} useful for testing purpose
+   *
+   * @param <T>
+   */
+  final class Fake<T> implements Sheet<T> {
+    /**
+     * Builds an empty fake with random id
+     *
+     * @since 1.0.0
+     */
+    public Fake() {
+      this(UUID.randomUUID());
+    }
+
+    /**
+     * Builds an empty fake
+     *
+     * @param id The id
+     * @since 1.0.0
+     */
+    public Fake(final UUID id) {
+      this(id, Multi.createFrom().empty(), Multi.createFrom().empty());
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param id     The id
+     * @param words  The words
+     * @param unique The  unique word
+     * @since 1.0.0
+     */
+    public Fake(final UUID id, final Multi<Dice<T>> words, final Multi<Dice<T>> unique) {
+      this.id = id;
+      this.words = words;
+      this.unique = unique;
+    }
+
+    @Override
+    public UUID id() {
+      return id;
+    }
+
+    @Override
+    public Multi<Dice<T>> words() {
+      return words;
+    }
+
+    @Override
+    public Multi<Dice<T>> words(final Sheet<T> other) {
+      return unique;
+    }
+
+    @Override
+    public Uni<Void> word(final Dice<T> word) {
+      return Uni.createFrom().voidItem();
+    }
+
+    private final UUID id;
+    private final Multi<Dice<T>> words;
+    private final Multi<Dice<T>> unique;
+  }
 }
