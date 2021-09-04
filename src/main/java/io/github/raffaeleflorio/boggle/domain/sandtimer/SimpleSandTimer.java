@@ -38,7 +38,7 @@ public final class SimpleSandTimer implements SandTimer {
    * @param deadline The deadline
    * @since 1.0.0
    */
-  SimpleSandTimer(final Instant deadline, final Supplier<Instant> now) {
+  public SimpleSandTimer(final Instant deadline, final Supplier<Instant> now) {
     this.deadline = deadline;
     this.now = now;
   }
