@@ -21,24 +21,18 @@ public final class SandTimerSheets<T> implements Sheets<T> {
    * @since 1.0.0
    */
   public SandTimerSheets(final Sheets<T> origin) {
-    this(origin, new RuntimeException("Deadline reached"), SandTimerSheet::new);
+    this(origin, SandTimerSheet::new);
   }
 
   /**
    * Builds a repo
    *
-   * @param origin    The sheets to decorate
-   * @param exception The exception to throw
-   * @param sheetFn   The function to build sheet with deadline
+   * @param origin  The sheets to decorate
+   * @param sheetFn The function to build sheet with deadline
    * @since 1.0.0
    */
-  SandTimerSheets(
-    final Sheets<T> origin,
-    final RuntimeException exception,
-    final BiFunction<Sheet<T>, Instant, Sheet<T>> sheetFn
-  ) {
+  public SandTimerSheets(final Sheets<T> origin, final BiFunction<Sheet<T>, Instant, Sheet<T>> sheetFn) {
     this.origin = origin;
-    this.exception = exception;
     this.sheetFn = sheetFn;
   }
 
@@ -62,6 +56,5 @@ public final class SandTimerSheets<T> implements Sheets<T> {
   }
 
   private final Sheets<T> origin;
-  private final RuntimeException exception;
   private final BiFunction<Sheet<T>, Instant, Sheet<T>> sheetFn;
 }
