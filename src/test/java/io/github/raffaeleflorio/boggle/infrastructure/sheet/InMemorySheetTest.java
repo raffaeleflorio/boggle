@@ -72,4 +72,20 @@ class InMemorySheetTest {
       )
     );
   }
+
+  @Test
+  void testUniqueWordsWithEmptyOther() {
+    assertThat(
+      new InMemorySheet<>(
+        UUID.randomUUID(),
+        Set.of(
+          new Dice.Fake<>(List.of(1)),
+          new Dice.Fake<>(List.of(1, 2, 3))
+        )
+      ).words(
+        new InMemorySheet<>(UUID.randomUUID())
+      ).onItem().transform(Dice::values),
+      AreEmitted.emits(hasSize(2))
+    );
+  }
 }

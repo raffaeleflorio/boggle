@@ -65,15 +65,15 @@ final class InMemorySheet<T> implements Sheet<T> {
   @Override
   public Multi<Dice<T>> words(final Sheet<T> other) {
     return words().select().when(myWord -> other
-      .words().map(otherWord -> different(myWord, otherWord)).filter(Boolean::booleanValue)
-      .collect().first()
-      .onItem().ifNotNull().transform(x -> true)
-      .onItem().ifNull().continueWith(false)
+      .words().map(otherWord -> equals(myWord, otherWord))
+      .filter(Boolean::booleanValue).collect().first()
+      .onItem().ifNotNull().transform(x -> false)
+      .onItem().ifNull().continueWith(true)
     );
   }
 
-  private Boolean different(final Dice<T> one, final Dice<T> two) {
-    return equalityCmp.compare(one, two) != 0;
+  private Boolean equals(final Dice<T> one, final Dice<T> two) {
+    return equalityCmp.compare(one, two) == 0;
   }
 
   @Override
