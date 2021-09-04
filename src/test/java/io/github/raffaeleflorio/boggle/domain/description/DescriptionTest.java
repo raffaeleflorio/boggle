@@ -6,6 +6,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 
 class DescriptionTest {
   @Test
@@ -23,6 +24,14 @@ class DescriptionTest {
         .feature("new", List.of("abc", "def"))
         .feature("new"),
       contains("abc", "def")
+    );
+  }
+
+  @Test
+  void testMissingFeature() {
+    assertThat(
+      new Description.Fake("name", "feature").feature("any"),
+      empty()
     );
   }
 }
