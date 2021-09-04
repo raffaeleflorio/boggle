@@ -1,6 +1,6 @@
 package io.github.raffaeleflorio.boggle.domain.dice;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.function.BiFunction;
 
 /**
@@ -47,7 +47,7 @@ public final class StrictDiceCount<T> implements ValidatedDice<T> {
   }
 
   @Override
-  public Collection<T> values() {
+  public List<T> values() {
     var values = origin.values();
     if (expected.equals(values.size())) {
       return values;

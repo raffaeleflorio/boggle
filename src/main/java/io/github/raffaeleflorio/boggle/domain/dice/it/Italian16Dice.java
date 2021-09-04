@@ -2,7 +2,6 @@ package io.github.raffaeleflorio.boggle.domain.dice.it;
 
 import io.github.raffaeleflorio.boggle.domain.dice.*;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -110,7 +109,7 @@ public final class Italian16Dice implements Dice<CharSequence> {
   }
 
   @Override
-  public Collection<CharSequence> values() {
+  public List<CharSequence> values() {
     return origin.values();
   }
 

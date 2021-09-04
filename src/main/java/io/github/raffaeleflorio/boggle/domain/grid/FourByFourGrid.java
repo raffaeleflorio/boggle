@@ -9,9 +9,7 @@ import io.github.raffaeleflorio.boggle.domain.graph.DFSGraph;
 import io.github.raffaeleflorio.boggle.domain.graph.Graph;
 import io.github.raffaeleflorio.boggle.domain.graph.UndirectedGraph;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -67,7 +65,7 @@ public final class FourByFourGrid<T> implements Grid<T> {
   }
 
   @Override
-  public Collection<T> values() {
+  public List<T> values() {
     return dice.values();
   }
 
@@ -78,7 +76,7 @@ public final class FourByFourGrid<T> implements Grid<T> {
 
   @Override
   public Boolean compatible(final Dice<T> word) {
-    return compatible(asList(word.values()));
+    return compatible(word.values());
   }
 
   private Boolean compatible(final List<T> word) {
@@ -89,7 +87,7 @@ public final class FourByFourGrid<T> implements Grid<T> {
   }
 
   private Graph<T> asGraph() {
-    var values = asList(values());
+    var values = values();
     return graph
       .edge(values.get(0), values.get(1))
       .edge(values.get(0), values.get(4))
@@ -133,10 +131,6 @@ public final class FourByFourGrid<T> implements Grid<T> {
       .edge(values.get(12), values.get(13))
       .edge(values.get(13), values.get(14))
       .edge(values.get(14), values.get(15));
-  }
-
-  private <X> List<X> asList(final Collection<X> from) {
-    return from.stream().collect(Collectors.toUnmodifiableList());
   }
 
   @Override

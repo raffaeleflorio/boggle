@@ -58,7 +58,7 @@ public final class UnorderedDice<T> implements Dice<T> {
   }
 
   @Override
-  public Collection<T> values() {
+  public List<T> values() {
     return mappedDice(Die::value);
   }
 

@@ -3,7 +3,7 @@ package io.github.raffaeleflorio.boggle.domain.grid;
 import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -106,7 +106,7 @@ public interface Grid<T> extends Dice<T> {
     }
 
     @Override
-    public Collection<T> values() {
+    public List<T> values() {
       return dice.values();
     }
 

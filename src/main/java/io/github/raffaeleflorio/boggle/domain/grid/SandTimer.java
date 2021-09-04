@@ -5,7 +5,6 @@ import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -73,7 +72,7 @@ public final class SandTimer<T> implements Grid<T> {
   }
 
   @Override
-  public Collection<T> values() {
+  public List<T> values() {
     return beforeDeadline(origin::values);
   }
 

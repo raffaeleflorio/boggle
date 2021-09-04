@@ -1,6 +1,5 @@
 package io.github.raffaeleflorio.boggle.domain.dice;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
@@ -18,7 +17,7 @@ public interface Dice<T> {
    * @return The current values
    * @since 1.0.0
    */
-  Collection<T> values();
+  List<T> values();
 
   /**
    * Shuffles the dice
@@ -51,7 +50,7 @@ public interface Dice<T> {
      * @param values The values
      * @since 1.0.0
      */
-    public Fake(final Collection<T> values) {
+    public Fake(final List<T> values) {
       this(values, Function.identity());
     }
 
@@ -62,13 +61,13 @@ public interface Dice<T> {
      * @param nextFn The function used to builds the next value
      * @since 1.0.0
      */
-    public Fake(final Collection<T> values, final Function<Collection<T>, Collection<T>> nextFn) {
+    public Fake(final List<T> values, final Function<List<T>, List<T>> nextFn) {
       this.values = values;
       this.nextFn = nextFn;
     }
 
     @Override
-    public Collection<T> values() {
+    public List<T> values() {
       return values;
     }
 
@@ -77,7 +76,7 @@ public interface Dice<T> {
       return new Dice.Fake<>(nextFn.apply(values), nextFn);
     }
 
-    private final Collection<T> values;
-    private final Function<Collection<T>, Collection<T>> nextFn;
+    private final List<T> values;
+    private final Function<List<T>, List<T>> nextFn;
   }
 }
