@@ -1,6 +1,7 @@
 package io.github.raffaeleflorio.boggle.hamcrest;
 
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -10,17 +11,19 @@ import java.util.List;
 
 public final class AreEmitted<T> extends TypeSafeDiagnosingMatcher<Multi<T>> {
   public AreEmitted(final Matcher<? super List<T>> origin, final Duration duration) {
+    this(new IsEmitted<>(origin, duration));
+  }
+
+  public AreEmitted(final IsEmitted<? super List<T>> origin) {
     this.origin = origin;
-    this.duration = duration;
   }
 
   @Override
   protected boolean matchesSafely(final Multi<T> tMulti, final Description description) {
     var emitted = tMulti.collect().asList();
-    var isEmitted = new IsEmitted<>(origin, duration);
-    var matches = isEmitted.matches(emitted);
+    var matches = origin.matches(emitted);
     if (!matches) {
-      isEmitted.describeMismatch(emitted, description);
+      origin.describeMismatch(emitted, description);
     }
     return matches;
   }
@@ -38,6 +41,5 @@ public final class AreEmitted<T> extends TypeSafeDiagnosingMatcher<Multi<T>> {
     return new AreEmitted<>(matcher, duration);
   }
 
-  private final Matcher<? super List<T>> origin;
-  private final Duration duration;
+  private final Matcher<? extends Uni<? super List<T>>> origin;
 }
