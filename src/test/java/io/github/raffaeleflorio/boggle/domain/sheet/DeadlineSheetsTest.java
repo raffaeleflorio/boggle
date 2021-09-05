@@ -11,11 +11,11 @@ import static io.github.raffaeleflorio.boggle.hamcrest.IsEmitted.emits;
 import static io.github.raffaeleflorio.boggle.hamcrest.IsThrowedWithMessage.throwsWithMessage;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-class SandTimerSheetsTest {
+class DeadlineSheetsTest {
   @Test
   void testCreationOfExpiredSheet() {
     assertThat(
-      new SandTimerSheets<>(
+      new DeadlineSheets<>(
         new Sheets.Fake<>(
           x -> Uni.createFrom().nullItem(),
           description -> Uni.createFrom().item(new Sheet.Fake<>(UUID.randomUUID(), description))
@@ -30,7 +30,7 @@ class SandTimerSheetsTest {
   @Test
   void testBuildingOfExpiredSheet() {
     assertThat(
-      new SandTimerSheets<>(
+      new DeadlineSheets<>(
         new Sheets.Fake<>(
           id -> Uni.createFrom().item(
             new Sheet.Fake<>(id, new Description.Fake("deadline", "1970-01-01T00:00:00Z"))

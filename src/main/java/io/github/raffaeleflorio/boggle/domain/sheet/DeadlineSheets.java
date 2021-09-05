@@ -8,19 +8,20 @@ import java.util.UUID;
 import java.util.function.BiFunction;
 
 /**
- * {@link Sheets} built with expiration if present in description
+ * {@link Sheets} that understands deadline feature
  *
+ * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class SandTimerSheets<T> implements Sheets<T> {
+public final class DeadlineSheets<T> implements Sheets<T> {
   /**
    * Builds a repo
    *
    * @param origin The sheets to decorate
    * @since 1.0.0
    */
-  public SandTimerSheets(final Sheets<T> origin) {
+  public DeadlineSheets(final Sheets<T> origin) {
     this(origin, SandTimerSheet::new);
   }
 
@@ -31,7 +32,7 @@ public final class SandTimerSheets<T> implements Sheets<T> {
    * @param sheetFn The function to build sheet with deadline
    * @since 1.0.0
    */
-  public SandTimerSheets(final Sheets<T> origin, final BiFunction<Sheet<T>, Instant, Sheet<T>> sheetFn) {
+  public DeadlineSheets(final Sheets<T> origin, final BiFunction<Sheet<T>, Instant, Sheet<T>> sheetFn) {
     this.origin = origin;
     this.sheetFn = sheetFn;
   }
