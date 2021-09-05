@@ -14,7 +14,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * In memory {@link io.github.raffaeleflorio.boggle.domain.sheet.Sheets} implementation
+ * In memory {@link Sheets} implementation
  *
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0

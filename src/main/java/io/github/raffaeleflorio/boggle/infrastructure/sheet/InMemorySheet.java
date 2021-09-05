@@ -9,7 +9,7 @@ import io.smallrye.mutiny.Uni;
 import java.util.*;
 
 /**
- * An in memory {@link io.github.raffaeleflorio.boggle.domain.sheet.Sheet} implementation
+ * In memory {@link Sheet} implementation
  *
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
