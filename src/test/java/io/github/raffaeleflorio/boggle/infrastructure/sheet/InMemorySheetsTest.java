@@ -29,7 +29,7 @@ class InMemorySheetsTest {
       new InMemorySheets<>(
         new ConcurrentHashMap<>(
           Map.of(
-            existingSheet, Map.entry(new Sheet.Fake<>(), new Description.Fake())
+            existingSheet, new Sheet.Fake<>()
           )
         )
       ).sheet(existingSheet),

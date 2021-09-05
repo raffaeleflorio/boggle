@@ -35,7 +35,7 @@ public final class InMemorySheets<T> implements Sheets<T> {
    * @param map The backed map
    * @since 1.0.0
    */
-  InMemorySheets(final ConcurrentMap<UUID, Map.Entry<Sheet<T>, Description>> map) {
+  InMemorySheets(final ConcurrentMap<UUID, Sheet<T>> map) {
     this(map, UUID::randomUUID);
   }
 
@@ -46,7 +46,7 @@ public final class InMemorySheets<T> implements Sheets<T> {
    * @param randomId The supplier of random UUID
    * @since 1.0.0
    */
-  InMemorySheets(final ConcurrentMap<UUID, Map.Entry<Sheet<T>, Description>> map, final Supplier<UUID> randomId) {
+  InMemorySheets(final ConcurrentMap<UUID, Sheet<T>> map, final Supplier<UUID> randomId) {
     this(map, randomId, InMemorySheet::new);
   }
 
@@ -59,7 +59,7 @@ public final class InMemorySheets<T> implements Sheets<T> {
    * @since 1.0.0
    */
   InMemorySheets(
-    final ConcurrentMap<UUID, Map.Entry<Sheet<T>, Description>> map,
+    final ConcurrentMap<UUID, Sheet<T>> map,
     final Supplier<UUID> randomId,
     final Function<Description, Sheet<T>> sheetFn
   ) {
@@ -70,10 +70,11 @@ public final class InMemorySheets<T> implements Sheets<T> {
 
   @Override
   public Uni<Sheet<T>> sheet(final Description description) {
-    Sheet<T> sheet = sheetFn.apply(
+    var id = randomId.get();
+    var sheet = sheetFn.apply(
       description.feature("id", List.of(randomId.get().toString()))
     );
-    map.put(sheet.id(), Map.entry(sheet, description));
+    map.put(id, sheet);
     return Uni.createFrom().item(sheet);
   }
 
@@ -81,11 +82,10 @@ public final class InMemorySheets<T> implements Sheets<T> {
   public Uni<Sheet<T>> sheet(final UUID id) {
     return Uni
       .createFrom()
-      .item(map.get(id))
-      .onItem().ifNotNull().transform(Map.Entry::getKey);
+      .item(map.get(id));
   }
 
-  private final ConcurrentMap<UUID, Map.Entry<Sheet<T>, Description>> map;
+  private final ConcurrentMap<UUID, Sheet<T>> map;
   private final Supplier<UUID> randomId;
   private final Function<Description, Sheet<T>> sheetFn;
 }
