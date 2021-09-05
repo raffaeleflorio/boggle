@@ -18,14 +18,14 @@ import java.util.function.Supplier;
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class DeadlineMatches<T> implements Matches<T> {
+public final class FixedDurationMatches<T> implements Matches<T> {
   /**
    * Builds minutes based matches
    *
    * @param origin The matches to decorate
    * @since 1.0.0
    */
-  public DeadlineMatches(final Matches<T> origin) {
+  public FixedDurationMatches(final Matches<T> origin) {
     this(origin, Duration::ofMinutes);
   }
 
@@ -36,7 +36,7 @@ public final class DeadlineMatches<T> implements Matches<T> {
    * @param durationFn The function to build duration
    * @since 1.0.0
    */
-  public DeadlineMatches(final Matches<T> origin, final Function<Integer, Duration> durationFn) {
+  public FixedDurationMatches(final Matches<T> origin, final Function<Integer, Duration> durationFn) {
     this(origin, durationFn, Instant::now);
   }
 
@@ -48,7 +48,7 @@ public final class DeadlineMatches<T> implements Matches<T> {
    * @param now        The function that supply now
    * @since 1.0.0
    */
-  DeadlineMatches(
+  FixedDurationMatches(
     final Matches<T> origin,
     final Function<Integer, Duration> durationFn,
     final Supplier<Instant> now
@@ -65,7 +65,7 @@ public final class DeadlineMatches<T> implements Matches<T> {
    * @param stringFn   The function to convert string to int
    * @since 1.0.0
    */
-  DeadlineMatches(
+  FixedDurationMatches(
     final Matches<T> origin,
     final Function<Integer, Duration> durationFn,
     final Supplier<Instant> now,

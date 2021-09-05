@@ -13,11 +13,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.notNullValue;
 
-class DeadlineMatchesTest {
+class FixedDurationMatchesTest {
   @Test
   void testDeadlineCalculation() {
     assertThat(
-      new DeadlineMatches<>(
+      new FixedDurationMatches<>(
         new Matches.Fake<>(
           description -> Uni.createFrom().item(new Match.Fake<>(UUID.randomUUID(), description)),
           x -> Uni.createFrom().nullItem()
@@ -36,7 +36,7 @@ class DeadlineMatchesTest {
   @Test
   void testBuildingExisting() {
     assertThat(
-      new DeadlineMatches<>(
+      new FixedDurationMatches<>(
         new Matches.Fake<>(
           x -> Uni.createFrom().nullItem(),
           id -> Uni.createFrom().item(new Match.Fake<>(id, new Description.Fake()))
