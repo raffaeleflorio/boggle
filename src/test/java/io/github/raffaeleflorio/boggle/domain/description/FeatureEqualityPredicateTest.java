@@ -8,11 +8,11 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-class FeaturePredicateTest {
+class FeatureEqualityPredicateTest {
   @Test
   void testPredicateTrue() {
     assertThat(
-      new FeaturePredicate(
+      new FeatureEqualityPredicate(
         Map.of("name", List.of("expected value"))
       ).test(new Description.Fake("name", "expected value")),
       equalTo(true)
@@ -22,7 +22,7 @@ class FeaturePredicateTest {
   @Test
   void testPredicateFalse() {
     assertThat(
-      new FeaturePredicate(
+      new FeatureEqualityPredicate(
         Map.of("name", List.of("one", "two"))
       ).test(new Description.Fake("name", "only one")),
       equalTo(false)
@@ -32,7 +32,7 @@ class FeaturePredicateTest {
   @Test
   void testPredicateTrueWithAdditionalProperties() {
     assertThat(
-      new FeaturePredicate(
+      new FeatureEqualityPredicate(
         Map.of("name", List.of("one", "two"))
       ).test(
         new Description.Fake(

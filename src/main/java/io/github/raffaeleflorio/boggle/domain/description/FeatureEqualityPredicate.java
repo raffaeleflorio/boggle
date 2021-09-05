@@ -10,14 +10,14 @@ import java.util.function.Predicate;
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class FeaturePredicate implements Predicate<Description> {
+public final class FeatureEqualityPredicate implements Predicate<Description> {
   /**
    * Builds a predicate
    *
    * @param expected The expected feature name to values map
    * @since 1.0.0
    */
-  public FeaturePredicate(final Map<CharSequence, List<CharSequence>> expected) {
+  public FeatureEqualityPredicate(final Map<CharSequence, List<CharSequence>> expected) {
     this.expected = expected;
   }
 
