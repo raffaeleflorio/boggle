@@ -44,4 +44,16 @@ class InMemorySheetsTest {
       emits(nullValue())
     );
   }
+
+  @Test
+  void testSheetBuildingAfterCreation() {
+    var sheets = new InMemorySheets<>();
+    assertThat(
+      sheets
+        .sheet(new Description.Fake())
+        .onItem().transform(Sheet::id)
+        .onItem().transform(sheets::sheet),
+      emits(notNullValue())
+    );
+  }
 }
