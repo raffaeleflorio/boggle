@@ -11,7 +11,7 @@ import java.util.function.Function;
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-final class MappedGrids<T> implements Grids<T> {
+public final class MappedGrids<T> implements Grids<T> {
   /**
    * Builds a grids
    *
