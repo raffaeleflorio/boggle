@@ -3,7 +3,6 @@ package io.github.raffaeleflorio.boggle.domain.sheet;
 import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.github.raffaeleflorio.boggle.hamcrest.AreEmitted;
-import io.smallrye.mutiny.Multi;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -46,14 +45,12 @@ class SheetTest {
     void testCustomWords() {
       assertThat(
         new Sheet.Fake<>(
-          UUID.randomUUID(),
-          new Description.Fake(),
-          Multi.createFrom().items(
+          List.of(
             new Dice.Fake<>(List.of(1, 42)),
             new Dice.Fake<>(List.of(2, 43)),
             new Dice.Fake<>(List.of(3, 44))
           ),
-          Multi.createFrom().empty()
+          List.of()
         ).words().onItem().transform(Dice::values),
         AreEmitted.emits(
           contains(
@@ -69,10 +66,8 @@ class SheetTest {
     void testUniqueWords() {
       assertThat(
         new Sheet.Fake<>(
-          UUID.randomUUID(),
-          new Description.Fake(),
-          Multi.createFrom().empty(),
-          Multi.createFrom().items(new Dice.Fake<>(List.of("UNIQUE")))
+          List.of(),
+          List.of(new Dice.Fake<>(List.of("UNIQUE")))
         ).words(new Sheet.Fake<>()).onItem().transform(Dice::values),
         AreEmitted.emits(
           contains(

@@ -28,7 +28,7 @@ public interface Dice<T> {
   Dice<T> shuffled();
 
   /**
-   * A {@link Dice} useful for testing purpose
+   * A {@link Dice} useful for testing
    *
    * @param <T> The mark side type
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)

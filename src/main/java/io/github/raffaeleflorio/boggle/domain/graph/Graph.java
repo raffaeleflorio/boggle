@@ -42,7 +42,7 @@ public interface Graph<T> {
   Graph<T> edge(T one, T two);
 
   /**
-   * A {@link Graph} useful for testing purpose
+   * A {@link Graph} useful for testing
    *
    * @param <T> The vertex type
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)

@@ -27,7 +27,7 @@ public interface Die<T> {
   Die<T> rolled();
 
   /**
-   * A {@link Die} useful for testing purpose
+   * A {@link Die} useful for testing
    *
    * @param <T> The mark side type
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)

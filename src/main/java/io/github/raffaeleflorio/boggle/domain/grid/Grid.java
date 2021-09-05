@@ -41,7 +41,7 @@ public interface Grid<T> extends Dice<T> {
   Description description();
 
   /**
-   * A {@link Grid} useful for testing purpose
+   * A {@link Grid} useful for testing
    *
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
    * @since 1.0.0

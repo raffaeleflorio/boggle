@@ -5,6 +5,7 @@ import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -57,9 +58,11 @@ public interface Sheet<T> {
   Description description();
 
   /**
-   * A {@link Sheet} useful for testing purpose
+   * A {@link Sheet} useful for testing
    *
-   * @param <T>
+   * @param <T> The word type
+   * @author Raffaele Florio (raffaeleflorio@protonmail.com)
+   * @since 1.0.0
    */
   final class Fake<T> implements Sheet<T> {
     /**
@@ -89,7 +92,18 @@ public interface Sheet<T> {
      * @since 1.0.0
      */
     public Fake(final UUID id, final Description description) {
-      this(id, description, Multi.createFrom().empty(), Multi.createFrom().empty());
+      this(id, description, List.of(), List.of());
+    }
+
+    /**
+     * Builds a fake with random id
+     *
+     * @param words  The words
+     * @param unique The unique words
+     * @since 1.0.0
+     */
+    public Fake(final List<Dice<T>> words, final List<Dice<T>> unique) {
+      this(UUID.randomUUID(), new Description.Fake(), words, unique);
     }
 
     /**
@@ -98,14 +112,14 @@ public interface Sheet<T> {
      * @param id          The id
      * @param description The description
      * @param words       The words
-     * @param unique      The  unique word
+     * @param unique      The unique words
      * @since 1.0.0
      */
     public Fake(
       final UUID id,
       final Description description,
-      final Multi<Dice<T>> words,
-      final Multi<Dice<T>> unique
+      final List<Dice<T>> words,
+      final List<Dice<T>> unique
     ) {
       this.id = id;
       this.words = words;
@@ -120,12 +134,16 @@ public interface Sheet<T> {
 
     @Override
     public Multi<Dice<T>> words() {
-      return words;
+      return multi(words);
+    }
+
+    private Multi<Dice<T>> multi(final List<Dice<T>> words) {
+      return Multi.createFrom().items(words::stream);
     }
 
     @Override
     public Multi<Dice<T>> words(final Sheet<T> other) {
-      return unique;
+      return multi(unique);
     }
 
     @Override
@@ -140,7 +158,7 @@ public interface Sheet<T> {
 
     private final UUID id;
     private final Description description;
-    private final Multi<Dice<T>> words;
-    private final Multi<Dice<T>> unique;
+    private final List<Dice<T>> words;
+    private final List<Dice<T>> unique;
   }
 }
