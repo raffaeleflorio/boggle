@@ -11,6 +11,7 @@ import java.util.*;
 /**
  * In memory {@link Sheet} implementation
  *
+ * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
