@@ -18,54 +18,20 @@ class InMemoryGridsTest {
     assertThat(
       new InMemoryGrids<>(
         Map.of(
-          Map.entry("a language", "a size"), new Grid.Fake<>()
-        )
+          description -> description.feature("feature").equals(List.of("value")),
+          new Grid.Fake<>())
       ).grid(
-        new Description.Fake(
-          Map.of(
-            "lang", List.of("a language"),
-            "size", List.of("a size")
-          )
-        )
+        new Description.Fake("feature", "value")
       ),
       emits(notNullValue())
     );
   }
 
   @Test
-  void testMissingGridPerLanguage() {
+  void testEmptyGrids() {
     assertThat(
-      new InMemoryGrids<>(
-        Map.of(
-          Map.entry("a language", "a size"), new Grid.Fake<>()
-        )
-      ).grid(
-        new Description.Fake(
-          Map.of(
-            "lang", List.of("any"),
-            "size", List.of("a size")
-          )
-        )
-      ),
-      emits(nullValue())
-    );
-  }
-
-  @Test
-  void testMissingGridPerSize() {
-    assertThat(
-      new InMemoryGrids<>(
-        Map.of(
-          Map.entry("a language", "a size"), new Grid.Fake<>()
-        )
-      ).grid(
-        new Description.Fake(
-          Map.of(
-            "lang", List.of("a language"),
-            "size", List.of("any")
-          )
-        )
-      ),
+      new InMemoryGrids<>(Map.of())
+        .grid(new Description.Fake("any", "value")),
       emits(nullValue())
     );
   }
