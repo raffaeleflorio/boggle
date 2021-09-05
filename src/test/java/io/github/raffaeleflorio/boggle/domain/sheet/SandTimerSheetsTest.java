@@ -1,6 +1,7 @@
 package io.github.raffaeleflorio.boggle.domain.sheet;
 
 import io.github.raffaeleflorio.boggle.domain.description.Description;
+import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,10 +17,8 @@ class SandTimerSheetsTest {
     assertThat(
       new SandTimerSheets<>(
         new Sheets.Fake<>(
-          new Sheet.Fake<>(
-            UUID.randomUUID(),
-            new Description.Fake().feature("deadline", List.of("1970-01-01T00:00:00Z"))
-          )
+          x -> Uni.createFrom().nullItem(),
+          description -> Uni.createFrom().item(new Sheet.Fake<>(UUID.randomUUID(), description))
         )
       ).sheet(new Description.Fake("deadline", List.of("1970-01-01T00:00:00Z"))).onItem().transform(x -> x::id),
       emits(
@@ -33,10 +32,10 @@ class SandTimerSheetsTest {
     assertThat(
       new SandTimerSheets<>(
         new Sheets.Fake<>(
-          new Sheet.Fake<>(
-            UUID.randomUUID(),
-            new Description.Fake().feature("deadline", List.of("1970-01-01T00:00:00Z"))
-          )
+          id -> Uni.createFrom().item(
+            new Sheet.Fake<>(id, new Description.Fake("deadline", "1970-01-01T00:00:00Z"))
+          ),
+          x -> Uni.createFrom().nullItem()
         )
       ).sheet(UUID.randomUUID()).onItem().transform(x -> x::id),
       emits(

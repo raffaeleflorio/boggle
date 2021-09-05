@@ -4,6 +4,7 @@ import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.smallrye.mutiny.Uni;
 
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * {@link Sheet} repository
@@ -39,43 +40,40 @@ public interface Sheets<T> {
    */
   final class Fake<T> implements Sheets<T> {
     /**
-     * Builds a fake with one element
+     * Builds a fake without elements
      *
      * @since 1.0.0
      */
     public Fake() {
-      this(new Sheet.Fake<>());
+      this(x -> Uni.createFrom().nullItem(), x -> Uni.createFrom().nullItem());
     }
 
     /**
      * Builds a fake with one element
      *
+     * @param sheetFn    The function to build existing sheet
+     * @param newSheetFn The function to build new sheet
      * @since 1.0.0
      */
-    public Fake(final Sheet<T> sheet) {
-      this(Uni.createFrom().item(sheet));
-    }
-
-    /**
-     * Builds a fake with one element
-     *
-     * @param sheet The sheet
-     * @since 1.0.0
-     */
-    public Fake(final Uni<Sheet<T>> sheet) {
-      this.sheet = sheet;
+    public Fake(
+      final Function<UUID, Uni<Sheet<T>>> sheetFn,
+      final Function<Description, Uni<Sheet<T>>> newSheetFn
+    ) {
+      this.sheetFn = sheetFn;
+      this.newSheetFn = newSheetFn;
     }
 
     @Override
     public Uni<Sheet<T>> sheet(final Description description) {
-      return sheet;
+      return newSheetFn.apply(description);
     }
 
     @Override
     public Uni<Sheet<T>> sheet(final UUID id) {
-      return sheet;
+      return sheetFn.apply(id);
     }
 
-    private final Uni<Sheet<T>> sheet;
+    private final Function<UUID, Uni<Sheet<T>>> sheetFn;
+    private final Function<Description, Uni<Sheet<T>>> newSheetFn;
   }
 }
