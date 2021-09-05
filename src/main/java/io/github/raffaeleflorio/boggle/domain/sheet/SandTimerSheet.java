@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 /**
  * A {@link Sheet} that expires according its description
  *
+ * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
