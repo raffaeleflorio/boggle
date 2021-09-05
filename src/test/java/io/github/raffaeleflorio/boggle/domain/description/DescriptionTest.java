@@ -45,5 +45,15 @@ class DescriptionTest {
         empty()
       );
     }
+
+    @Test
+    void testFeatureCleaning() {
+      assertThat(
+        new Description.Fake("name", "feature")
+          .feature("any", List.of())
+          .feature("name"),
+        empty()
+      );
+    }
   }
 }

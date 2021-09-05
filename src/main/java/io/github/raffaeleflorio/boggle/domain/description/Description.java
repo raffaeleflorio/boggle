@@ -30,7 +30,7 @@ public interface Description {
   Description feature(CharSequence name, List<CharSequence> values);
 
   /**
-   * A {@link Description} with always zero or one feature, useful for testing
+   * {@link Description} useful for testing
    *
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
    * @since 1.0.0
@@ -74,12 +74,22 @@ public interface Description {
      * @since 1.0.0
      */
     public Fake(final Map.Entry<CharSequence, List<CharSequence>> feature) {
-      this.feature = feature;
+      this(Map.of(feature.getKey(), feature.getValue()));
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param features The features
+     * @since 1.0.0
+     */
+    public Fake(final Map<CharSequence, List<CharSequence>> features) {
+      this.features = features;
     }
 
     @Override
     public List<CharSequence> feature(final CharSequence name) {
-      return feature.getKey().equals(name) ? feature.getValue() : List.of();
+      return features.getOrDefault(name, List.of());
     }
 
     @Override
@@ -87,6 +97,6 @@ public interface Description {
       return new Description.Fake(name, values);
     }
 
-    private final Map.Entry<CharSequence, List<CharSequence>> feature;
+    private final Map<CharSequence, List<CharSequence>> features;
   }
 }
