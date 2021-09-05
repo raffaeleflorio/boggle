@@ -1,13 +1,11 @@
 package io.github.raffaeleflorio.boggle.domain.score;
 
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
-import io.github.raffaeleflorio.boggle.hamcrest.IsEmitted;
 import org.junit.jupiter.api.Test;
 
 import static io.github.raffaeleflorio.boggle.hamcrest.IsEmitted.emits;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ConstantScoreTest {
   @Test
