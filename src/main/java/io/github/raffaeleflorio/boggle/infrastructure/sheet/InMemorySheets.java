@@ -6,7 +6,6 @@ import io.github.raffaeleflorio.boggle.domain.sheet.Sheets;
 import io.smallrye.mutiny.Uni;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -72,7 +71,7 @@ public final class InMemorySheets<T> implements Sheets<T> {
   public Uni<Sheet<T>> sheet(final Description description) {
     var id = randomId.get();
     var sheet = sheetFn.apply(
-      description.feature("id", List.of(randomId.get().toString()))
+      description.feature("id", List.of(id.toString()))
     );
     map.put(id, sheet);
     return Uni.createFrom().item(sheet);
