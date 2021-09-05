@@ -1,6 +1,6 @@
 package io.github.raffaeleflorio.boggle.domain.match;
 
-import io.github.raffaeleflorio.boggle.domain.player.Player;
+import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -27,11 +27,11 @@ public interface Match<T> {
   /**
    * Builds asynchronously a new sheet to play
    *
-   * @param player The player joining
+   * @param id The player joining
    * @return The sheet
    * @since 1.0.0
    */
-  Uni<Sheet<T>> sheet(Player<T> player);
+  Uni<Sheet<T>> sheet(UUID id);
 
   /**
    * Builds asynchronously the final score per player
@@ -40,4 +40,12 @@ public interface Match<T> {
    * @since 1.0.0
    */
   Multi<Map.Entry<UUID, Integer>> score();
+
+  /**
+   * Builds a match description
+   *
+   * @return The description
+   * @since 1.0.0
+   */
+  Description description();
 }

@@ -1,8 +1,8 @@
 package io.github.raffaeleflorio.boggle.domain.match;
 
+import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.smallrye.mutiny.Uni;
 
-import java.time.temporal.TemporalAmount;
 import java.util.UUID;
 
 /**
@@ -14,15 +14,12 @@ import java.util.UUID;
  */
 public interface Matches<T> {
   /**
-   * Builds asynchronously a new match to play
+   * Builds asynchronously a new match to play according its description
    *
-   * @param lang     The match language
-   * @param size     The grid size
-   * @param duration The match duration
    * @return The match
    * @since 1.0.0
    */
-  Uni<Match<T>> match(CharSequence lang, CharSequence size, TemporalAmount duration);
+  Uni<Match<T>> match(Description description);
 
   /**
    * Builds asynchronously a match by its id
