@@ -2,7 +2,6 @@ package io.github.raffaeleflorio.boggle.infrastructure.sheet;
 
 import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
-import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
 import io.github.raffaeleflorio.boggle.hamcrest.AreEmitted;
 import org.junit.jupiter.api.Test;
 
@@ -53,7 +52,7 @@ class InMemorySheetTest {
   }
 
   @Test
-  void testDiff() {
+  void testUniqueWords() {
     assertThat(
       new InMemorySheet<>(
         new Description.Fake(),
@@ -61,22 +60,24 @@ class InMemorySheetTest {
           new Dice.Fake<>(List.of(1)),
           new Dice.Fake<>(List.of(1, 2, 3))
         )
-      ).diff(
-          new Sheet.Fake<>(
-            List.of(
-              new Dice.Fake<>(List.of(1, 2, 3))
-            ),
-            List.of()
+      ).words(
+        new InMemorySheet<>(
+          new Description.Fake(),
+          Set.of(
+            new Dice.Fake<>(List.of(1, 2, 3))
           )
         )
-        .onItem().transformToMulti(Sheet::words)
-        .onItem().transformToIterable(Dice::values),
-      AreEmitted.emits(contains(1))
+      ).onItem().transform(Dice::values),
+      AreEmitted.emits(
+        contains(
+          List.of(1)
+        )
+      )
     );
   }
 
   @Test
-  void testDiffWithEmptyOther() {
+  void testUniqueWordsWithEmptyOther() {
     assertThat(
       new InMemorySheet<>(
         new Description.Fake(),
@@ -84,15 +85,10 @@ class InMemorySheetTest {
           new Dice.Fake<>(List.of(1)),
           new Dice.Fake<>(List.of(1, 2, 3))
         )
-      ).diff(
-          new Sheet.Fake<>(
-            List.of(),
-            List.of()
-          )
-        )
-        .onItem().transformToMulti(Sheet::words)
-        .onItem().transformToIterable(Dice::values),
-      AreEmitted.emits(hasSize(4))
+      ).words(
+        new InMemorySheet<>(new Description.Fake())
+      ).onItem().transform(Dice::values),
+      AreEmitted.emits(hasSize(2))
     );
   }
 

@@ -7,7 +7,6 @@ import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * In memory {@link Sheet} implementation
@@ -50,33 +49,9 @@ final class InMemorySheet<T> implements Sheet<T> {
    * @since 1.0.0
    */
   InMemorySheet(final Description description, final Set<Dice<T>> words, final Comparator<Dice<T>> equalityCmp) {
-    this(
-      description,
-      words,
-      equalityCmp,
-      list -> Collections.synchronizedSet(new HashSet<>(list))
-    );
-  }
-
-  /**
-   * Builds an in memory sheet
-   *
-   * @param description The description
-   * @param words       The word set
-   * @param equalityCmp The equality comparator
-   * @param cloneFn     The function to clone set
-   * @since 1.0.0
-   */
-  InMemorySheet(
-    final Description description,
-    final Set<Dice<T>> words,
-    final Comparator<Dice<T>> equalityCmp,
-    final Function<List<Dice<T>>, Set<Dice<T>>> cloneFn
-  ) {
     this.description = description;
     this.words = words;
     this.equalityCmp = equalityCmp;
-    this.cloneFn = cloneFn;
   }
 
   @Override
@@ -90,18 +65,13 @@ final class InMemorySheet<T> implements Sheet<T> {
   }
 
   @Override
-  public Uni<Sheet<T>> diff(final Sheet<T> other) {
-    return uniqueWords(other)
-      .onItem().transform(words -> new InMemorySheet<>(description, words, equalityCmp, cloneFn));
-  }
-
-  private Uni<Set<Dice<T>>> uniqueWords(final Sheet<T> other) {
+  public Multi<Dice<T>> words(final Sheet<T> other) {
     return words().select().when(myWord -> other
       .words().map(otherWord -> equals(myWord, otherWord))
       .filter(Boolean::booleanValue).collect().first()
       .onItem().ifNotNull().transform(x -> false)
       .onItem().ifNull().continueWith(true)
-    ).collect().asList().onItem().transform(cloneFn);
+    );
   }
 
   private Boolean equals(final Dice<T> one, final Dice<T> two) {
@@ -122,5 +92,4 @@ final class InMemorySheet<T> implements Sheet<T> {
   private final Description description;
   private final Set<Dice<T>> words;
   private final Comparator<Dice<T>> equalityCmp;
-  private final Function<List<Dice<T>>, Set<Dice<T>>> cloneFn;
 }

@@ -72,13 +72,13 @@ class SandTimerSheetTest {
   }
 
   @Test
-  void testDiffAfterExpiration() {
+  void testUniqueWordsAfterExpiration() {
     assertThat(
       new SandTimerSheet<>(
         new Sheet.Fake<>(UUID.randomUUID()),
         new SandTimer.Fake(true)
-      ).diff(new Sheet.Fake<>()),
-      not(IsEmittedFailure.emits(IllegalStateException.class, "Deadline reached"))
+      ).words(new Sheet.Fake<>()),
+      not(AreEmittedFailure.emits(IllegalStateException.class, "Deadline reached"))
     );
   }
 }
