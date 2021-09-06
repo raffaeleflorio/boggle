@@ -6,7 +6,10 @@ import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * In memory {@link Sheet} implementation
@@ -37,21 +40,8 @@ final class InMemorySheet<T> implements Sheet<T> {
    * @since 1.0.0
    */
   InMemorySheet(final Description description, final Set<Dice<T>> words) {
-    this(description, words, (o1, o2) -> o1.values().equals(o2.values()) ? 0 : 1);
-  }
-
-  /**
-   * Builds an in memory sheet
-   *
-   * @param description The description
-   * @param words       The word set
-   * @param equalityCmp The equality comparator
-   * @since 1.0.0
-   */
-  InMemorySheet(final Description description, final Set<Dice<T>> words, final Comparator<Dice<T>> equalityCmp) {
     this.description = description;
     this.words = words;
-    this.equalityCmp = equalityCmp;
   }
 
   @Override
@@ -61,7 +51,7 @@ final class InMemorySheet<T> implements Sheet<T> {
 
   @Override
   public Multi<Dice<T>> words() {
-    return Multi.createFrom().items(words::stream).select().distinct(equalityCmp);
+    return Multi.createFrom().items(words::stream);
   }
 
   @Override
@@ -77,5 +67,4 @@ final class InMemorySheet<T> implements Sheet<T> {
 
   private final Description description;
   private final Set<Dice<T>> words;
-  private final Comparator<Dice<T>> equalityCmp;
 }

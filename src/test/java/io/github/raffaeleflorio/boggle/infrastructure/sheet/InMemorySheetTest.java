@@ -34,7 +34,7 @@ class InMemorySheetTest {
   }
 
   @Test
-  void testWordsWithoutDuplicates() {
+  void testWordsWithDuplicates() {
     assertThat(
       new InMemorySheet<>(
         new Description.Fake(),
@@ -47,7 +47,7 @@ class InMemorySheetTest {
           )
         )
       ).words(),
-      AreEmitted.emits(hasSize(1))
+      AreEmitted.emits(hasSize(2))
     );
   }
 
