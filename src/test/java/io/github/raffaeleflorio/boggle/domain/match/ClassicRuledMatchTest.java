@@ -18,6 +18,34 @@ import static org.hamcrest.Matchers.*;
 
 class ClassicRuledMatchTest {
   @Test
+  void testScoreWithSingle() {
+    var player = UUID.randomUUID();
+    assertThat(
+      new ClassicRuledMatch<>(
+        new Match.Fake<>(
+          Map.of(
+            player, 0
+          ),
+          Map.of(
+            player, new Sheet.Fake<>(
+              List.of(
+                new Dice.Fake<>(List.of(1, 2, 3)),
+                new Dice.Fake<>(List.of(1))
+              )
+            )
+          )
+        ),
+        new Score.Fake<>(x -> 12)
+      ).score(),
+      AreEmitted.emits(
+        contains(
+          Map.entry(player, 24)
+        )
+      )
+    );
+  }
+
+  @Test
   void testScoreWithTwoPlayers() {
     var player1 = UUID.randomUUID();
     var player2 = UUID.randomUUID();
@@ -42,11 +70,11 @@ class ClassicRuledMatchTest {
             )
           )
         ),
-        new Score.Fake<>(x -> 789)
+        new Score.Fake<>(x -> 1)
       ).score(),
       AreEmitted.emits(
         containsInAnyOrder(
-          Map.entry(player1, 789),
+          Map.entry(player1, 1),
           Map.entry(player2, 0)
         )
       )
@@ -82,18 +110,20 @@ class ClassicRuledMatchTest {
               List.of(
                 new Dice.Fake<>(List.of(1)),
                 new Dice.Fake<>(List.of(1, 2, 3)),
-                new Dice.Fake<>(List.of(1, 2, 3, 4))
+                new Dice.Fake<>(List.of(1, 2, 3, 4)),
+                new Dice.Fake<>(List.of(1, 2, 3, 4)),
+                new Dice.Fake<>(List.of(1, 2, 3, 5))
               )
             )
           )
         ),
-        new Score.Fake<>(x -> 789)
+        new Score.Fake<>(x -> 1)
       ).score(),
       AreEmitted.emits(
         containsInAnyOrder(
           Map.entry(player1, 0),
           Map.entry(player2, 0),
-          Map.entry(player3, 789)
+          Map.entry(player3, 2)
         )
       )
     );
