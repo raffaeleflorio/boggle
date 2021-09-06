@@ -47,7 +47,7 @@ class DeadlineMatchesTest {
       )
         .match(UUID.randomUUID())
         .onItem().transformToUni(x -> x.sheet(UUID.randomUUID()))
-        .onItem().invoke(sheet -> sheet.word(new Dice.Fake<>())),
+        .onItem().transformToUni(sheet -> sheet.word(new Dice.Fake<>())),
       IsEmittedFailure.emits(
         IllegalStateException.class, "Deadline reached"
       )

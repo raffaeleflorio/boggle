@@ -14,30 +14,30 @@ import static org.hamcrest.Matchers.*;
 
 class SandTimerMatchTest {
   @Test
-  void testScoreAfterExpiration() {
-    assertThat(
-      new SandTimerMatch<>(
-        new Match.Fake<>(UUID.randomUUID(), new Description.Fake()),
-        new SandTimer.Fake(true)
-      ).score(),
-      AreEmittedFailure.emits(
-        IllegalStateException.class, "Unable to build score of an in progress match"
-      )
-    );
-  }
-
-  @Test
   void testScoreBeforeExpiration() {
     var expected = UUID.randomUUID();
     assertThat(
       new SandTimerMatch<>(
         new Match.Fake<>(expected, new Description.Fake()),
-        new SandTimer.Fake(false)
+        new SandTimer.Fake(true)
       ).score(),
       not(
         AreEmittedFailure.emits(
           IllegalStateException.class, "Unable to build score of an in progress match"
         )
+      )
+    );
+  }
+
+  @Test
+  void testScoreAfterExpiration() {
+    assertThat(
+      new SandTimerMatch<>(
+        new Match.Fake<>(UUID.randomUUID(), new Description.Fake()),
+        new SandTimer.Fake(false)
+      ).score(),
+      AreEmittedFailure.emits(
+        IllegalStateException.class, "Unable to build score of an in progress match"
       )
     );
   }

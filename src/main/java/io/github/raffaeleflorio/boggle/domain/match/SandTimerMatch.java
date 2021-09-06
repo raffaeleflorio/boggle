@@ -90,7 +90,7 @@ public final class SandTimerMatch<T> implements Match<T> {
 
   @Override
   public Multi<Map.Entry<UUID, Integer>> score() {
-    if (sandTimer.expired()) {
+    if (!sandTimer.expired()) {
       return Multi.createFrom().failure(exceptionFn.apply("Unable to build score of an in progress match"));
     }
     return origin.score();
