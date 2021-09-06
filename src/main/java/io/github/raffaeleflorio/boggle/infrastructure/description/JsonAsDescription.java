@@ -1,25 +1,24 @@
-package io.github.raffaeleflorio.boggle.infrastructure.match;
+package io.github.raffaeleflorio.boggle.infrastructure.description;
 
 import io.github.raffaeleflorio.boggle.domain.description.Description;
-import io.github.raffaeleflorio.boggle.domain.match.Match;
 import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
 /**
- * {@link Match} {@link Description} from JSON
+ * JSON as {@link Description} without nested objects
  *
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class JsonMatchDescription implements Description {
+public final class JsonAsDescription implements Description {
   /**
    * Builds a description
    *
    * @param origin The JSON
    * @since 1.0.0
    */
-  public JsonMatchDescription(final JsonObject origin) {
+  public JsonAsDescription(final JsonObject origin) {
     this.origin = origin;
   }
 
@@ -30,7 +29,7 @@ public final class JsonMatchDescription implements Description {
 
   @Override
   public Description feature(final CharSequence name, final List<CharSequence> values) {
-    return new JsonMatchDescription(origin.copy().put(name.toString(), values.get(0)));
+    return new JsonAsDescription(origin.copy().put(name.toString(), values.get(0)));
   }
 
   private final JsonObject origin;
