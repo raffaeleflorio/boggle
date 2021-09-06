@@ -9,7 +9,6 @@ import io.smallrye.mutiny.Uni;
 
 import java.time.Instant;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 /**
  * A {@link Sheet} that expires according its description
@@ -61,34 +60,30 @@ public final class SandTimerSheet<T> implements Sheet<T> {
 
   @Override
   public UUID id() {
-    return beforeExpiration(origin::id);
-  }
-
-  private <X> X beforeExpiration(final Supplier<X> fn) {
-    if (sandTimer.expired()) {
-      throw exception;
-    }
-    return fn.get();
+    return origin.id();
   }
 
   @Override
   public Multi<Dice<T>> words() {
-    return beforeExpiration(origin::words);
+    return origin.words();
   }
 
   @Override
   public Multi<Dice<T>> words(final Sheet<T> other) {
-    return beforeExpiration(() -> origin.words(other));
+    return origin.words(other);
   }
 
   @Override
   public Uni<Void> word(final Dice<T> word) {
-    return beforeExpiration(() -> origin.word(word));
+    if (sandTimer.expired()) {
+      return Uni.createFrom().failure(exception);
+    }
+    return origin.word(word);
   }
 
   @Override
   public Description description() {
-    return beforeExpiration(origin::description);
+    return origin.description();
   }
 
   private final Sheet<T> origin;
