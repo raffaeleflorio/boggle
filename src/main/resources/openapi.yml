@@ -117,6 +117,25 @@ paths:
       tags:
         - match
         - player
+  /sheets/{sheet}:
+    post:
+      summary: Writes a word
+      operationId: writeWord
+      parameters:
+        - $ref: '#/components/parameters/Sheet'
+      requestBody:
+        $ref: '#/components/requestBodies/Word'
+      responses:
+        204:
+          description: Word written
+        404:
+          $ref: '#/components/responses/SheetNotFound'
+        410:
+          $ref: '#/components/responses/SheetExpired'
+        429:
+          $ref: '#/components/responses/TooManyAttempts'
+      tags:
+        - player
 
 components:
   securitySchemes:
