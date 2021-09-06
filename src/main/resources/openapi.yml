@@ -77,15 +77,15 @@ paths:
         - organizer
   /matches/{match}/sheet:
     post:
-      summary: Joins a match
-      operationId: joinMatch
+      summary: Builds a sheet
+      operationId: buildSheet
       parameters:
         - $ref: '#/components/parameters/Match'
       requestBody:
         $ref: '#/components/requestBodies/Player'
       responses:
         200:
-          description: Match joined
+          description: Sheet built
           content:
             application/json:
               schema:
@@ -116,42 +116,6 @@ paths:
           $ref: '#/components/responses/ScoreNotFound'
       tags:
         - match
-        - player
-  /sheets/{sheet}:
-    post:
-      summary: Writes a word
-      operationId: writeWord
-      parameters:
-        - $ref: '#/components/parameters/Sheet'
-      requestBody:
-        $ref: '#/components/requestBodies/Word'
-      responses:
-        204:
-          description: Word written
-        404:
-          $ref: '#/components/responses/SheetNotFound'
-        410:
-          $ref: '#/components/responses/SheetExpired'
-        429:
-          $ref: '#/components/responses/TooManyAttempts'
-      tags:
-        - player
-    get:
-      summary: Gets the sheet
-      parameters:
-        - $ref: '#/components/parameters/Sheet'
-      responses:
-        200:
-          description: Sheet found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Sheet'
-        404:
-          $ref: '#/components/responses/SheetNotFound'
-        410:
-          $ref: '#/components/responses/SheetExpired'
-      tags:
         - player
 
 components:
