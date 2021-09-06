@@ -5,7 +5,7 @@ import io.github.raffaeleflorio.boggle.domain.grid.Grid;
 import io.smallrye.mutiny.Uni;
 
 /**
- * A {@link Score} emitted if the word is in a grid
+ * A {@link Score} emitted if the word is in a grid, otherwise another score
  *
  * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
@@ -20,7 +20,18 @@ public final class IfInGrid<T> implements Score<T> {
    * @since 1.0.0
    */
   public IfInGrid(final Score<T> origin, final Grid<T> grid) {
-    this(origin, grid, 0);
+    this(origin, Uni.createFrom().item(grid));
+  }
+
+  /**
+   * Builds a score
+   *
+   * @param origin The score to decorate
+   * @param grid   The grid
+   * @since 1.0.0
+   */
+  public IfInGrid(final Score<T> origin, final Uni<Grid<T>> grid) {
+    this(origin, grid, Uni.createFrom().item(0));
   }
 
   /**
@@ -31,19 +42,7 @@ public final class IfInGrid<T> implements Score<T> {
    * @param def    The score to emit when not in grid
    * @since 1.0.0
    */
-  IfInGrid(final Score<T> origin, final Grid<T> grid, final Integer def) {
-    this(origin, grid, Uni.createFrom().item(def));
-  }
-
-  /**
-   * Builds a score
-   *
-   * @param origin The score to decorate
-   * @param grid   The grid to use
-   * @param def    The score to emit when not in grid
-   * @since 1.0.0
-   */
-  IfInGrid(final Score<T> origin, final Grid<T> grid, final Uni<Integer> def) {
+  public IfInGrid(final Score<T> origin, final Uni<Grid<T>> grid, final Uni<Integer> def) {
     this.origin = origin;
     this.grid = grid;
     this.def = def;
@@ -51,10 +50,12 @@ public final class IfInGrid<T> implements Score<T> {
 
   @Override
   public Uni<Integer> score(final Dice<T> word) {
-    return grid.compatible(word) ? origin.score(word) : def;
+    return grid
+      .onItem().transform(x -> x.compatible(word))
+      .onItem().transformToUni(compatible -> compatible ? origin.score(word) : def);
   }
 
   private final Score<T> origin;
-  private final Grid<T> grid;
+  private final Uni<? extends Grid<T>> grid;
   private final Uni<Integer> def;
 }
