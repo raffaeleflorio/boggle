@@ -54,7 +54,9 @@ public final class ClassicRuledMatches<T> implements Matches<T> {
   @Override
   public Uni<Match<T>> match(final Description description) {
     return rule(description)
-      .onItem().ifNotNull().transformToUni(rule -> ruledMatch(rule, description));
+      .onItem().ifNotNull().transformToUni(rule -> origin.match(description)
+        .onItem().ifNotNull().transform(match -> matchFn.apply(match, rule.apply(match)))
+      );
   }
 
   private Uni<Function<Match<T>, Score<T>>> rule(final Description description) {
@@ -63,19 +65,11 @@ public final class ClassicRuledMatches<T> implements Matches<T> {
       .onItem().ifNotNull().transform(Map.Entry::getValue);
   }
 
-  private Uni<Match<T>> ruledMatch(final Function<Match<T>, Score<T>> rule, final Description description) {
-    return origin
-      .match(description)
-      .onItem()
-      .transform(match -> matchFn.apply(match, rule.apply(match)));
-  }
-
   @Override
   public Uni<Match<T>> match(final UUID id) {
-    return origin
-      .match(id)
-      .onItem().ifNotNull().transformToUni(match ->
-        rule(match.description()).onItem().transform(rule -> matchFn.apply(match, rule.apply(match)))
+    return origin.match(id)
+      .onItem().ifNotNull().transformToUni(match -> rule(match.description())
+        .onItem().ifNotNull().transform(rule -> matchFn.apply(match, rule.apply(match)))
       );
   }
 

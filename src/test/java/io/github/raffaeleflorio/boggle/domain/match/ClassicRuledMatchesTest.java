@@ -32,6 +32,20 @@ class ClassicRuledMatchesTest {
   }
 
   @Test
+  void testExistingMatchWithoutRule() {
+    assertThat(
+      new ClassicRuledMatches<>(
+        new Matches.Fake<>(
+          x -> Uni.createFrom().nullItem(),
+          id -> Uni.createFrom().item(new Match.Fake<>(id, new Description.Fake()))
+        ),
+        Map.of()
+      ).match(UUID.randomUUID()),
+      emits(nullValue())
+    );
+  }
+
+  @Test
   void testMissingMatch() {
     assertThat(
       new ClassicRuledMatches<>(
@@ -56,6 +70,23 @@ class ClassicRuledMatchesTest {
         Map.of()
       ).match(new Description.Fake()),
       emits(nullValue())
+    );
+  }
+
+  @Test
+  void testMatchCreationWithRule() {
+    assertThat(
+      new ClassicRuledMatches<>(
+        new Matches.Fake<>(
+          description -> Uni.createFrom().item(new Match.Fake<>(UUID.randomUUID(), description)),
+          id -> Uni.createFrom().nullItem()
+        ),
+        Map.of(
+          x -> true,
+          match -> new Score.Fake<>()
+        )
+      ).match(new Description.Fake()),
+      emits(notNullValue())
     );
   }
 }
