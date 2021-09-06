@@ -104,7 +104,6 @@ public interface Match<T> {
       this(UUID.randomUUID(), new Description.Fake(), scores, new Sheets.Fake<>(), new Grid.Fake<>());
     }
 
-
     /**
      * Builds a fake
      *
@@ -123,6 +122,17 @@ public interface Match<T> {
      */
     public Fake(final Grid<T> grid) {
       this(UUID.randomUUID(), new Description.Fake(), Map.of(), new Sheets.Fake<>(), grid);
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param scores The scores
+     * @param sheets The sheets
+     * @since 1.0.0
+     */
+    public Fake(final Map<UUID, Integer> scores, final Sheets<T> sheets) {
+      this(UUID.randomUUID(), new Description.Fake(), scores, sheets, new Grid.Fake<>());
     }
 
     /**
