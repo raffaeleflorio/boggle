@@ -1,8 +1,5 @@
 package io.github.raffaeleflorio.boggle.domain.player;
 
-import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
-import io.smallrye.mutiny.Uni;
-
 import java.util.UUID;
 
 /**
@@ -22,15 +19,6 @@ public interface Player<T> {
   UUID id();
 
   /**
-   * Builds asynchronously a sheet by its id
-   *
-   * @param id The sheet id
-   * @return The sheet
-   * @since 1.0.0
-   */
-  Uni<Sheet<T>> sheet(UUID id);
-
-  /**
    * {@link Player} useful for testing
    *
    * @param <T> The word type
@@ -48,24 +36,13 @@ public interface Player<T> {
     }
 
     /**
-     * Builds a fake without sheets
+     * Builds a fake
      *
+     * @param id The id
      * @since 1.0.0
      */
     public Fake(final UUID id) {
-      this(id, Uni.createFrom().nullItem());
-    }
-
-    /**
-     * Builds a fake
-     *
-     * @param id    The id
-     * @param sheet The sheet
-     * @since 1.0.0
-     */
-    public Fake(final UUID id, final Uni<Sheet<T>> sheet) {
       this.id = id;
-      this.sheet = sheet;
     }
 
     @Override
@@ -73,12 +50,6 @@ public interface Player<T> {
       return id;
     }
 
-    @Override
-    public Uni<Sheet<T>> sheet(final UUID id) {
-      return sheet;
-    }
-
     private final UUID id;
-    private final Uni<Sheet<T>> sheet;
   }
 }
