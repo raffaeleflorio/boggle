@@ -52,6 +52,17 @@ class InMemorySheetTest {
   }
 
   @Test
+  void testWordsAfterAddingAWord() {
+    var sheets = new InMemorySheet<>(new Description.Fake());
+    assertThat(
+      sheets
+        .word(new Dice.Fake<>())
+        .onItem().transformToMulti(x -> sheets.words()),
+      AreEmitted.emits(hasSize(1))
+    );
+  }
+
+  @Test
   void testDescription() {
     assertThat(
       new InMemorySheet<>(new Description.Fake("fake", "value"))
