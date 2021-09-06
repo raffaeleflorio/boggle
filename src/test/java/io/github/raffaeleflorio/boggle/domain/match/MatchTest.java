@@ -2,7 +2,7 @@ package io.github.raffaeleflorio.boggle.domain.match;
 
 import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.grid.Grid;
-import io.github.raffaeleflorio.boggle.domain.sheet.Sheets;
+import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
 import io.github.raffaeleflorio.boggle.hamcrest.IsEmitted;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static io.github.raffaeleflorio.boggle.hamcrest.AreEmitted.emits;
+import static io.github.raffaeleflorio.boggle.hamcrest.IsEmitted.emits;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -44,16 +45,28 @@ class MatchTest {
     void testScore() {
       var expected = Map.entry(UUID.randomUUID(), 123);
       assertThat(
-        new Match.Fake<>(Map.of(expected.getKey(), expected.getValue())).score(),
+        new Match.Fake<>(
+          Map.of(expected.getKey(), expected.getValue()),
+          Map.of()
+        ).score(),
         emits(contains(expected))
       );
     }
 
     @Test
-    void testSheet() {
+    void testMissingSheet() {
       assertThat(
-        new Match.Fake<>(new Sheets.Fake<>()).sheet(UUID.randomUUID()),
+        new Match.Fake<>(Map.of(), Map.of()).sheet(UUID.randomUUID()),
         IsEmitted.emits(nullValue())
+      );
+    }
+
+    @Test
+    void testExistingSheet() {
+      var player = UUID.randomUUID();
+      assertThat(
+        new Match.Fake<>(Map.of(), Map.of(player, new Sheet.Fake<>())).sheet(player),
+        IsEmitted.emits(notNullValue())
       );
     }
 
@@ -61,7 +74,10 @@ class MatchTest {
     void testPlayers() {
       var expected = UUID.randomUUID();
       assertThat(
-        new Match.Fake<>(Map.of(expected, 123)).players(),
+        new Match.Fake<>(
+          Map.of(expected, 123),
+          Map.of()
+        ).players(),
         emits(contains(expected))
       );
     }

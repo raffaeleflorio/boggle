@@ -3,7 +3,6 @@ package io.github.raffaeleflorio.boggle.domain.match;
 import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.grid.Grid;
 import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
-import io.github.raffaeleflorio.boggle.domain.sheet.Sheets;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
@@ -91,27 +90,17 @@ public interface Match<T> {
      * @since 1.0.0
      */
     public Fake(final UUID id, final Description description) {
-      this(id, description, Map.of(), new Sheets.Fake<>(), new Grid.Fake<>());
+      this(id, description, Map.of(), Map.of(), new Grid.Fake<>());
     }
 
     /**
      * Builds a fake
      *
-     * @param scores The scores
+     * @param sheetPerPlayer The sheets
      * @since 1.0.0
      */
-    public Fake(final Map<UUID, Integer> scores) {
-      this(UUID.randomUUID(), new Description.Fake(), scores, new Sheets.Fake<>(), new Grid.Fake<>());
-    }
-
-    /**
-     * Builds a fake
-     *
-     * @param sheets The sheets
-     * @since 1.0.0
-     */
-    public Fake(final Sheets<T> sheets) {
-      this(UUID.randomUUID(), new Description.Fake(), Map.of(), sheets, new Grid.Fake<>());
+    public Fake(final Map<UUID, Integer> scores, final Map<UUID, Sheet<T>> sheetPerPlayer) {
+      this(UUID.randomUUID(), new Description.Fake(), scores, sheetPerPlayer, new Grid.Fake<>());
     }
 
     /**
@@ -121,41 +110,30 @@ public interface Match<T> {
      * @since 1.0.0
      */
     public Fake(final Grid<T> grid) {
-      this(UUID.randomUUID(), new Description.Fake(), Map.of(), new Sheets.Fake<>(), grid);
+      this(UUID.randomUUID(), new Description.Fake(), Map.of(), Map.of(), grid);
     }
 
     /**
      * Builds a fake
      *
-     * @param scores The scores
-     * @param sheets The sheets
-     * @since 1.0.0
-     */
-    public Fake(final Map<UUID, Integer> scores, final Sheets<T> sheets) {
-      this(UUID.randomUUID(), new Description.Fake(), scores, sheets, new Grid.Fake<>());
-    }
-
-    /**
-     * Builds a fake
-     *
-     * @param id          The id
-     * @param description The description
-     * @param scores      The scores
-     * @param sheets      The sheets
-     * @param grid        The grid
+     * @param id             The id
+     * @param description    The description
+     * @param scores         The scores
+     * @param sheetPerPlayer The sheets
+     * @param grid           The grid
      * @since 1.0.0
      */
     public Fake(
       final UUID id,
       final Description description,
       final Map<UUID, Integer> scores,
-      final Sheets<T> sheets,
+      final Map<UUID, Sheet<T>> sheetPerPlayer,
       final Grid<T> grid
     ) {
       this.id = id;
       this.description = description;
       this.scores = scores;
-      this.sheets = sheets;
+      this.sheetPerPlayer = sheetPerPlayer;
       this.grid = grid;
     }
 
@@ -166,7 +144,7 @@ public interface Match<T> {
 
     @Override
     public Uni<Sheet<T>> sheet(final UUID id) {
-      return sheets.sheet(UUID.randomUUID());
+      return Uni.createFrom().item(sheetPerPlayer.get(id));
     }
 
     @Override
@@ -192,7 +170,7 @@ public interface Match<T> {
     private final UUID id;
     private final Description description;
     private final Map<UUID, Integer> scores;
-    private final Sheets<T> sheets;
+    private final Map<UUID, Sheet<T>> sheetPerPlayer;
     private final Grid<T> grid;
   }
 }

@@ -5,10 +5,8 @@ import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.github.raffaeleflorio.boggle.domain.grid.Grid;
 import io.github.raffaeleflorio.boggle.domain.score.Score;
 import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
-import io.github.raffaeleflorio.boggle.domain.sheet.Sheets;
 import io.github.raffaeleflorio.boggle.hamcrest.AreEmitted;
 import io.github.raffaeleflorio.boggle.hamcrest.IsEmitted;
-import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -20,20 +18,84 @@ import static org.hamcrest.Matchers.*;
 
 class ClassicRuledMatchTest {
   @Test
-  void testScoreUniqueWord() {
-    var expected = Map.entry(UUID.randomUUID(), 789);
+  void testScoreWithTwoPlayers() {
+    var player1 = UUID.randomUUID();
+    var player2 = UUID.randomUUID();
     assertThat(
       new ClassicRuledMatch<>(
         new Match.Fake<>(
-          Map.of(expected.getKey(), 123),
-          new Sheets.Fake<>(
-            id -> Uni.createFrom().item(new Sheet.Fake<>(List.of(new Dice.Fake<>()))),
-            x -> Uni.createFrom().nullItem()
+          Map.of(
+            player1, 123,
+            player2, 123
+          ),
+          Map.of(
+            player1, new Sheet.Fake<>(
+              List.of(
+                new Dice.Fake<>(List.of(1, 2, 3)),
+                new Dice.Fake<>(List.of(1))
+              )
+            ),
+            player2, new Sheet.Fake<>(
+              List.of(
+                new Dice.Fake<>(List.of(1))
+              )
+            )
           )
         ),
         new Score.Fake<>(x -> 789)
       ).score(),
-      AreEmitted.emits(contains(expected))
+      AreEmitted.emits(
+        containsInAnyOrder(
+          Map.entry(player1, 789),
+          Map.entry(player2, 0)
+        )
+      )
+    );
+  }
+
+  @Test
+  void testScoreWithThreePlayers() {
+    var player1 = UUID.randomUUID();
+    var player2 = UUID.randomUUID();
+    var player3 = UUID.randomUUID();
+    assertThat(
+      new ClassicRuledMatch<>(
+        new Match.Fake<>(
+          Map.of(
+            player1, 123,
+            player2, 123,
+            player3, 123
+          ),
+          Map.of(
+            player1, new Sheet.Fake<>(
+              List.of(
+                new Dice.Fake<>(List.of(1, 2, 3)),
+                new Dice.Fake<>(List.of(1))
+              )
+            ),
+            player2, new Sheet.Fake<>(
+              List.of(
+                new Dice.Fake<>(List.of(1))
+              )
+            ),
+            player3, new Sheet.Fake<>(
+              List.of(
+                new Dice.Fake<>(List.of(1)),
+                new Dice.Fake<>(List.of(1, 2, 3)),
+                new Dice.Fake<>(List.of(1, 2, 3, 4))
+              )
+            )
+          )
+        ),
+        new Score.Fake<>(x -> 789)
+      ).score(),
+      AreEmitted.emits(
+        containsInAnyOrder(
+          Map.entry(player1, 0),
+          Map.entry(player2, 0),
+          Map.entry(player3, 789)
+        )
+      )
     );
   }
 
@@ -61,17 +123,29 @@ class ClassicRuledMatchTest {
   }
 
   @Test
-  void testSheet() {
+  void testMissingSheet() {
+    assertThat(
+      new ClassicRuledMatch<>(
+        new Match.Fake<>(Map.of(), Map.of()),
+        new Score.Fake<>()
+      ).sheet(UUID.randomUUID()),
+      IsEmitted.emits(nullValue())
+    );
+  }
+
+  @Test
+  void testExistingSheet() {
+    var player = UUID.randomUUID();
     assertThat(
       new ClassicRuledMatch<>(
         new Match.Fake<>(
-          new Sheets.Fake<>(
-            id -> Uni.createFrom().item(new Sheet.Fake<>(id)),
-            x -> Uni.createFrom().nullItem()
+          Map.of(),
+          Map.of(
+            player, new Sheet.Fake<>()
           )
         ),
         new Score.Fake<>()
-      ).sheet(UUID.randomUUID()),
+      ).sheet(player),
       IsEmitted.emits(notNullValue())
     );
   }
@@ -81,7 +155,10 @@ class ClassicRuledMatchTest {
     var expected = UUID.randomUUID();
     assertThat(
       new ClassicRuledMatch<>(
-        new Match.Fake<>(Map.of(expected, 123)),
+        new Match.Fake<>(
+          Map.of(expected, 123),
+          Map.of()
+        ),
         new Score.Fake<>()
       ).players(),
       AreEmitted.emits(contains(expected))
