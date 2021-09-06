@@ -1,6 +1,7 @@
 package io.github.raffaeleflorio.boggle.hamcrest;
 
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -13,21 +14,16 @@ public final class AreEmittedFailure<T> extends TypeSafeMatcher<Multi<T>> {
     final String expectedMessage,
     final Duration duration
   ) {
-    this(
-      new IsThrowedWithMessage(expectedClass, expectedMessage),
-      duration
-    );
+    this(new IsEmittedFailure<>(expectedClass, expectedMessage, duration));
   }
 
-  public AreEmittedFailure(final Matcher<Runnable> origin, final Duration duration) {
+  public AreEmittedFailure(Matcher<? extends Uni<? extends Runnable>> origin) {
     this.origin = origin;
-    this.duration = duration;
   }
 
   @Override
   protected boolean matchesSafely(final Multi<T> tMulti) {
-    Runnable runnable = () -> tMulti.collect().asList().await().atMost(duration);
-    return origin.matches(runnable);
+    return origin.matches(tMulti.collect().asList());
   }
 
   @Override
@@ -47,6 +43,5 @@ public final class AreEmittedFailure<T> extends TypeSafeMatcher<Multi<T>> {
     return new AreEmittedFailure<>(expectedClass, expectedMessage, duration);
   }
 
-  private final Matcher<Runnable> origin;
-  private final Duration duration;
+  private final Matcher<? extends Uni<? extends Runnable>> origin;
 }
