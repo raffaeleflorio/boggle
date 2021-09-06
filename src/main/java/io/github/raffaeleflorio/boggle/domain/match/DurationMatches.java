@@ -12,20 +12,20 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * {@link Matches} that understands duration feature and builds deadline feature
+ * {@link Matches} that understands duration feature and builds from it the deadline feature
  *
  * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class FixedDurationMatches<T> implements Matches<T> {
+public final class DurationMatches<T> implements Matches<T> {
   /**
    * Builds minutes based matches
    *
    * @param origin The matches to decorate
    * @since 1.0.0
    */
-  public FixedDurationMatches(final Matches<T> origin) {
+  public DurationMatches(final Matches<T> origin) {
     this(origin, Duration::ofMinutes);
   }
 
@@ -36,7 +36,7 @@ public final class FixedDurationMatches<T> implements Matches<T> {
    * @param durationFn The function to build duration
    * @since 1.0.0
    */
-  public FixedDurationMatches(final Matches<T> origin, final Function<Integer, Duration> durationFn) {
+  public DurationMatches(final Matches<T> origin, final Function<Integer, Duration> durationFn) {
     this(origin, durationFn, Instant::now);
   }
 
@@ -48,7 +48,7 @@ public final class FixedDurationMatches<T> implements Matches<T> {
    * @param now        The function that supply now
    * @since 1.0.0
    */
-  FixedDurationMatches(
+  DurationMatches(
     final Matches<T> origin,
     final Function<Integer, Duration> durationFn,
     final Supplier<Instant> now
@@ -65,7 +65,7 @@ public final class FixedDurationMatches<T> implements Matches<T> {
    * @param stringFn   The function to convert string to int
    * @since 1.0.0
    */
-  FixedDurationMatches(
+  DurationMatches(
     final Matches<T> origin,
     final Function<Integer, Duration> durationFn,
     final Supplier<Instant> now,
