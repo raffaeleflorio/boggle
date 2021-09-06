@@ -30,7 +30,7 @@ public final class DeadlineMatches<T> implements Matches<T> {
   }
 
   private Uni<Match<T>> mapped(final Uni<Match<T>> match) {
-    return match.onItem().transform(x -> matchFn.apply(x, deadline(x.description())));
+    return match.onItem().ifNotNull().transform(x -> matchFn.apply(x, deadline(x.description())));
   }
 
   private Instant deadline(final Description description) {

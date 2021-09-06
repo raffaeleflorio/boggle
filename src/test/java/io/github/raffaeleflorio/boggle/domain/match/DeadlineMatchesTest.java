@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 class DeadlineMatchesTest {
   @Test
@@ -44,8 +45,9 @@ class DeadlineMatchesTest {
             new Match.Fake<>(id, new Description.Fake("deadline", "1970-01-01T00:00:00Z"))
           )
         )
-      )
-        .match(UUID.randomUUID())
+      ).match(
+          UUID.randomUUID()
+        )
         .onItem().transformToUni(x -> x.sheet(UUID.randomUUID()))
         .onItem().transformToUni(sheet -> sheet.word(new Dice.Fake<>())),
       IsEmittedFailure.emits(
@@ -64,6 +66,19 @@ class DeadlineMatchesTest {
         )
       ).match(new Description.Fake("deadline", "1970-01-01T00:00:00Z")),
       IsEmitted.emits(notNullValue())
+    );
+  }
+
+  @Test
+  void testMissingMatch() {
+    assertThat(
+      new DeadlineMatches<>(
+        new Matches.Fake<>(
+          x -> Uni.createFrom().nullItem(),
+          x -> Uni.createFrom().nullItem()
+        )
+      ).match(UUID.randomUUID()),
+      IsEmitted.emits(nullValue())
     );
   }
 }
