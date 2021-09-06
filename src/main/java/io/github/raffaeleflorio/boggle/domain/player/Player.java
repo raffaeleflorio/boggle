@@ -27,15 +27,6 @@ public interface Player<T> {
    */
   final class Fake<T> implements Player<T> {
     /**
-     * Builds a fake without sheets and with random id
-     *
-     * @since 1.0.0
-     */
-    public Fake() {
-      this(UUID.randomUUID());
-    }
-
-    /**
      * Builds a fake
      *
      * @param id The id
