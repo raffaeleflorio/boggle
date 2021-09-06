@@ -70,15 +70,4 @@ class SandTimerSheetTest {
       not(AreEmittedFailure.emits(IllegalStateException.class, "Deadline reached"))
     );
   }
-
-  @Test
-  void testUniqueWordsAfterExpiration() {
-    assertThat(
-      new SandTimerSheet<>(
-        new Sheet.Fake<>(UUID.randomUUID()),
-        new SandTimer.Fake(true)
-      ).words(new Sheet.Fake<>()),
-      not(AreEmittedFailure.emits(IllegalStateException.class, "Deadline reached"))
-    );
-  }
 }

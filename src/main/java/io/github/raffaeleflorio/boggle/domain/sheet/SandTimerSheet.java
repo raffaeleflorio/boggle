@@ -69,11 +69,6 @@ public final class SandTimerSheet<T> implements Sheet<T> {
   }
 
   @Override
-  public Multi<Dice<T>> words(final Sheet<T> other) {
-    return origin.words(other);
-  }
-
-  @Override
   public Uni<Void> word(final Dice<T> word) {
     if (sandTimer.expired()) {
       return Uni.createFrom().failure(exception);

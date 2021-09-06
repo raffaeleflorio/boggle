@@ -52,47 +52,6 @@ class InMemorySheetTest {
   }
 
   @Test
-  void testUniqueWords() {
-    assertThat(
-      new InMemorySheet<>(
-        new Description.Fake(),
-        Set.of(
-          new Dice.Fake<>(List.of(1)),
-          new Dice.Fake<>(List.of(1, 2, 3))
-        )
-      ).words(
-        new InMemorySheet<>(
-          new Description.Fake(),
-          Set.of(
-            new Dice.Fake<>(List.of(1, 2, 3))
-          )
-        )
-      ).onItem().transform(Dice::values),
-      AreEmitted.emits(
-        contains(
-          List.of(1)
-        )
-      )
-    );
-  }
-
-  @Test
-  void testUniqueWordsWithEmptyOther() {
-    assertThat(
-      new InMemorySheet<>(
-        new Description.Fake(),
-        Set.of(
-          new Dice.Fake<>(List.of(1)),
-          new Dice.Fake<>(List.of(1, 2, 3))
-        )
-      ).words(
-        new InMemorySheet<>(new Description.Fake())
-      ).onItem().transform(Dice::values),
-      AreEmitted.emits(hasSize(2))
-    );
-  }
-
-  @Test
   void testDescription() {
     assertThat(
       new InMemorySheet<>(new Description.Fake("fake", "value"))

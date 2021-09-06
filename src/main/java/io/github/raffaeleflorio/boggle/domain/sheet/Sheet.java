@@ -32,15 +32,6 @@ public interface Sheet<T> {
   Multi<Dice<T>> words();
 
   /**
-   * Builds asynchronously the unique words
-   *
-   * @param other The sheet to compare
-   * @return The words
-   * @since 1.0.0
-   */
-  Multi<Dice<T>> words(Sheet<T> other);
-
-  /**
    * Writes asynchronously a new word
    *
    * @param word The word
@@ -92,7 +83,7 @@ public interface Sheet<T> {
      * @since 1.0.0
      */
     public Fake(final UUID id, final Description description) {
-      this(id, description, List.of(), List.of());
+      this(id, description, List.of());
     }
 
     /**
@@ -102,8 +93,8 @@ public interface Sheet<T> {
      * @param unique The unique words
      * @since 1.0.0
      */
-    public Fake(final List<Dice<T>> words, final List<Dice<T>> unique) {
-      this(UUID.randomUUID(), new Description.Fake(), words, unique);
+    public Fake(final List<Dice<T>> words) {
+      this(UUID.randomUUID(), new Description.Fake(), words);
     }
 
     /**
@@ -112,18 +103,11 @@ public interface Sheet<T> {
      * @param id          The id
      * @param description The description
      * @param words       The words
-     * @param unique      The unique words
      * @since 1.0.0
      */
-    public Fake(
-      final UUID id,
-      final Description description,
-      final List<Dice<T>> words,
-      final List<Dice<T>> unique
-    ) {
+    public Fake(final UUID id, final Description description, final List<Dice<T>> words) {
       this.id = id;
       this.words = words;
-      this.unique = unique;
       this.description = description;
     }
 
@@ -142,11 +126,6 @@ public interface Sheet<T> {
     }
 
     @Override
-    public Multi<Dice<T>> words(final Sheet<T> other) {
-      return multi(unique);
-    }
-
-    @Override
     public Uni<Void> word(final Dice<T> word) {
       return Uni.createFrom().voidItem();
     }
@@ -159,6 +138,5 @@ public interface Sheet<T> {
     private final UUID id;
     private final Description description;
     private final List<Dice<T>> words;
-    private final List<Dice<T>> unique;
   }
 }

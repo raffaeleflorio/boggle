@@ -49,29 +49,13 @@ class SheetTest {
             new Dice.Fake<>(List.of(1, 42)),
             new Dice.Fake<>(List.of(2, 43)),
             new Dice.Fake<>(List.of(3, 44))
-          ),
-          List.of()
+          )
         ).words().onItem().transform(Dice::values),
         AreEmitted.emits(
           contains(
             List.of(1, 42),
             List.of(2, 43),
             List.of(3, 44)
-          )
-        )
-      );
-    }
-
-    @Test
-    void testUniqueWords() {
-      assertThat(
-        new Sheet.Fake<>(
-          List.of(),
-          List.of(new Dice.Fake<>(List.of("UNIQUE")))
-        ).words(new Sheet.Fake<>()).onItem().transform(Dice::values),
-        AreEmitted.emits(
-          contains(
-            List.of("UNIQUE")
           )
         )
       );
