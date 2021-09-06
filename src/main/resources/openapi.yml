@@ -213,12 +213,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - id
-            properties:
-              id:
-                $ref: '#/components/schemas/Id'
+            $ref: '#/components/schemas/Player'
   parameters:
     Match:
       name: match
@@ -285,6 +280,13 @@ components:
         additionalProperties:
           type: integer
           minimum: 1
+    Player:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
     Match:
       type: object
       required:
