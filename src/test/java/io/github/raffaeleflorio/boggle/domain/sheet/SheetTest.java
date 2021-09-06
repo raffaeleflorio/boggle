@@ -63,17 +63,16 @@ class SheetTest {
     }
 
     @Test
-    void testUniqueWords() {
+    void testDiff() {
       assertThat(
         new Sheet.Fake<>(
           List.of(),
           List.of(new Dice.Fake<>(List.of("UNIQUE")))
-        ).words(new Sheet.Fake<>()).onItem().transform(Dice::values),
-        AreEmitted.emits(
-          contains(
-            List.of("UNIQUE")
-          )
         )
+          .diff(new Sheet.Fake<>())
+          .onItem().transformToMulti(Sheet::words)
+          .onItem().transformToIterable(Dice::values),
+        AreEmitted.emits(contains("UNIQUE"))
       );
     }
 

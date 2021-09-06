@@ -69,8 +69,8 @@ public final class SandTimerSheet<T> implements Sheet<T> {
   }
 
   @Override
-  public Multi<Dice<T>> words(final Sheet<T> other) {
-    return origin.words(other);
+  public Uni<Sheet<T>> diff(final Sheet<T> other) {
+    return origin.diff(other);
   }
 
   @Override

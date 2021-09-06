@@ -32,13 +32,13 @@ public interface Sheet<T> {
   Multi<Dice<T>> words();
 
   /**
-   * Builds asynchronously the unique words
+   * Builds asynchronously the difference with another sheet
    *
    * @param other The sheet to compare
-   * @return The words
+   * @return The difference
    * @since 1.0.0
    */
-  Multi<Dice<T>> words(Sheet<T> other);
+  Uni<Sheet<T>> diff(Sheet<T> other);
 
   /**
    * Writes asynchronously a new word
@@ -98,12 +98,12 @@ public interface Sheet<T> {
     /**
      * Builds a fake with random id
      *
-     * @param words  The words
-     * @param unique The unique words
+     * @param words The words
+     * @param diff  The diff
      * @since 1.0.0
      */
-    public Fake(final List<Dice<T>> words, final List<Dice<T>> unique) {
-      this(UUID.randomUUID(), new Description.Fake(), words, unique);
+    public Fake(final List<Dice<T>> words, final List<Dice<T>> diff) {
+      this(UUID.randomUUID(), new Description.Fake(), words, diff);
     }
 
     /**
@@ -112,18 +112,18 @@ public interface Sheet<T> {
      * @param id          The id
      * @param description The description
      * @param words       The words
-     * @param unique      The unique words
+     * @param diff        The diff
      * @since 1.0.0
      */
     public Fake(
       final UUID id,
       final Description description,
       final List<Dice<T>> words,
-      final List<Dice<T>> unique
+      final List<Dice<T>> diff
     ) {
       this.id = id;
       this.words = words;
-      this.unique = unique;
+      this.diff = diff;
       this.description = description;
     }
 
@@ -142,8 +142,8 @@ public interface Sheet<T> {
     }
 
     @Override
-    public Multi<Dice<T>> words(final Sheet<T> other) {
-      return multi(unique);
+    public Uni<Sheet<T>> diff(final Sheet<T> other) {
+      return Uni.createFrom().item(new Sheet.Fake<>(id, description, diff, diff));
     }
 
     @Override
@@ -159,6 +159,6 @@ public interface Sheet<T> {
     private final UUID id;
     private final Description description;
     private final List<Dice<T>> words;
-    private final List<Dice<T>> unique;
+    private final List<Dice<T>> diff;
   }
 }
