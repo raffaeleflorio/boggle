@@ -1,6 +1,7 @@
 package io.github.raffaeleflorio.boggle.infrastructure.grid;
 
 import io.github.raffaeleflorio.boggle.domain.description.Description;
+import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.github.raffaeleflorio.boggle.domain.grid.Grid;
 import org.junit.jupiter.api.Test;
 
@@ -9,8 +10,7 @@ import java.util.Map;
 
 import static io.github.raffaeleflorio.boggle.hamcrest.IsEmitted.emits;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 
 class InMemoryGridsTest {
   @Test
@@ -19,7 +19,8 @@ class InMemoryGridsTest {
       new InMemoryGrids<>(
         Map.of(
           description -> description.feature("feature").equals(List.of("value")),
-          new Grid.Fake<>())
+          new Grid.Fake<>()
+        )
       ).grid(
         new Description.Fake("feature", "value")
       ),
@@ -30,9 +31,31 @@ class InMemoryGridsTest {
   @Test
   void testEmptyGrids() {
     assertThat(
-      new InMemoryGrids<>(Map.of())
-        .grid(new Description.Fake("any", "value")),
+      new InMemoryGrids<>(Map.of()).grid(new Description.Fake("any", "value")),
       emits(nullValue())
+    );
+  }
+
+  @Test
+  void testExistingGridShuffled() {
+    assertThat(
+      new InMemoryGrids<>(
+        Map.of(
+          x -> true,
+          new Grid.Fake<>(
+            new Dice.Fake<>(
+              List.of(),
+              x -> List.of(
+                "SH", "UFFL", "ED"
+              )
+            )
+          )
+        )
+      ).grid(
+          new Description.Fake()
+        )
+        .onItem().transform(Grid::values),
+      emits(contains("SH", "UFFL", "ED"))
     );
   }
 }
