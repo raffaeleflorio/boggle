@@ -1,6 +1,7 @@
 package io.github.raffaeleflorio.boggle.domain.match;
 
 import io.github.raffaeleflorio.boggle.domain.description.Description;
+import io.github.raffaeleflorio.boggle.domain.grid.Grid;
 import io.github.raffaeleflorio.boggle.domain.sheet.Sheets;
 import io.github.raffaeleflorio.boggle.hamcrest.IsEmitted;
 import org.junit.jupiter.api.Nested;
@@ -53,6 +54,23 @@ class MatchTest {
       assertThat(
         new Match.Fake<>(new Sheets.Fake<>()).sheet(UUID.randomUUID()),
         IsEmitted.emits(nullValue())
+      );
+    }
+
+    @Test
+    void testPlayers() {
+      var expected = UUID.randomUUID();
+      assertThat(
+        new Match.Fake<>(Map.of(expected, 123)).players(),
+        emits(contains(expected))
+      );
+    }
+
+    @Test
+    void testGrid() {
+      assertThat(
+        new Match.Fake<>(new Grid.Fake<>()).grid(),
+        IsEmitted.emits(notNullValue())
       );
     }
   }

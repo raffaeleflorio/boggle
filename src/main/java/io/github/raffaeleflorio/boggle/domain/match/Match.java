@@ -1,6 +1,7 @@
 package io.github.raffaeleflorio.boggle.domain.match;
 
 import io.github.raffaeleflorio.boggle.domain.description.Description;
+import io.github.raffaeleflorio.boggle.domain.grid.Grid;
 import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
 import io.github.raffaeleflorio.boggle.domain.sheet.Sheets;
 import io.smallrye.mutiny.Multi;
@@ -51,6 +52,22 @@ public interface Match<T> {
   Description description();
 
   /**
+   * Builds asynchronously the grid
+   *
+   * @return The grid
+   * @since 1.0.0
+   */
+  Uni<Grid<T>> grid();
+
+  /**
+   * Builds asynchronously the players playing the game
+   *
+   * @return The players
+   * @since 1.0.0
+   */
+  Multi<UUID> players();
+
+  /**
    * {@link Match} useful for testing
    *
    * @param <T> The word type
@@ -74,7 +91,7 @@ public interface Match<T> {
      * @since 1.0.0
      */
     public Fake(final UUID id, final Description description) {
-      this(id, description, Map.of(), new Sheets.Fake<>());
+      this(id, description, Map.of(), new Sheets.Fake<>(), new Grid.Fake<>());
     }
 
     /**
@@ -84,7 +101,7 @@ public interface Match<T> {
      * @since 1.0.0
      */
     public Fake(final Map<UUID, Integer> scores) {
-      this(UUID.randomUUID(), new Description.Fake(), scores, new Sheets.Fake<>());
+      this(UUID.randomUUID(), new Description.Fake(), scores, new Sheets.Fake<>(), new Grid.Fake<>());
     }
 
 
@@ -95,7 +112,17 @@ public interface Match<T> {
      * @since 1.0.0
      */
     public Fake(final Sheets<T> sheets) {
-      this(UUID.randomUUID(), new Description.Fake(), Map.of(), sheets);
+      this(UUID.randomUUID(), new Description.Fake(), Map.of(), sheets, new Grid.Fake<>());
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param grid The grid
+     * @since 1.0.0
+     */
+    public Fake(final Grid<T> grid) {
+      this(UUID.randomUUID(), new Description.Fake(), Map.of(), new Sheets.Fake<>(), grid);
     }
 
     /**
@@ -105,18 +132,21 @@ public interface Match<T> {
      * @param description The description
      * @param scores      The scores
      * @param sheets      The sheets
+     * @param grid        The grid
      * @since 1.0.0
      */
     public Fake(
       final UUID id,
       final Description description,
       final Map<UUID, Integer> scores,
-      final Sheets<T> sheets
+      final Sheets<T> sheets,
+      final Grid<T> grid
     ) {
       this.id = id;
       this.description = description;
       this.scores = scores;
       this.sheets = sheets;
+      this.grid = grid;
     }
 
     @Override
@@ -139,9 +169,20 @@ public interface Match<T> {
       return description;
     }
 
+    @Override
+    public Uni<Grid<T>> grid() {
+      return Uni.createFrom().item(grid);
+    }
+
+    @Override
+    public Multi<UUID> players() {
+      return Multi.createFrom().items(scores.keySet()::stream);
+    }
+
     private final UUID id;
     private final Description description;
     private final Map<UUID, Integer> scores;
     private final Sheets<T> sheets;
+    private final Grid<T> grid;
   }
 }
