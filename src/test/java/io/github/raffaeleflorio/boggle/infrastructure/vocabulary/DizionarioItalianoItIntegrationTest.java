@@ -11,9 +11,8 @@ import java.util.List;
 import static io.github.raffaeleflorio.boggle.hamcrest.IsEmitted.emits;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
 
-class DizionarioItalianoItTest {
+class DizionarioItalianoItIntegrationTest {
   @Test
   void testNotContainsAnEnglishWord() {
     assertThat(

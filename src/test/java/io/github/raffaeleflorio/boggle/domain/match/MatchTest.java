@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import static io.github.raffaeleflorio.boggle.hamcrest.AreEmitted.emits;
-import static io.github.raffaeleflorio.boggle.hamcrest.IsEmitted.emits;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
