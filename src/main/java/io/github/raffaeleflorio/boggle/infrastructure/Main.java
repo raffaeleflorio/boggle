@@ -15,7 +15,6 @@ import io.github.raffaeleflorio.boggle.domain.score.IfInVocabulary;
 import io.github.raffaeleflorio.boggle.infrastructure.grid.InMemoryGrids;
 import io.github.raffaeleflorio.boggle.infrastructure.match.InMemoryMatches;
 import io.github.raffaeleflorio.boggle.infrastructure.vocabulary.DizionarioItalianoIt;
-import io.github.raffaeleflorio.boggle.infrastructure.vocabulary.TreccaniVocabulary;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.ext.web.client.WebClient;
 
