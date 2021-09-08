@@ -1,6 +1,8 @@
 package io.github.raffaeleflorio.boggle.infrastructure.grid;
 
 import io.github.raffaeleflorio.boggle.domain.description.Description;
+import io.github.raffaeleflorio.boggle.domain.dice.Dice;
+import io.github.raffaeleflorio.boggle.domain.grid.Grid;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.junit.jupiter.api.Test;
@@ -16,11 +18,15 @@ class GridAsJsonTest {
   void testEncode() {
     assertThat(
       new GridAsJson(
-        new Description.Fake(
-          Map.of(
-            "lang", List.of("any language"),
-            "size", List.of("any size"),
-            "layout", List.of("A", "B", "C")
+        new Grid.Fake<>(
+          new Dice.Fake<>(),
+          x -> false,
+          new Description.Fake(
+            Map.of(
+              "lang", List.of("any language"),
+              "size", List.of("any size"),
+              "layout", List.of("A", "B", "C")
+            )
           )
         )
       ).encode(),
