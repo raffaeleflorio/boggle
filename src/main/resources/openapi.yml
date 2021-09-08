@@ -75,21 +75,17 @@ paths:
       tags:
         - match
         - organizer
-  /matches/{match}/sheet:
+  /matches/{match}/word:
     post:
-      summary: Builds a sheet
-      operationId: buildSheet
+      summary: Send a word
+      operationId: sendWord
       parameters:
         - $ref: '#/components/parameters/Match'
       requestBody:
-        $ref: '#/components/requestBodies/Player'
+        $ref: '#/components/requestBodies/PlayerWord'
       responses:
-        200:
-          description: Sheet built
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Sheet'
+        202:
+          description: Word sent
         404:
           $ref: '#/components/responses/MatchNotFound'
       tags:
@@ -116,25 +112,6 @@ paths:
           $ref: '#/components/responses/ScoreNotFound'
       tags:
         - match
-        - player
-  /sheets/{sheet}:
-    post:
-      summary: Writes a word
-      operationId: writeWord
-      parameters:
-        - $ref: '#/components/parameters/Sheet'
-      requestBody:
-        $ref: '#/components/requestBodies/Word'
-      responses:
-        204:
-          description: Word written
-        404:
-          $ref: '#/components/responses/SheetNotFound'
-        410:
-          $ref: '#/components/responses/SheetExpired'
-        429:
-          $ref: '#/components/responses/TooManyAttempts'
-      tags:
         - player
 
 components:
@@ -180,23 +157,20 @@ components:
                 minimum: 1
                 maximum: 10
                 default: 3
-    Word:
-      description: A word
+    PlayerWord:
+      description: A word by a player
       content:
         application/json:
           schema:
             type: object
             required:
+              - player
               - dice
             properties:
+              player:
+                $ref: '#/components/schemas/Id'
               dice:
                 $ref: '#/components/schemas/Dice'
-    Player:
-      description: A player
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Player'
   parameters:
     Match:
       name: match
@@ -230,18 +204,6 @@ components:
       items:
         type: string
         example: [ W, O, R, D ]
-    Sheet:
-      type: object
-      required:
-        - id
-        - words
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        words:
-          type: array
-          items:
-            $ref: '#/components/schemas/Dice'
     Grid:
       type: object
       required:

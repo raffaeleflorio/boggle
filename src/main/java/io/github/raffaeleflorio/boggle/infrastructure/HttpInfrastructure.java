@@ -3,7 +3,9 @@ package io.github.raffaeleflorio.boggle.infrastructure;
 import io.github.raffaeleflorio.boggle.domain.match.Match;
 import io.github.raffaeleflorio.boggle.domain.match.Matches;
 import io.github.raffaeleflorio.boggle.infrastructure.description.JsonAsDescription;
+import io.github.raffaeleflorio.boggle.infrastructure.dice.JsonDice;
 import io.github.raffaeleflorio.boggle.infrastructure.match.MatchAsJson;
+import io.github.raffaeleflorio.boggle.infrastructure.player.JsonPlayer;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonArray;
@@ -64,6 +66,7 @@ final class HttpInfrastructure extends AbstractVerticle {
     routerBuilder.operation("createMatch").handler(this::createMatch);
     routerBuilder.operation("getMatch").handler(this::getMatch);
     routerBuilder.operation("getMatchScore").handler(this::getMatchScore);
+    routerBuilder.operation("sendWord").handler(this::sendWord);
     return routerBuilder;
   }
 
@@ -93,6 +96,17 @@ final class HttpInfrastructure extends AbstractVerticle {
       .onItem().ifNotNull().transform(JsonArray::encodePrettily)
       .onItem().ifNotNull().<Runnable>transform(json -> () -> ctx.response().setStatusCode(200).endAndForget(json))
       .onFailure().recoverWithItem(() -> ctx.response().setStatusCode(404).endAndForget())
+      .subscribe().with(Runnable::run);
+  }
+
+  private void sendWord(final RoutingContext ctx) {
+    var body = ctx.getBodyAsJson();
+    matches
+      .match(UUID.fromString(ctx.pathParam("match")))
+      .onItem().ifNotNull().transformToUni(match -> match.sheet(new JsonPlayer(body).id()))
+      .onItem().ifNotNull().transformToUni(sheet -> sheet.word(new JsonDice(body)))
+      .onItem().<Runnable>transform(x -> () -> ctx.response().setStatusCode(202).endAndForget())
+      .onFailure().recoverWithItem(() -> ctx.response().setStatusCode(404))
       .subscribe().with(Runnable::run);
   }
 
