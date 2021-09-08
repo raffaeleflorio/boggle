@@ -18,7 +18,7 @@ public final class DizionarioItalianoIt implements Vocabulary<CharSequence> {
    * @param webClient The webclient
    * @since 1.0.0
    */
-  DizionarioItalianoIt(final WebClient webClient) {
+  public DizionarioItalianoIt(final WebClient webClient) {
     this(
       new HttpVocabulary(
         webClient,

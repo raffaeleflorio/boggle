@@ -14,6 +14,7 @@ import io.github.raffaeleflorio.boggle.domain.score.IfInGrid;
 import io.github.raffaeleflorio.boggle.domain.score.IfInVocabulary;
 import io.github.raffaeleflorio.boggle.infrastructure.grid.InMemoryGrids;
 import io.github.raffaeleflorio.boggle.infrastructure.match.InMemoryMatches;
+import io.github.raffaeleflorio.boggle.infrastructure.vocabulary.DizionarioItalianoIt;
 import io.github.raffaeleflorio.boggle.infrastructure.vocabulary.TreccaniVocabulary;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.ext.web.client.WebClient;
@@ -58,7 +59,7 @@ public final class Main {
                 match -> new IfInGrid<>(
                   new IfInVocabulary<>(
                     new FourByFourScore<>(),
-                    new TreccaniVocabulary(WebClient.create(vertx))
+                    new DizionarioItalianoIt(WebClient.create(vertx))
                   ),
                   match.grid()
                 )
