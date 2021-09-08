@@ -1,7 +1,6 @@
 package io.github.raffaeleflorio.boggle.infrastructure.grid;
 
 import io.github.raffaeleflorio.boggle.domain.description.Description;
-import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.github.raffaeleflorio.boggle.domain.grid.Grid;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -19,8 +18,6 @@ class GridAsJsonTest {
     assertThat(
       new GridAsJson(
         new Grid.Fake<>(
-          new Dice.Fake<>(),
-          x -> false,
           new Description.Fake(
             Map.of(
               "lang", List.of("any language"),
