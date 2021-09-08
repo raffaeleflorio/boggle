@@ -28,8 +28,8 @@ public final class Main {
     vertx.deployVerticleAndAwait(
       new HttpInfrastructure(
         new DurationMatches<>(
-          new ClassicRuledMatches<>(
-            new DeadlineMatches<>(
+          new DeadlineMatches<>(
+            new ClassicRuledMatches<>(
               new InMemoryMatches<>(
                 new MappedGrids<>(
                   new InMemoryGrids<>(
@@ -47,21 +47,21 @@ public final class Main {
                   ),
                   LayoutGrid::new
                 )
-              )
-            ),
-            Map.of(
-              new FeatureEqualityPredicate(
-                Map.of(
-                  "lang", List.of("it"),
-                  "size", List.of("4x4")
-                )
               ),
-              match -> new IfInGrid<>(
-                new IfInVocabulary<>(
-                  new FourByFourScore<>(),
-                  new TreccaniVocabulary(WebClient.create(vertx))
+              Map.of(
+                new FeatureEqualityPredicate(
+                  Map.of(
+                    "lang", List.of("it"),
+                    "size", List.of("4x4")
+                  )
                 ),
-                match.grid()
+                match -> new IfInGrid<>(
+                  new IfInVocabulary<>(
+                    new FourByFourScore<>(),
+                    new TreccaniVocabulary(WebClient.create(vertx))
+                  ),
+                  match.grid()
+                )
               )
             )
           ),

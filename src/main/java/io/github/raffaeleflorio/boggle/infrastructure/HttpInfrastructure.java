@@ -6,6 +6,7 @@ import io.github.raffaeleflorio.boggle.infrastructure.description.JsonAsDescript
 import io.github.raffaeleflorio.boggle.infrastructure.match.MatchAsJson;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.vertx.core.AbstractVerticle;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.core.http.HttpServer;
 import io.vertx.mutiny.ext.web.Router;
@@ -62,6 +63,7 @@ final class HttpInfrastructure extends AbstractVerticle {
   private RouterBuilder binded(final RouterBuilder routerBuilder) {
     routerBuilder.operation("createMatch").handler(this::createMatch);
     routerBuilder.operation("getMatch").handler(this::getMatch);
+    routerBuilder.operation("getMatchScore").handler(this::getMatchScore);
     return routerBuilder;
   }
 
@@ -80,6 +82,18 @@ final class HttpInfrastructure extends AbstractVerticle {
 
   private void getMatch(final RoutingContext ctx) {
     reply(ctx, matches.match(UUID.fromString(ctx.pathParam("match"))));
+  }
+
+  private void getMatchScore(final RoutingContext ctx) {
+    matches
+      .match(UUID.fromString(ctx.pathParam("match")))
+      .onItem().ifNotNull().transformToMulti(Match::score)
+      .collect().asList()
+      .onItem().ifNotNull().transform(JsonArray::new)
+      .onItem().ifNotNull().transform(JsonArray::encodePrettily)
+      .onItem().ifNotNull().<Runnable>transform(json -> () -> ctx.response().setStatusCode(200).endAndForget(json))
+      .onFailure().recoverWithItem(() -> ctx.response().setStatusCode(404).endAndForget())
+      .subscribe().with(Runnable::run);
   }
 
   private Uni<HttpServer> listeningHttpServer(final Router router) {
