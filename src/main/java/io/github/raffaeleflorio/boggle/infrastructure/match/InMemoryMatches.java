@@ -58,12 +58,13 @@ public final class InMemoryMatches<T> implements Matches<T> {
     var id = randomId.get();
     return grids
       .grid(description)
-      .onItem().transform(grid -> matchFn.apply(
+      .onItem().ifNotNull().transform(Grid::shuffled)
+      .onItem().ifNotNull().transform(grid -> matchFn.apply(
           description.feature("id", List.of(id.toString())),
           grid
         )
       )
-      .onItem().invoke(match -> map.put(id, match));
+      .onItem().ifNotNull().invoke(match -> map.put(id, match));
   }
 
   @Override
