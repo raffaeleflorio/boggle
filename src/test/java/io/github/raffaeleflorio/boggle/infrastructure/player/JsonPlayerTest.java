@@ -13,7 +13,7 @@ class JsonPlayerTest {
   void testId() {
     var expected = UUID.randomUUID();
     assertThat(
-      new JsonPlayer(new JsonObject().put("id", expected.toString())).id(),
+      new JsonPlayer(new JsonObject().put("player", expected.toString())).id(),
       equalTo(expected)
     );
   }

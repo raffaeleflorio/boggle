@@ -24,7 +24,7 @@ public final class JsonPlayer implements Player<CharSequence> {
 
   @Override
   public UUID id() {
-    return UUID.fromString(origin.getString("id"));
+    return UUID.fromString(origin.getString("player"));
   }
 
   private final JsonObject origin;
