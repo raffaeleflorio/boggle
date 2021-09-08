@@ -14,9 +14,14 @@ import io.vertx.mutiny.core.http.HttpServer;
 import io.vertx.mutiny.ext.web.Router;
 import io.vertx.mutiny.ext.web.RoutingContext;
 import io.vertx.mutiny.ext.web.handler.AuthenticationHandler;
+import io.vertx.mutiny.ext.web.handler.CorsHandler;
 import io.vertx.mutiny.ext.web.openapi.RouterBuilder;
 
+import java.util.Set;
 import java.util.UUID;
+
+import static io.vertx.core.http.HttpMethod.GET;
+import static io.vertx.core.http.HttpMethod.POST;
 
 // TODO refactoring
 
@@ -42,6 +47,7 @@ final class HttpInfrastructure extends AbstractVerticle {
     return RouterBuilder
       .create(vertx, "openapi.yml")
       .onItem().transform(this::passThruAuth)
+      .onItem().transform(this::passhThruCors)
       .onItem().transform(this::binded)
       .onItem().transform(RouterBuilder::createRouter)
       .onItem().transformToUni(this::listeningHttpServer)
@@ -60,6 +66,10 @@ final class HttpInfrastructure extends AbstractVerticle {
         routingContext.next();
       }
     });
+  }
+
+  private RouterBuilder passhThruCors(final RouterBuilder routerBuilder) {
+    return routerBuilder.rootHandler(CorsHandler.create("*").allowedMethods(Set.of(GET, POST)));
   }
 
   private RouterBuilder binded(final RouterBuilder routerBuilder) {
