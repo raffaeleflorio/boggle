@@ -90,6 +90,16 @@ public interface Grid<T> extends Dice<T> {
     /**
      * Builds a fake
      *
+     * @param description The description
+     * @since 1.0.0
+     */
+    public Fake(final Description description) {
+      this(new Dice.Fake<>(), x -> false, description);
+    }
+
+    /**
+     * Builds a fake
+     *
      * @param dice         The dice
      * @param compatibleFn The function to build compatibility
      * @param description  The description
