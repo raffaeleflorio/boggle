@@ -63,16 +63,7 @@ public final class UnorderedDice<T> implements Dice<T> {
   }
 
   private <D> List<D> mappedDice(final Function<Die<T>, D> map) {
-    return shuffledDice().stream().map(map).collect(Collectors.toUnmodifiableList());
-  }
-
-  private List<Die<T>> shuffledDice() {
-    var x = cloneFn.apply(dice);
-    for (var i = dice.size() - 1; i > 0; i--) {
-      var j = rolledDie(i + 1).value();
-      x.set(i, x.set(j, x.get(i)));
-    }
-    return x;
+    return dice.stream().map(map).collect(Collectors.toUnmodifiableList());
   }
 
   private Die<Integer> rolledDie(final Integer bound) {
@@ -81,7 +72,16 @@ public final class UnorderedDice<T> implements Dice<T> {
 
   @Override
   public Dice<T> shuffled() {
-    return new UnorderedDice<>(mappedDice(Die::rolled), dieFn);
+    return new UnorderedDice<>(shuffledDice(mappedDice(Die::rolled)), dieFn);
+  }
+
+  private List<Die<T>> shuffledDice(final List<Die<T>> from) {
+    var x = cloneFn.apply(from);
+    for (var i = dice.size() - 1; i > 0; i--) {
+      var j = rolledDie(i + 1).value();
+      x.set(i, x.set(j, x.get(i)));
+    }
+    return x;
   }
 
   private final Collection<Die<T>> dice;

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 
 class UnorderedDiceTest {
@@ -19,7 +20,7 @@ class UnorderedDiceTest {
           new Die.Fake<>(3)
         )
       ).values(),
-      containsInAnyOrder(1, 2, 3)
+      contains(1, 2, 3)
     );
   }
 
