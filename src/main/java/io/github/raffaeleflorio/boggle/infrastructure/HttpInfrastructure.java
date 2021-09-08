@@ -106,7 +106,7 @@ final class HttpInfrastructure extends AbstractVerticle {
       .onItem().ifNotNull().transformToUni(match -> match.sheet(new JsonPlayer(body).id()))
       .onItem().ifNotNull().transformToUni(sheet -> sheet.word(new JsonDice(body)))
       .onItem().<Runnable>transform(x -> () -> ctx.response().setStatusCode(202).endAndForget())
-      .onFailure().recoverWithItem(() -> ctx.response().setStatusCode(404))
+      .onFailure().recoverWithItem(() -> ctx.response().setStatusCode(404).endAndForget())
       .subscribe().with(Runnable::run);
   }
 
