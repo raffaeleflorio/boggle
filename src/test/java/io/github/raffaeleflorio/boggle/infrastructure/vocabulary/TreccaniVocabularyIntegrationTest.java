@@ -29,7 +29,7 @@ class TreccaniVocabularyIntegrationTest {
   }
 
   @Test
-  void testNotContainsAnItalianWord() {
+  void testContainsAnItalianWord() {
     assertThat(
       new TreccaniVocabulary(WebClient.create(Vertx.vertx())).contains(
         new Dice.Fake<>(
