@@ -1,5 +1,6 @@
 package io.github.raffaeleflorio.boggle.domain.grid;
 
+import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,10 +15,20 @@ class GridTest {
   @Nested
   class FakeTest {
     @Test
-    void testDescription() {
+    void testDefaultDescription() {
       assertThat(
         new Grid.Fake<>().description().feature("id"),
         contains("fake grid")
+      );
+    }
+
+    @Test
+    void testCustomDescription() {
+      assertThat(
+        new Grid.Fake<>(new Description.Fake("feature", "value"))
+          .description()
+          .feature("feature"),
+        contains("value")
       );
     }
 
