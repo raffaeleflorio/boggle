@@ -11,11 +11,11 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-class GridDescriptionAsJsonTest {
+class GridAsJsonTest {
   @Test
   void testEncode() {
     assertThat(
-      new GridDescriptionAsJson(
+      new GridAsJson(
         new Description.Fake(
           Map.of(
             "lang", List.of("any language"),

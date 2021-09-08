@@ -10,8 +10,12 @@ import io.vertx.core.json.JsonObject;
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class GridDescriptionAsJson extends JsonObject {
-  public GridDescriptionAsJson(final Description description) {
+public final class GridAsJson extends JsonObject {
+  public GridAsJson(final Grid<?> grid) {
+    this(grid.description());
+  }
+
+  public GridAsJson(final Description description) {
     super(
       new JsonObject()
         .put("lang", description.feature("lang").get(0))
