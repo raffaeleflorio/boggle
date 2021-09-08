@@ -30,8 +30,7 @@ public final class InMemoryGrids<T> implements Grids<T> {
   public Uni<Grid<T>> grid(final Description description) {
     return Multi.createFrom().iterable(grids.entrySet())
       .filter(entry -> entry.getKey().test(description)).collect().first()
-      .onItem().ifNotNull().transform(Map.Entry::getValue)
-      .onItem().ifNotNull().transform(Grid::shuffled);
+      .onItem().ifNotNull().transform(Map.Entry::getValue);
   }
 
   private final Map<Predicate<Description>, Grid<T>> grids;

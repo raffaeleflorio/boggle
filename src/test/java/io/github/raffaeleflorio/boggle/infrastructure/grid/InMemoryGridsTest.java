@@ -37,16 +37,18 @@ class InMemoryGridsTest {
   }
 
   @Test
-  void testExistingGridShuffled() {
+  void testExistingGridNotShuffled() {
     assertThat(
       new InMemoryGrids<>(
         Map.of(
           x -> true,
           new Grid.Fake<>(
             new Dice.Fake<>(
-              List.of(),
+              List.of(
+                "NOT", "SHUFFLED"
+              ),
               x -> List.of(
-                "SH", "UFFL", "ED"
+                "SHUFFLED", "NOT"
               )
             )
           )
@@ -55,7 +57,7 @@ class InMemoryGridsTest {
           new Description.Fake()
         )
         .onItem().transform(Grid::values),
-      emits(contains("SH", "UFFL", "ED"))
+      emits(contains("NOT", "SHUFFLED"))
     );
   }
 }
