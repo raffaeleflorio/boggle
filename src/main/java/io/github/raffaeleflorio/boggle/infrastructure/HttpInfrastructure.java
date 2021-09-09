@@ -36,10 +36,14 @@ final class HttpInfrastructure extends AbstractVerticle {
    * Builds the HTTP infrastructure
    *
    * @param matches The matches
+   * @param port    The port
+   * @param iface   The interface
    * @since 1.0.0
    */
-  HttpInfrastructure(final Matches<CharSequence> matches) {
+  HttpInfrastructure(final Matches<CharSequence> matches, final Integer port, final String iface) {
     this.matches = matches;
+    this.port = port;
+    this.iface = iface;
   }
 
   @Override
@@ -123,8 +127,10 @@ final class HttpInfrastructure extends AbstractVerticle {
   private Uni<HttpServer> listeningHttpServer(final Router router) {
     return vertx.createHttpServer()
       .requestHandler(router)
-      .listen(37608, "127.0.0.1");
+      .listen(port, iface);
   }
 
   private final Matches<CharSequence> matches;
+  private final Integer port;
+  private final String iface;
 }

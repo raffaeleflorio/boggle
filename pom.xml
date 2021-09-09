@@ -13,10 +13,12 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <mainClass>io.github.raffaeleflorio.boggle.infrastructure.Main</mainClass>
 
     <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
+    <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
     <junit.version>5.7.2</junit.version>
     <hamcrest.version>2.2</hamcrest.version>
     <mutiny.version>1.0.0</mutiny.version>
@@ -85,6 +87,16 @@
       <artifactId>smallrye-mutiny-vertx-web-openapi</artifactId>
       <version>${mutiny-vertx.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-config</artifactId>
+      <version>${vertx.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.smallrye.reactive</groupId>
+      <artifactId>smallrye-mutiny-vertx-config</artifactId>
+      <version>${mutiny-vertx.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -96,6 +108,30 @@
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven-javadoc-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>${maven-shade-plugin.version}</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
+          <transformers>
+            <transformer
+              implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+              <manifestEntries>
+                <Main-Class>${mainClass}</Main-Class>
+              </manifestEntries>
+            </transformer>
+          </transformers>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>

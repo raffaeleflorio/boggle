@@ -57,7 +57,8 @@ final class HttpVocabulary implements Vocabulary<CharSequence> {
       .expect(ResponsePredicate.contentType("text/html"))
       .send()
       .onItem().transform(HttpResponse::bodyAsString)
-      .onItem().transform(response -> !response.contains(nokTag));
+      .onItem().transform(response -> !response.contains(nokTag))
+      .onFailure().retry().atMost(5);
   }
 
   private String url(final Dice<CharSequence> word) {
