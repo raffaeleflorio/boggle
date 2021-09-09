@@ -19,7 +19,6 @@ import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.ext.web.client.WebClient;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +26,6 @@ import static java.lang.Integer.parseUnsignedInt;
 
 public final class Main {
   public static void main(String[] args) {
-    System.out.println(Arrays.asList(args));
     var vertx = Vertx.vertx();
     vertx.deployVerticleAndAwait(
       new HttpInfrastructure(
