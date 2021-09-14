@@ -69,8 +69,8 @@ public final class Main {
           ),
           Duration::ofMinutes
         ),
-        args.length > 0 ? parseUnsignedInt(args[0]) : 37608,
-        args.length > 1 ? args[1] : "127.0.0.1"
+        parseUnsignedInt(args[0]),
+        args[1]
       )
     );
   }
