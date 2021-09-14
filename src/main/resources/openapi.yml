@@ -60,21 +60,6 @@ paths:
       tags:
         - match
         - player
-    delete:
-      summary: Deletes a match
-      operationId: deleteMatch
-      security:
-        - xApiKey: [ ]
-      parameters:
-        - $ref: '#/components/parameters/Match'
-      responses:
-        204:
-          description: Match deleted
-        404:
-          $ref: '#/components/responses/MatchNotFound'
-      tags:
-        - match
-        - organizer
   /matches/{match}/word:
     post:
       summary: Send a word
