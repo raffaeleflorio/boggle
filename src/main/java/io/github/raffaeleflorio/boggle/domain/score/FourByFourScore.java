@@ -23,8 +23,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- * Classical 4x4 {@link Score} based on word length:
+ * Classical 4x4 {@link Score} based on word length.
+ *
  * <table>
+ *   <caption>Score table</caption>
  *   <tr>
  *     <th>Word length</th>
  *     <th>Score</th>

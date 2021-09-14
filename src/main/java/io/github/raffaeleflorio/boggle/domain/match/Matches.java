@@ -32,6 +32,7 @@ public interface Matches<T> {
   /**
    * Builds asynchronously a new match to play according its description
    *
+   * @param description The description
    * @return The match or null if not found
    * @since 1.0.0
    */
