@@ -7,9 +7,10 @@ import io.smallrye.mutiny.Uni;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
- * A word sheet
+ * A sheet
  *
  * @param <T> The word type
  * @since 1.0.0
@@ -83,18 +84,17 @@ public interface Sheet<T> {
      * @since 1.0.0
      */
     public Fake(final UUID id, final Description description) {
-      this(id, description, List.of());
+      this(id, description, Multi.createFrom().empty());
     }
 
     /**
      * Builds a fake with random id
      *
-     * @param words  The words
-     * @param unique The unique words
+     * @param words The words
      * @since 1.0.0
      */
     public Fake(final List<Dice<T>> words) {
-      this(UUID.randomUUID(), new Description.Fake(), words);
+      this(UUID.randomUUID(), new Description.Fake(), Multi.createFrom().items(words::stream));
     }
 
     /**
@@ -105,10 +105,29 @@ public interface Sheet<T> {
      * @param words       The words
      * @since 1.0.0
      */
-    public Fake(final UUID id, final Description description, final List<Dice<T>> words) {
+    public Fake(final UUID id, final Description description, final Multi<Dice<T>> words) {
+      this(id, description, words, x -> Uni.createFrom().voidItem());
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param id          The id
+     * @param description The description
+     * @param words       The words
+     * @param wordFn      The function to build word
+     * @since 1.0.0
+     */
+    public Fake(
+      final UUID id,
+      final Description description,
+      final Multi<Dice<T>> words,
+      final Function<Dice<T>, Uni<Void>> wordFn
+    ) {
       this.id = id;
-      this.words = words;
       this.description = description;
+      this.words = words;
+      this.wordFn = wordFn;
     }
 
     @Override
@@ -118,16 +137,12 @@ public interface Sheet<T> {
 
     @Override
     public Multi<Dice<T>> words() {
-      return multi(words);
-    }
-
-    private Multi<Dice<T>> multi(final List<Dice<T>> words) {
-      return Multi.createFrom().items(words::stream);
+      return words;
     }
 
     @Override
     public Uni<Void> word(final Dice<T> word) {
-      return Uni.createFrom().voidItem();
+      return wordFn.apply(word);
     }
 
     @Override
@@ -137,6 +152,7 @@ public interface Sheet<T> {
 
     private final UUID id;
     private final Description description;
-    private final List<Dice<T>> words;
+    private final Multi<Dice<T>> words;
+    private final Function<Dice<T>, Uni<Void>> wordFn;
   }
 }

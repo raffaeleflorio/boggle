@@ -9,7 +9,7 @@ import java.util.function.Function;
 /**
  * {@link Sheet} repository
  *
- * @param <T> The sheet word type
+ * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
@@ -18,7 +18,7 @@ public interface Sheets<T> {
    * Builds asynchronously a new sheet by its description
    *
    * @param description The sheet description
-   * @return The sheet
+   * @return The sheet or null if not found
    * @since 1.0.0
    */
   Uni<Sheet<T>> sheet(Description description);
@@ -27,7 +27,7 @@ public interface Sheets<T> {
    * Builds asynchronously a sheet from its id
    *
    * @param id The sheet id
-   * @return The sheet
+   * @return The sheet or null if not found
    * @since 1.0.0
    */
   Uni<Sheet<T>> sheet(UUID id);
@@ -49,7 +49,7 @@ public interface Sheets<T> {
     }
 
     /**
-     * Builds a fake with one element
+     * Builds a fake
      *
      * @param sheetFn    The function to build existing sheet
      * @param newSheetFn The function to build new sheet

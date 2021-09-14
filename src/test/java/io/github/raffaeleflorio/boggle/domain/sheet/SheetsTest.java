@@ -16,7 +16,7 @@ class SheetsTest {
   @Nested
   class FakeTest {
     @Test
-    void testSheetCreation() {
+    void testDefaultSheetCreation() {
       assertThat(
         new Sheets.Fake<>().sheet(new Description.Fake()),
         emits(nullValue())
@@ -35,7 +35,7 @@ class SheetsTest {
     }
 
     @Test
-    void testSheetBuilding() {
+    void testDefaultSheetBuilding() {
       assertThat(
         new Sheets.Fake<>().sheet(UUID.randomUUID()),
         emits(nullValue())

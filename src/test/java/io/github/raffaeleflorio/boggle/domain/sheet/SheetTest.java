@@ -26,7 +26,7 @@ class SheetTest {
     }
 
     @Test
-    void testWord() {
+    void testDefaultWordCreateion() {
       assertThat(
         new Sheet.Fake<>().word(new Dice.Fake<>()),
         emits(nullValue())
@@ -34,7 +34,7 @@ class SheetTest {
     }
 
     @Test
-    void testWords() {
+    void testDefaultWords() {
       assertThat(
         new Sheet.Fake<>().words(),
         AreEmitted.emits(empty())

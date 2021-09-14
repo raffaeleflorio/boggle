@@ -9,46 +9,47 @@ import io.smallrye.mutiny.Uni;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
- * A {@link Sheet} that expires according its description
+ * A {@link Sheet} with a deadline
  *
  * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class SandTimerSheet<T> implements Sheet<T> {
+public final class DeadlineSheet<T> implements Sheet<T> {
   /**
-   * Builds a sand timer sheet
+   * Builds a sheet
    *
    * @param origin   The sheet to decorate
    * @param deadline The deadline
    * @since 1.0.0
    */
-  public SandTimerSheet(final Sheet<T> origin, final Instant deadline) {
+  public DeadlineSheet(final Sheet<T> origin, final Instant deadline) {
     this(origin, new SimpleSandTimer(deadline, Instant::now));
   }
 
   /**
-   * Builds a sand timer sheet
+   * Builds a deadline sheet with a {@link SandTimer}
    *
    * @param origin    The sheet to decorate
-   * @param sandTimer The sandtimer
+   * @param sandTimer The sand timer
    * @since 1.0.0
    */
-  public SandTimerSheet(final Sheet<T> origin, final SandTimer sandTimer) {
+  public DeadlineSheet(final Sheet<T> origin, final SandTimer sandTimer) {
     this(origin, sandTimer, new IllegalStateException("Deadline reached"));
   }
 
   /**
-   * Builds a sand timer sheet
+   * Builds a deadline sheet with a sand timer and a custom exception
    *
    * @param origin    The sheet to decorate
-   * @param sandTimer The sandtimer
+   * @param sandTimer The sand timer
    * @param exception The exception to throw
    * @since 1.0.0
    */
-  public SandTimerSheet(
+  public DeadlineSheet(
     final Sheet<T> origin,
     final SandTimer sandTimer,
     final RuntimeException exception
@@ -70,10 +71,15 @@ public final class SandTimerSheet<T> implements Sheet<T> {
 
   @Override
   public Uni<Void> word(final Dice<T> word) {
+    return beforeExpiration(() -> origin.word(word));
+
+  }
+
+  private <X> Uni<X> beforeExpiration(final Supplier<Uni<X>> target) {
     if (sandTimer.expired()) {
       return Uni.createFrom().failure(exception);
     }
-    return origin.word(word);
+    return target.get();
   }
 
   @Override
