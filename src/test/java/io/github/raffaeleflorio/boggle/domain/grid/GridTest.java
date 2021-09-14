@@ -48,6 +48,15 @@ class GridTest {
     }
 
     @Test
+    void testCompatibilityWithJustDescription() {
+      assertThat(
+        new Grid.Fake<>(new Description.Fake())
+          .compatible(new Dice.Fake<>()),
+        equalTo(false)
+      );
+    }
+
+    @Test
     void testDefaultCompatibility() {
       assertThat(
         new Grid.Fake<>().compatible(new Dice.Fake<>()),
