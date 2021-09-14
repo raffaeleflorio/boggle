@@ -15,7 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * {@link Match} with score calculated per unique word
+ * {@link Match} with score assigned only to unique words
  *
  * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
@@ -57,7 +57,6 @@ final class ClassicRuledMatch<T> implements Match<T> {
     return origin.sheet(id);
   }
 
-  // TODO refactoring MultiDiff with comparator
   @Override
   public Multi<Map.Entry<UUID, Integer>> score() {
     return sheetPerPlayer()
@@ -72,18 +71,20 @@ final class ClassicRuledMatch<T> implements Match<T> {
 
   private Uni<Map.Entry<UUID, List<Dice<T>>>> uniqueWordsPerPlayer(final Map.Entry<UUID, Sheet<T>> playerSheet) {
     return playerSheet.getValue().words()
-      .select().distinct(equalityCmp)
-      .select().when(playerWord -> otherPlayersWord(playerSheet.getKey())
-        .map(otherWord -> equals(playerWord, otherWord))
-        .filter(Boolean::booleanValue).collect().first()
-        .onItem().ifNotNull().transform(x -> false)
-        .onItem().ifNull().continueWith(true)
-      )
-      .collect().asList()
+      .select().when(playerWord -> notInOtherPlayerSheet(playerSheet.getKey(), playerWord))
+      .select().distinct(equalityCmp).collect().asList()
       .onItem().transform(words -> Map.entry(playerSheet.getKey(), words));
   }
 
-  private Multi<Dice<T>> otherPlayersWord(final UUID player) {
+  private Uni<Boolean> notInOtherPlayerSheet(final UUID player, final Dice<T> word) {
+    return otherPlayerWords(player)
+      .map(otherWord -> equals(word, otherWord))
+      .filter(Boolean::booleanValue).collect().first()
+      .onItem().ifNotNull().transform(x -> false)
+      .onItem().ifNull().continueWith(true);
+  }
+
+  private Multi<Dice<T>> otherPlayerWords(final UUID player) {
     return sheetPerPlayer()
       .filter(entry -> !entry.getKey().equals(player))
       .onItem().transformToMultiAndMerge(sheet -> sheet.getValue().words());

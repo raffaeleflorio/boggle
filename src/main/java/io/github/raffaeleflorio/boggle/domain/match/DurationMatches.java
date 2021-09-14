@@ -32,47 +32,47 @@ public final class DurationMatches<T> implements Matches<T> {
   /**
    * Builds matches
    *
-   * @param origin     The matches to decorate
-   * @param durationFn The function to build duration
+   * @param origin   The matches to decorate
+   * @param amountFn The function to build temporal amount
    * @since 1.0.0
    */
-  public DurationMatches(final Matches<T> origin, final Function<Integer, Duration> durationFn) {
-    this(origin, durationFn, Instant::now);
+  public DurationMatches(final Matches<T> origin, final Function<Integer, TemporalAmount> amountFn) {
+    this(origin, amountFn, Instant::now);
   }
 
   /**
    * Builds matches
    *
-   * @param origin     The matches to decorate
-   * @param durationFn The function to build duration
-   * @param now        The function that supply now
+   * @param origin   The matches to decorate
+   * @param amountFn The function to build temporal amount
+   * @param now      The function that supply now
    * @since 1.0.0
    */
   DurationMatches(
     final Matches<T> origin,
-    final Function<Integer, Duration> durationFn,
+    final Function<Integer, TemporalAmount> amountFn,
     final Supplier<Instant> now
   ) {
-    this(origin, durationFn, now, Integer::parseUnsignedInt);
+    this(origin, amountFn, now, Integer::parseUnsignedInt);
   }
 
   /**
    * Builds matches
    *
-   * @param origin     The matches to decorate
-   * @param durationFn The function to build duration
-   * @param now        The function that supply now
-   * @param stringFn   The function to convert string to int
+   * @param origin   The matches to decorate
+   * @param amountFn The function to build temporal amount
+   * @param now      The function that supply now
+   * @param stringFn The function to convert string to int
    * @since 1.0.0
    */
   DurationMatches(
     final Matches<T> origin,
-    final Function<Integer, Duration> durationFn,
+    final Function<Integer, TemporalAmount> amountFn,
     final Supplier<Instant> now,
     final Function<String, Integer> stringFn
   ) {
     this.origin = origin;
-    this.durationFn = durationFn;
+    this.amountFn = amountFn;
     this.now = now;
     this.stringFn = stringFn;
   }
@@ -83,11 +83,11 @@ public final class DurationMatches<T> implements Matches<T> {
   }
 
   private List<CharSequence> deadline(final Description description) {
-    return List.of(now.get().plus(duration(description)).toString());
+    return List.of(now.get().plus(amount(description)).toString());
   }
 
-  private TemporalAmount duration(final Description description) {
-    return durationFn.apply(
+  private TemporalAmount amount(final Description description) {
+    return amountFn.apply(
       stringFn.apply(description.feature("duration").get(0).toString())
     );
   }
@@ -98,7 +98,7 @@ public final class DurationMatches<T> implements Matches<T> {
   }
 
   private final Matches<T> origin;
-  private final Function<Integer, Duration> durationFn;
+  private final Function<Integer, TemporalAmount> amountFn;
   private final Supplier<Instant> now;
   private final Function<String, Integer> stringFn;
 }

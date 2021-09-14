@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 class ClassicRuledMatchesTest {
   @Test
-  void testExistingMatch() {
+  void testExistingMatchWithARuleAssigned() {
     assertThat(
       new ClassicRuledMatches<>(
         new Matches.Fake<>(
@@ -32,7 +32,7 @@ class ClassicRuledMatchesTest {
   }
 
   @Test
-  void testExistingMatchWithoutRule() {
+  void testExistingMatchWithoutARuleAssigned() {
     assertThat(
       new ClassicRuledMatches<>(
         new Matches.Fake<>(
@@ -60,7 +60,7 @@ class ClassicRuledMatchesTest {
   }
 
   @Test
-  void testMatchCreationWithoutRule() {
+  void testMatchCreationWithoutARuleAssigned() {
     assertThat(
       new ClassicRuledMatches<>(
         new Matches.Fake<>(
@@ -74,7 +74,7 @@ class ClassicRuledMatchesTest {
   }
 
   @Test
-  void testMatchCreationWithRule() {
+  void testMatchCreationWithARuleAssigned() {
     assertThat(
       new ClassicRuledMatches<>(
         new Matches.Fake<>(

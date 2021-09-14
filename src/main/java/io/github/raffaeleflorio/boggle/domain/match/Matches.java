@@ -17,7 +17,7 @@ public interface Matches<T> {
   /**
    * Builds asynchronously a new match to play according its description
    *
-   * @return The match
+   * @return The match or null if not found
    * @since 1.0.0
    */
   Uni<Match<T>> match(Description description);
@@ -26,7 +26,7 @@ public interface Matches<T> {
    * Builds asynchronously a match by its id
    *
    * @param id The match id
-   * @return The match
+   * @return The match or null if not found
    * @since 1.0.0
    */
   Uni<Match<T>> match(UUID id);

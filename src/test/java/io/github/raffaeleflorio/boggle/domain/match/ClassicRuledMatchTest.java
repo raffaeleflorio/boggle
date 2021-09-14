@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.*;
 
 class ClassicRuledMatchTest {
   @Test
-  void testScoreWithSingle() {
+  void testScoreWithSinglePlayer() {
     var player = UUID.randomUUID();
     assertThat(
       new ClassicRuledMatch<>(
@@ -31,6 +31,37 @@ class ClassicRuledMatchTest {
               List.of(
                 new Dice.Fake<>(List.of(1, 2, 3)),
                 new Dice.Fake<>(List.of(1))
+              )
+            )
+          )
+        ),
+        new Score.Fake<>(x -> 12)
+      ).score(),
+      AreEmitted.emits(
+        contains(
+          Map.entry(player, 24)
+        )
+      )
+    );
+  }
+
+  @Test
+  void testScoreWithSinglePlayerWithDuplicateWords() {
+    var player = UUID.randomUUID();
+    assertThat(
+      new ClassicRuledMatch<>(
+        new Match.Fake<>(
+          Map.of(
+            player, 0
+          ),
+          Map.of(
+            player, new Sheet.Fake<>(
+              List.of(
+                new Dice.Fake<>(List.of(1, 2, 3)),
+                new Dice.Fake<>(List.of(1)),
+                new Dice.Fake<>(List.of(1)),
+                new Dice.Fake<>(List.of(1)),
+                new Dice.Fake<>(List.of(1, 2, 3))
               )
             )
           )
@@ -110,7 +141,6 @@ class ClassicRuledMatchTest {
               List.of(
                 new Dice.Fake<>(List.of(1)),
                 new Dice.Fake<>(List.of(1, 2, 3)),
-                new Dice.Fake<>(List.of(1, 2, 3, 4)),
                 new Dice.Fake<>(List.of(1, 2, 3, 4)),
                 new Dice.Fake<>(List.of(1, 2, 3, 5))
               )

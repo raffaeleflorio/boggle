@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 class DurationMatchesTest {
   @Test
-  void testDeadlineCalculation() {
+  void testDeadlineCalculationFromDuration() {
     assertThat(
       new DurationMatches<>(
         new Matches.Fake<>(
@@ -24,9 +24,10 @@ class DurationMatchesTest {
         ),
         Duration::ofMinutes,
         () -> Instant.EPOCH
-      )
-        .match(new Description.Fake("duration", "3"))
-        .onItem().transform(x -> x.description().feature("deadline")),
+      ).match(
+          new Description.Fake("duration", "3")
+        )
+        .onItem().transform(match -> match.description().feature("deadline")),
       emits(
         contains("1970-01-01T00:03:00Z")
       )

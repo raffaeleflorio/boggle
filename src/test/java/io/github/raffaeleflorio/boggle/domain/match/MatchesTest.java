@@ -15,14 +15,15 @@ class MatchesTest {
   @Nested
   class FakeTest {
     @Test
-    void testCreation() {
+    void testMatchCreation() {
       var expected = UUID.randomUUID();
       assertThat(
         new Matches.Fake<>(
-          x -> Uni.createFrom().item(new Match.Fake<>(expected, x)),
+          description -> Uni.createFrom().item(new Match.Fake<>(expected, description)),
           x -> Uni.createFrom().nullItem()
-        )
-          .match(new Description.Fake())
+        ).match(
+            new Description.Fake()
+          )
           .onItem().transform(Match::id),
         emits(equalTo(expected))
       );

@@ -28,7 +28,10 @@ class DeadlineMatchesTest {
             new Match.Fake<>(id, new Description.Fake("deadline", future.toString()))
           )
         )
-      ).match(UUID.randomUUID()).onItem().transformToMulti(Match::score),
+      ).match(
+          UUID.randomUUID()
+        )
+        .onItem().transformToMulti(Match::score),
       AreEmittedFailure.emits(
         IllegalStateException.class, "Unable to build score of an in progress match"
       )
@@ -64,7 +67,9 @@ class DeadlineMatchesTest {
           description -> Uni.createFrom().item(new Match.Fake<>(UUID.randomUUID(), description)),
           id -> Uni.createFrom().nullItem()
         )
-      ).match(new Description.Fake("deadline", "1970-01-01T00:00:00Z")),
+      ).match(
+        new Description.Fake("deadline", "1970-01-01T00:00:00Z")
+      ),
       IsEmitted.emits(notNullValue())
     );
   }

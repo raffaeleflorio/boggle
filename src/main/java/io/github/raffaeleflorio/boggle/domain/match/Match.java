@@ -8,6 +8,7 @@ import io.smallrye.mutiny.Uni;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * A boggle match
@@ -29,7 +30,7 @@ public interface Match<T> {
    * Builds asynchronously a new sheet to play
    *
    * @param id The player joining
-   * @return The sheet
+   * @return The sheet or null if not found
    * @since 1.0.0
    */
   Uni<Sheet<T>> sheet(UUID id);
@@ -37,13 +38,13 @@ public interface Match<T> {
   /**
    * Builds asynchronously the final score per player
    *
-   * @return The score
+   * @return The score per player
    * @since 1.0.0
    */
   Multi<Map.Entry<UUID, Integer>> score();
 
   /**
-   * Builds a match description
+   * Builds the description
    *
    * @return The description
    * @since 1.0.0
@@ -86,21 +87,67 @@ public interface Match<T> {
     /**
      * Builds a fake
      *
-     * @param id The id
+     * @param id          The id
+     * @param description The description
      * @since 1.0.0
      */
     public Fake(final UUID id, final Description description) {
-      this(id, description, Map.of(), Map.of(), new Grid.Fake<>());
+      this(id, description, Multi.createFrom().empty(), x -> Uni.createFrom().nullItem(), new Grid.Fake<>());
     }
 
     /**
      * Builds a fake
      *
-     * @param sheetPerPlayer The sheets
+     * @param score The score
      * @since 1.0.0
      */
-    public Fake(final Map<UUID, Integer> scores, final Map<UUID, Sheet<T>> sheetPerPlayer) {
-      this(UUID.randomUUID(), new Description.Fake(), scores, sheetPerPlayer, new Grid.Fake<>());
+    public Fake(final Multi<Map.Entry<UUID, Integer>> score) {
+      this(score, x -> Uni.createFrom().nullItem());
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param score   The score
+     * @param sheetFn The function to build sheet
+     * @since 1.0.0
+     */
+    public Fake(final Multi<Map.Entry<UUID, Integer>> score, final Function<UUID, Uni<Sheet<T>>> sheetFn) {
+      this(UUID.randomUUID(), new Description.Fake(), score, sheetFn, new Grid.Fake<>());
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param sheetFn The function to build sheet
+     * @since 1.0.0
+     */
+    public Fake(final Function<UUID, Uni<Sheet<T>>> sheetFn) {
+      this(Multi.createFrom().empty(), sheetFn);
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param scoreMap The score per player
+     * @param sheetMap The sheet per player
+     * @since 1.0.0
+     */
+    public Fake(final Map<UUID, Integer> scoreMap, final Map<UUID, Sheet<T>> sheetMap) {
+      this(
+        Multi.createFrom().items(scoreMap.entrySet()::stream),
+        player -> Uni.createFrom().item(sheetMap.get(player))
+      );
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param scoreMap The score per player
+     * @since 1.0.0
+     */
+    public Fake(final Map<UUID, Integer> scoreMap) {
+      this(scoreMap, Map.of());
     }
 
     /**
@@ -110,30 +157,56 @@ public interface Match<T> {
      * @since 1.0.0
      */
     public Fake(final Grid<T> grid) {
-      this(UUID.randomUUID(), new Description.Fake(), Map.of(), Map.of(), grid);
+      this(UUID.randomUUID(), new Description.Fake(), Multi.createFrom().empty(), x -> Uni.createFrom().nullItem(), grid);
     }
 
     /**
      * Builds a fake
      *
-     * @param id             The id
-     * @param description    The description
-     * @param scores         The scores
-     * @param sheetPerPlayer The sheets
-     * @param grid           The grid
+     * @param id          The id
+     * @param description The description
+     * @param scoreMap    The score map
+     * @param sheetMap    The sheet map
+     * @param grid        The grid
      * @since 1.0.0
      */
     public Fake(
       final UUID id,
       final Description description,
-      final Map<UUID, Integer> scores,
-      final Map<UUID, Sheet<T>> sheetPerPlayer,
+      final Map<UUID, Integer> scoreMap,
+      final Map<UUID, Sheet<T>> sheetMap,
+      final Grid<T> grid
+    ) {
+      this(
+        id,
+        description,
+        Multi.createFrom().items(scoreMap.entrySet()::stream),
+        player -> Uni.createFrom().item(sheetMap.get(player)),
+        grid
+      );
+    }
+
+    /**
+     * Builds a fake
+     *
+     * @param id          The id
+     * @param description The description
+     * @param score       The score
+     * @param sheetFn     The function to build sheet
+     * @param grid        The grid
+     * @since 1.0.0
+     */
+    public Fake(
+      final UUID id,
+      final Description description,
+      final Multi<Map.Entry<UUID, Integer>> score,
+      final Function<UUID, Uni<Sheet<T>>> sheetFn,
       final Grid<T> grid
     ) {
       this.id = id;
       this.description = description;
-      this.scores = scores;
-      this.sheetPerPlayer = sheetPerPlayer;
+      this.score = score;
+      this.sheetFn = sheetFn;
       this.grid = grid;
     }
 
@@ -144,12 +217,12 @@ public interface Match<T> {
 
     @Override
     public Uni<Sheet<T>> sheet(final UUID id) {
-      return Uni.createFrom().item(sheetPerPlayer.get(id));
+      return sheetFn.apply(id);
     }
 
     @Override
     public Multi<Map.Entry<UUID, Integer>> score() {
-      return Multi.createFrom().items(scores.entrySet()::stream);
+      return score;
     }
 
     @Override
@@ -164,13 +237,13 @@ public interface Match<T> {
 
     @Override
     public Multi<UUID> players() {
-      return Multi.createFrom().items(scores.keySet()::stream);
+      return score.onItem().transform(Map.Entry::getKey);
     }
 
     private final UUID id;
     private final Description description;
-    private final Map<UUID, Integer> scores;
-    private final Map<UUID, Sheet<T>> sheetPerPlayer;
+    private final Multi<Map.Entry<UUID, Integer>> score;
+    private final Function<UUID, Uni<Sheet<T>>> sheetFn;
     private final Grid<T> grid;
   }
 }

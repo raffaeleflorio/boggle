@@ -4,7 +4,7 @@ import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.grid.Grid;
 import io.github.raffaeleflorio.boggle.domain.sandtimer.SandTimer;
 import io.github.raffaeleflorio.boggle.domain.sandtimer.SimpleSandTimer;
-import io.github.raffaeleflorio.boggle.domain.sheet.SandTimerSheet;
+import io.github.raffaeleflorio.boggle.domain.sheet.DeadlineSheet;
 import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -16,57 +16,57 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * {@link Match} with a sand timer
+ * {@link Match} with a deadline
  *
  * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class SandTimerMatch<T> implements Match<T> {
+public final class DeadlineMatch<T> implements Match<T> {
   /**
-   * Builds a match
+   * Builds a deadline match
    *
    * @param origin   The match to decorate
    * @param deadline The deadline
    */
-  public SandTimerMatch(final Match<T> origin, final Instant deadline) {
+  public DeadlineMatch(final Match<T> origin, final Instant deadline) {
     this(origin, new SimpleSandTimer(deadline, Instant::now));
   }
 
   /**
-   * Builds a match
+   * Builds a match with sand timer
    *
    * @param origin    The match to decorate
    * @param sandTimer The sand timer
    */
-  public SandTimerMatch(final Match<T> origin, final SandTimer sandTimer) {
+  public DeadlineMatch(final Match<T> origin, final SandTimer sandTimer) {
     this(origin, sandTimer, msg -> new IllegalStateException(msg.toString()));
   }
 
   /**
-   * Builds a match
+   * Builds a match with sand timer
    *
    * @param origin      The match to decorate
    * @param sandTimer   The sand timer
-   * @param exceptionFn The exception to throw
+   * @param exceptionFn The function to build the exception to throw
    */
-  public SandTimerMatch(
+  public DeadlineMatch(
     final Match<T> origin,
     final SandTimer sandTimer,
     final Function<CharSequence, RuntimeException> exceptionFn
   ) {
-    this(origin, sandTimer, exceptionFn, SandTimerSheet::new);
+    this(origin, sandTimer, exceptionFn, DeadlineSheet::new);
   }
 
   /**
-   * Builds a match
+   * Builds a match with sand timer
    *
    * @param origin      The match to decorate
    * @param sandTimer   The sand timer
    * @param exceptionFn The exception to throw
-   * @param sheetFn     The function to map sheet
+   * @param sheetFn     The function to build deadline sheet
    */
-  SandTimerMatch(
+  DeadlineMatch(
     final Match<T> origin,
     final SandTimer sandTimer,
     final Function<CharSequence, RuntimeException> exceptionFn,

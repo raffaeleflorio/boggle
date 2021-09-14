@@ -15,11 +15,23 @@ import java.util.function.BiFunction;
  * @since 1.0.0
  */
 public final class DeadlineMatches<T> implements Matches<T> {
+  /**
+   * Builds matches
+   *
+   * @param origin The origin to decorate
+   * @since 1.0.0
+   */
   public DeadlineMatches(final Matches<T> origin) {
-    this(origin, SandTimerMatch::new);
+    this(origin, DeadlineMatch::new);
   }
 
-  public DeadlineMatches(final Matches<T> origin, final BiFunction<Match<T>, Instant, Match<T>> matchFn) {
+  /**
+   * Builds matches
+   *
+   * @param origin  The origin to decorate
+   * @param matchFn The function to build a deadline match
+   */
+  DeadlineMatches(final Matches<T> origin, final BiFunction<Match<T>, Instant, Match<T>> matchFn) {
     this.origin = origin;
     this.matchFn = matchFn;
   }

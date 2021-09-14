@@ -2,8 +2,8 @@ package io.github.raffaeleflorio.boggle.domain.match;
 
 import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.grid.Grid;
-import io.github.raffaeleflorio.boggle.domain.sheet.Sheet;
 import io.github.raffaeleflorio.boggle.hamcrest.IsEmitted;
+import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -21,10 +21,7 @@ class MatchTest {
     void testId() {
       var expected = UUID.randomUUID();
       assertThat(
-        new Match.Fake<>(
-          expected,
-          new Description.Fake()
-        ).id(),
+        new Match.Fake<>(expected, new Description.Fake()).id(),
         equalTo(expected)
       );
     }
@@ -44,28 +41,16 @@ class MatchTest {
     void testScore() {
       var expected = Map.entry(UUID.randomUUID(), 123);
       assertThat(
-        new Match.Fake<>(
-          Map.of(expected.getKey(), expected.getValue()),
-          Map.of()
-        ).score(),
+        new Match.Fake<>(Map.of(expected.getKey(), expected.getValue())).score(),
         emits(contains(expected))
       );
     }
 
     @Test
-    void testMissingSheet() {
+    void testSheet() {
       assertThat(
-        new Match.Fake<>(Map.of(), Map.of()).sheet(UUID.randomUUID()),
+        new Match.Fake<>(x -> Uni.createFrom().nullItem()).sheet(UUID.randomUUID()),
         IsEmitted.emits(nullValue())
-      );
-    }
-
-    @Test
-    void testExistingSheet() {
-      var player = UUID.randomUUID();
-      assertThat(
-        new Match.Fake<>(Map.of(), Map.of(player, new Sheet.Fake<>())).sheet(player),
-        IsEmitted.emits(notNullValue())
       );
     }
 
@@ -73,10 +58,7 @@ class MatchTest {
     void testPlayers() {
       var expected = UUID.randomUUID();
       assertThat(
-        new Match.Fake<>(
-          Map.of(expected, 123),
-          Map.of()
-        ).players(),
+        new Match.Fake<>(Map.of(expected, 123)).players(),
         emits(contains(expected))
       );
     }

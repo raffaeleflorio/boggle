@@ -12,12 +12,12 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-class SandTimerMatchTest {
+class DeadlineMatchTest {
   @Test
   void testScoreBeforeExpiration() {
     var expected = UUID.randomUUID();
     assertThat(
-      new SandTimerMatch<>(
+      new DeadlineMatch<>(
         new Match.Fake<>(expected, new Description.Fake()),
         new SandTimer.Fake(true)
       ).score(),
@@ -32,7 +32,7 @@ class SandTimerMatchTest {
   @Test
   void testScoreAfterExpiration() {
     assertThat(
-      new SandTimerMatch<>(
+      new DeadlineMatch<>(
         new Match.Fake<>(UUID.randomUUID(), new Description.Fake()),
         new SandTimer.Fake(false)
       ).score(),
@@ -46,7 +46,7 @@ class SandTimerMatchTest {
   void testIdAfterExpiration() {
     var expected = UUID.randomUUID();
     assertThat(
-      new SandTimerMatch<>(
+      new DeadlineMatch<>(
         new Match.Fake<>(expected, new Description.Fake()),
         new SandTimer.Fake(true)
       ).id(),
@@ -57,7 +57,7 @@ class SandTimerMatchTest {
   @Test
   void testDescriptionAfterExpiration() {
     assertThat(
-      new SandTimerMatch<>(
+      new DeadlineMatch<>(
         new Match.Fake<>(UUID.randomUUID(), new Description.Fake("feature", "value")),
         new SandTimer.Fake(true)
       ).description().feature("feature"),
@@ -68,7 +68,7 @@ class SandTimerMatchTest {
   @Test
   void testGridAfterExpiration() {
     assertThat(
-      new SandTimerMatch<>(
+      new DeadlineMatch<>(
         new Match.Fake<>(UUID.randomUUID(), new Description.Fake()),
         new SandTimer.Fake(true)
       ).grid(),
@@ -79,7 +79,7 @@ class SandTimerMatchTest {
   @Test
   void testPlayersAfterExpiration() {
     assertThat(
-      new SandTimerMatch<>(
+      new DeadlineMatch<>(
         new Match.Fake<>(UUID.randomUUID(), new Description.Fake()),
         new SandTimer.Fake(true)
       ).players(),
