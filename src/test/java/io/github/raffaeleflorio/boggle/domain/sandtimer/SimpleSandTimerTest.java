@@ -17,22 +17,19 @@ class SimpleSandTimerTest {
       timer::expired,
       after(
         60, MILLISECONDS,
-        supplies(
-          equalTo(true)
-        )
+        supplies(equalTo(true))
       )
     );
   }
 
   @Test
   void testNotExpired() {
+    var timer = new SimpleSandTimer(ofMillis(100));
     assertThat(
-      () -> new SimpleSandTimer(ofMillis(100)).expired(),
+      timer::expired,
       after(
         20, MILLISECONDS,
-        supplies(
-          equalTo(false)
-        )
+        supplies(equalTo(false))
       )
     );
   }

@@ -5,7 +5,7 @@ import java.time.temporal.TemporalAmount;
 import java.util.function.Supplier;
 
 /**
- * A simple sandtimer
+ * A {@link SandTimer} backed by {@link Instant}
  *
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
@@ -14,7 +14,7 @@ public final class SimpleSandTimer implements SandTimer {
   /**
    * Builds a sand timer
    *
-   * @param duration The duration
+   * @param duration The sand timer duration
    * @since 1.0.0
    */
   public SimpleSandTimer(final TemporalAmount duration) {
@@ -24,8 +24,8 @@ public final class SimpleSandTimer implements SandTimer {
   /**
    * Builds a sand timer
    *
-   * @param duration The duration
-   * @param now      The supplier of now
+   * @param duration The sand timer duration
+   * @param now      The now supplier
    * @since 1.0.0
    */
   public SimpleSandTimer(final TemporalAmount duration, final Supplier<Instant> now) {
@@ -33,9 +33,10 @@ public final class SimpleSandTimer implements SandTimer {
   }
 
   /**
-   * Builds a sand timer
+   * Builds a sand timer with a deadline
    *
    * @param deadline The deadline
+   * @param now      The now supplier
    * @since 1.0.0
    */
   public SimpleSandTimer(final Instant deadline, final Supplier<Instant> now) {

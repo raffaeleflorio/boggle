@@ -1,5 +1,5 @@
 /**
- * Objects about sandtimers
+ * Objects about sand timers
  *
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
