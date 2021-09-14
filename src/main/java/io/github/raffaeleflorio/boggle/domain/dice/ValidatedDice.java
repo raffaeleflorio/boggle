@@ -3,7 +3,7 @@ package io.github.raffaeleflorio.boggle.domain.dice;
 /**
  * A validated {@link Dice}
  *
- * @param <T> The dice mark value
+ * @param <T> The mark type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */

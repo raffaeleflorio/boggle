@@ -1,7 +1,7 @@
 package io.github.raffaeleflorio.boggle.infrastructure;
 
 import io.github.raffaeleflorio.boggle.domain.description.FeatureEqualityPredicate;
-import io.github.raffaeleflorio.boggle.domain.dice.it.Italian16Dice;
+import io.github.raffaeleflorio.boggle.domain.dice.it.SixteenItalianDice;
 import io.github.raffaeleflorio.boggle.domain.grid.FourByFourGrid;
 import io.github.raffaeleflorio.boggle.domain.grid.LangGrid;
 import io.github.raffaeleflorio.boggle.domain.grid.LayoutGrid;
@@ -43,7 +43,7 @@ public final class Main {
                         )
                       ),
                       new LangGrid<>(
-                        new FourByFourGrid<>(new Italian16Dice()), "it"
+                        new FourByFourGrid<>(new SixteenItalianDice()), "it"
                       )
                     )
                   ),

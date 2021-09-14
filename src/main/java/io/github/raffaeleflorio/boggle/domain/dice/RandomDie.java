@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 /**
  * A {@link Die} backed by {@link Random}
  *
+ * @param <T> The mark type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
@@ -23,7 +24,7 @@ public final class RandomDie<T> implements Die<T> {
   }
 
   /**
-   * Builds an unbounded non cryptographically strong die
+   * Builds an unbounded non cryptographically strong die with a custom minimum and initial value
    *
    * @param sidesFn The function used to map an integer to a side
    * @param min     The minimum and initial value
@@ -34,7 +35,7 @@ public final class RandomDie<T> implements Die<T> {
   }
 
   /**
-   * Builds a bounded non cryptographically strong die
+   * Builds a bounded non cryptographically strong die with a custom minimum and initial value
    *
    * @param sidesFn The function used to map an integer to a side
    * @param min     The minimum and initial value
@@ -46,7 +47,7 @@ public final class RandomDie<T> implements Die<T> {
   }
 
   /**
-   * Builds a bounded die
+   * Builds a bounded die with a custom {@link Random} and a minimum and initial value
    *
    * @param sidesFn The function used to map an integer to a side
    * @param min     The initial value

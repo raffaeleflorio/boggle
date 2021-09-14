@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.contains;
 
 class AlignedDiceTest {
   @Test
-  void testInitialValues() {
+  void testInitialAlignment() {
     assertThat(
       new AlignedDice<>(
         List.of(
@@ -25,7 +25,7 @@ class AlignedDiceTest {
   }
 
   @Test
-  void testShuffled() {
+  void testShuffledAlignment() {
     var inc = (Function<Integer, Integer>) x -> x + 1;
     assertThat(
       new AlignedDice<>(

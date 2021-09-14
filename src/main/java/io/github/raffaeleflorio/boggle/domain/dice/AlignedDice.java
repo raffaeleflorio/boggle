@@ -5,9 +5,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Aligned {@link Dice}, it preserves {@link Die} ordering
+ * Aligned {@link Dice}
  *
- * @param <T> The mark side type
+ * @param <T> The mark type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */

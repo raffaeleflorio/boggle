@@ -25,7 +25,7 @@ class UnorderedDiceTest {
   }
 
   @Test
-  void testShuffled() {
+  void testShuffledValuesInAnyOrder() {
     var inc = (Function<Integer, Integer>) x -> x + 1;
     assertThat(
       new UnorderedDice<>(

@@ -4,39 +4,39 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * A {@link Dice} decorator that verify lazily the dice count
+ * A {@link ValidatedDice} according dice count
  *
- * @param <T> The die mark type
+ * @param <T> The mark type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class StrictDiceCount<T> implements ValidatedDice<T> {
+public final class StrictCountDice<T> implements ValidatedDice<T> {
   /**
-   * Builds a strict dice number
+   * Builds a strict count dice
    *
    * @param origin   The dice to decorate
    * @param expected The expected count
    * @since 1.0.0
    */
-  public StrictDiceCount(final Dice<T> origin, final Integer expected) {
+  public StrictCountDice(final Dice<T> origin, final Integer expected) {
     this(
       origin,
       expected,
-      (x, y) -> new IllegalStateException(
-        String.format("Expected a dice of count %s, but was %s", x, y)
+      (expectedCount, actualCount) -> new IllegalStateException(
+        String.format("Expected a dice of count %s, but was %s", expectedCount, actualCount)
       )
     );
   }
 
   /**
-   * Builds a strict dice number
+   * Builds a strict count with a custom exception
    *
    * @param origin      The dice to decorate
    * @param expected    The expected count
-   * @param exceptionFn The function used to build the exception
+   * @param exceptionFn The function to build the exception from expected and actual count
    * @since 1.0.0
    */
-  public StrictDiceCount(
+  public StrictCountDice(
     final Dice<T> origin,
     final Integer expected,
     final BiFunction<Integer, Integer, RuntimeException> exceptionFn
@@ -57,7 +57,7 @@ public final class StrictDiceCount<T> implements ValidatedDice<T> {
 
   @Override
   public Dice<T> shuffled() {
-    return new StrictDiceCount<>(origin.shuffled(), expected, exceptionFn);
+    return new StrictCountDice<>(origin.shuffled(), expected, exceptionFn);
   }
 
   private final Dice<T> origin;

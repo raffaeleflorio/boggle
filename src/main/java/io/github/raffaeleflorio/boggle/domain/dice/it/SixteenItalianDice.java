@@ -7,30 +7,30 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * Standard italian boggle 16 dice
+ * Standard sixteen Italian boggle dice
  *
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class Italian16Dice implements Dice<CharSequence> {
+public final class SixteenItalianDice implements Dice<CharSequence> {
   /**
-   * Builds a non cryptographically strong italian boggle 16 dice
+   * Builds non cryptographically strong sixteen Italian boggle dice
    *
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
    * @since 1.0.0
    */
-  public Italian16Dice() {
+  public SixteenItalianDice() {
     this((min, bound) -> new RandomDie<>(Function.identity(), min, bound));
   }
 
   /**
-   * Builds an italian boggle 16 dice
+   * Builds sixteen Italian boggle dice with a custom bounded die
    *
    * @param dieFn The function to build bounded die
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
    * @since 1.0.0
    */
-  public Italian16Dice(final BiFunction<Integer, Integer, Die<Integer>> dieFn) {
+  public SixteenItalianDice(final BiFunction<Integer, Integer, Die<Integer>> dieFn) {
     this(
       new UnorderedDice<>(
         List.of(
@@ -104,7 +104,7 @@ public final class Italian16Dice implements Dice<CharSequence> {
     );
   }
 
-  private Italian16Dice(final Dice<CharSequence> origin) {
+  private SixteenItalianDice(final Dice<CharSequence> origin) {
     this.origin = origin;
   }
 
@@ -115,7 +115,7 @@ public final class Italian16Dice implements Dice<CharSequence> {
 
   @Override
   public Dice<CharSequence> shuffled() {
-    return new Italian16Dice(origin.shuffled());
+    return new SixteenItalianDice(origin.shuffled());
   }
 
   private final Dice<CharSequence> origin;

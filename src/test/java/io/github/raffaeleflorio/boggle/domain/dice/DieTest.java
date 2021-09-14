@@ -10,7 +10,7 @@ class DieTest {
   @Nested
   class FakeTest {
     @Test
-    void testValue() {
+    void testInitialValue() {
       var expected = 123456790L;
       assertThat(
         new Die.Fake<>(expected).value(),
@@ -19,7 +19,7 @@ class DieTest {
     }
 
     @Test
-    void testRolled() {
+    void testRolledValueWithoutNextFn() {
       var expected = "this value never change";
       assertThat(
         new Die.Fake<>(expected).rolled().value(),
@@ -28,9 +28,12 @@ class DieTest {
     }
 
     @Test
-    void testRolledWithNextFn() {
+    void testRolledValueWithNextFn() {
       assertThat(
-        new Die.Fake<>(1, x -> x + 1).rolled().value(),
+        new Die.Fake<>(
+          1,
+          x -> x + 1
+        ).rolled().value(),
         equalTo(2)
       );
     }

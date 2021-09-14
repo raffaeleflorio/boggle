@@ -21,17 +21,22 @@ class DiceTest {
     }
 
     @Test
-    void testShuffledWithoutNextFn() {
+    void testShuffledValuesWithoutNextFn() {
       assertThat(
-        new Dice.Fake<>(List.of("NO", "CH", "AN", "GE")).shuffled().values(),
+        new Dice.Fake<>(
+          List.of("NO", "CH", "AN", "GE")
+        ).shuffled().values(),
         contains("NO", "CH", "AN", "GE")
       );
     }
 
     @Test
-    void testShuffledWithNextFn() {
+    void testShuffledValuesWithNextFn() {
       assertThat(
-        new Dice.Fake<>(List.of(1, 2, 3), x -> List.of(2, 4, 6)).shuffled().values(),
+        new Dice.Fake<>(
+          List.of(1, 2, 3),
+          x -> List.of(2, 4, 6)
+        ).shuffled().values(),
         contains(2, 4, 6)
       );
     }

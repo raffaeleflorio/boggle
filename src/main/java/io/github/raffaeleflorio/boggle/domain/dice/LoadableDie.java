@@ -7,6 +7,7 @@ import java.util.function.Function;
 /**
  * A loadable {@link Die}, so some sides could be more probable than others
  *
+ * @param <T> The mark type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
@@ -25,7 +26,7 @@ public final class LoadableDie<T> implements Die<T> {
   }
 
   /**
-   * Builds a loadable die
+   * Builds a loadable die with a custom bounded die
    *
    * @param sides The sides
    * @param dieFn The function to build a bounded die
@@ -36,7 +37,7 @@ public final class LoadableDie<T> implements Die<T> {
   }
 
   /**
-   * Builds a loadable die
+   * Builds a loadable die with a custom bounded die and a current side value
    *
    * @param sides   The sides
    * @param dieFn   The function to build a bounded die

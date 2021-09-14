@@ -9,11 +9,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasSize;
 
-class Italian16DiceTest {
+class SixteenItalianDiceTest {
   @RepeatedTest(256)
-  void testRepeatedShuffles() {
+  void testShuffledLetterFrequencies() {
     assertThat(
-      new Italian16Dice().shuffled().values(),
+      new SixteenItalianDice().shuffled().values(),
       allOf(
         hasSize(16),
         hasMaximumFrequencies(

@@ -5,13 +5,13 @@ import java.util.function.Function;
 /**
  * Rollable object with marked sides
  *
- * @param <T> The mark side type
+ * @param <T> The mark type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
 public interface Die<T> {
   /**
-   * Builds the current mark side value
+   * Builds the current mark value
    *
    * @return The current value
    * @since 1.0.0
@@ -29,7 +29,7 @@ public interface Die<T> {
   /**
    * A {@link Die} useful for testing
    *
-   * @param <T> The mark side type
+   * @param <T> The mark type
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
    * @since 1.0.0
    */
@@ -45,7 +45,7 @@ public interface Die<T> {
     }
 
     /**
-     * Builds a fake
+     * Builds a fake with an initial value and a function to build the next value
      *
      * @param value  The value
      * @param nextFn The function to build the next value

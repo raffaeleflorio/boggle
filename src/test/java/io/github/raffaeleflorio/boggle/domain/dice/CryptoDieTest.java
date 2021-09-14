@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.*;
 
 class CryptoDieTest {
   @Test
-  void testInitialValue() {
+  void testDefaultInitialValue() {
     assertThat(
       new CryptoDie<>(Function.identity()).value(),
       equalTo(0)
@@ -26,7 +26,7 @@ class CryptoDieTest {
   }
 
   @RepeatedTest(128)
-  void testRolledWithBound() {
+  void testMinAndBoundAfterRolling() {
     var min = 2;
     var bound = 16;
     assertThat(

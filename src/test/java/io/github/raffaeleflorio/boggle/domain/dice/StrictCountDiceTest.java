@@ -8,11 +8,11 @@ import static io.github.raffaeleflorio.boggle.hamcrest.IsThrowedWithMessage.thro
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
-class StrictDiceCountTest {
+class StrictCountDiceTest {
   @Test
-  void testValues() {
+  void testBadCountWithInitialValues() {
     assertThat(
-      () -> new StrictDiceCount<>(
+      () -> new StrictCountDice<>(
         new Dice.Fake<>(List.of("A", "B", "C")),
         4
       ).values(),
@@ -21,9 +21,9 @@ class StrictDiceCountTest {
   }
 
   @Test
-  void testShuffled() {
+  void testBadCountWithShuffledValue() {
     assertThat(
-      () -> new StrictDiceCount<>(
+      () -> new StrictCountDice<>(
         new Dice.Fake<>(
           List.of("A", "B"),
           x -> List.of("A")
@@ -35,9 +35,9 @@ class StrictDiceCountTest {
   }
 
   @Test
-  void testValuesWithCorrectCount() {
+  void testCorrectCount() {
     assertThat(
-      new StrictDiceCount<>(
+      new StrictCountDice<>(
         new Dice.Fake<>(List.of(1, 2, 3)),
         3
       ).values(),

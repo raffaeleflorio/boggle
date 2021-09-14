@@ -8,9 +8,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Unordered {@link Dice}, it does not preserve {@link Die} ordering
+ * Unordered {@link Dice}
  *
- * @param <T> The mark side type
+ * @param <T> The mark type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
@@ -29,7 +29,7 @@ public final class UnorderedDice<T> implements Dice<T> {
   }
 
   /**
-   * Builds an unordered dice
+   * Builds an unordered dice with a custom bounded die
    *
    * @param dice  The dice
    * @param dieFn The function to builds a bounded die
@@ -66,10 +66,6 @@ public final class UnorderedDice<T> implements Dice<T> {
     return dice.stream().map(map).collect(Collectors.toUnmodifiableList());
   }
 
-  private Die<Integer> rolledDie(final Integer bound) {
-    return dieFn.apply(0, bound).rolled();
-  }
-
   @Override
   public Dice<T> shuffled() {
     return new UnorderedDice<>(shuffledDice(mappedDice(Die::rolled)), dieFn);
@@ -82,6 +78,10 @@ public final class UnorderedDice<T> implements Dice<T> {
       x.set(i, x.set(j, x.get(i)));
     }
     return x;
+  }
+
+  private Die<Integer> rolledDie(final Integer bound) {
+    return dieFn.apply(0, bound).rolled();
   }
 
   private final Collection<Die<T>> dice;

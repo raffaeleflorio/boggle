@@ -26,7 +26,7 @@ class RandomDieTest {
   }
 
   @RepeatedTest(128)
-  void testRolledWithBound() {
+  void testMinAndBoundAfterRolling() {
     var min = 16;
     var bound = 32;
     assertThat(

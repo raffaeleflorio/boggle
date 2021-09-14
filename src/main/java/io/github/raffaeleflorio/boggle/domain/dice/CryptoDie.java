@@ -6,6 +6,7 @@ import java.util.function.Function;
 /**
  * A cryptographically strong die
  *
+ * @param <T> The mark type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */

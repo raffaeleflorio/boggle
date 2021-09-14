@@ -6,7 +6,7 @@ import java.util.function.Function;
 /**
  * A group of {@link Die}
  *
- * @param <T> The die mark type
+ * @param <T> The mark type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
@@ -30,7 +30,7 @@ public interface Dice<T> {
   /**
    * A {@link Dice} useful for testing
    *
-   * @param <T> The mark side type
+   * @param <T> The mark type
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
    * @since 1.0.0
    */
@@ -45,7 +45,7 @@ public interface Dice<T> {
     }
 
     /**
-     * Builds a fake
+     * Builds a fake with constant values
      *
      * @param values The values
      * @since 1.0.0
@@ -55,10 +55,10 @@ public interface Dice<T> {
     }
 
     /**
-     * Builds a fake
+     * Builds a fake with an initial values and a function to builds the next value
      *
      * @param values The values
-     * @param nextFn The function used to builds the next value
+     * @param nextFn The function to builds the next value
      * @since 1.0.0
      */
     public Fake(final List<T> values, final Function<List<T>, List<T>> nextFn) {
