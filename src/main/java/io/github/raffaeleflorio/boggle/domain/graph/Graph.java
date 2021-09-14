@@ -50,16 +50,7 @@ public interface Graph<T> {
    */
   final class Fake<T> implements Graph<T> {
     /**
-     * Builds a fake that never makes an edge
-     *
-     * @since 1.0.0
-     */
-    public Fake() {
-      this((x, y) -> false, (x, y) -> false);
-    }
-
-    /**
-     * Builds a fake
+     * Builds a fake with custom connected and adjacent function
      *
      * @param connectedFn The function that verifies vertices connection
      * @param adjacentFn  The function that verifies vertices adjacency

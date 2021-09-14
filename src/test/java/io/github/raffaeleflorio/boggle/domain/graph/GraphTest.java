@@ -10,18 +10,10 @@ class GraphTest {
   @Nested
   class FakeTest {
     @Test
-    void testDefaultConnected() {
-      assertThat(
-        new Graph.Fake<>().connected("any", "vertices"),
-        equalTo(false)
-      );
-    }
-
-    @Test
-    void testConnectedWithCustomFn() {
+    void testConnected() {
       assertThat(
         new Graph.Fake<>(
-          (x, y) -> true,
+          (first, second) -> true,
           (x, y) -> false
         ).connected("x", "y"),
         equalTo(true)
@@ -29,37 +21,24 @@ class GraphTest {
     }
 
     @Test
-    void testConnectedWithoutConnectedFn() {
-      assertThat(
-        new Graph.Fake<>().edge("x", "y").connected("x", "y"),
-        equalTo(false)
-      );
-    }
-
-    @Test
-    void testDefaultAdjacent() {
-      assertThat(
-        new Graph.Fake<>().adjacent("any", "vertices"),
-        equalTo(false)
-      );
-    }
-
-    @Test
-    void testAdjacentWithoutCustomFn() {
-      assertThat(
-        new Graph.Fake<>().edge("x", "y").adjacent("x", "y"),
-        equalTo(false)
-      );
-    }
-
-    @Test
-    void testAdjacentWithCustomFn() {
+    void testAdjacent() {
       assertThat(
         new Graph.Fake<>(
           (x, y) -> false,
-          (x, y) -> true
-        ).edge("x", "y").adjacent("x", "y"),
+          (first, second) -> true
+        ).adjacent("x", "y"),
         equalTo(true)
+      );
+    }
+
+    @Test
+    void testEdgeIgnored() {
+      assertThat(
+        new Graph.Fake<>(
+          (first, second) -> false,
+          (x, y) -> true
+        ).edge("one", "two").connected("one", "two"),
+        equalTo(false)
       );
     }
   }

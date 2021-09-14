@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 /**
  * A graph traversed with Depth-first search
  *
- * @param <T> The vertx type
+ * @param <T> The vertex type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @see <a href="https://en.wikipedia.org/wiki/Depth-first_search">Wikipedia definition</a>
  * @since 1.0.0
@@ -29,18 +29,18 @@ public final class DFSGraph<T> implements Graph<T> {
   private DFSGraph(
     final Map<T, Set<T>> adjList,
     final Function<Map<T, Set<T>>, Map<T, Set<T>>> mapCloneFn,
-    final Supplier<Set<T>> setFn,
+    final Supplier<Set<T>> newSetFn,
     final Function<Set<T>, Set<T>> setCloneFn
   ) {
     this.adjList = adjList;
     this.mapCloneFn = mapCloneFn;
-    this.setFn = setFn;
+    this.newSetFn = newSetFn;
     this.setCloneFn = setCloneFn;
   }
 
   @Override
   public Boolean connected(final T first, final T second) {
-    return dfs(setFn.get(), first).contains(second);
+    return dfs(newSetFn.get(), first).contains(second);
   }
 
   private Set<T> dfs(final Set<T> discovered, final T root) {
@@ -54,7 +54,7 @@ public final class DFSGraph<T> implements Graph<T> {
   }
 
   private Set<T> adjacents(final T first) {
-    return adjList.getOrDefault(first, setFn.get());
+    return adjList.getOrDefault(first, newSetFn.get());
   }
 
   @Override
@@ -68,11 +68,11 @@ public final class DFSGraph<T> implements Graph<T> {
     newSet.add(two);
     var newAdjList = mapCloneFn.apply(adjList);
     newAdjList.put(one, newSet);
-    return new DFSGraph<>(newAdjList, mapCloneFn, setFn, setCloneFn);
+    return new DFSGraph<>(newAdjList, mapCloneFn, newSetFn, setCloneFn);
   }
 
   private final Map<T, Set<T>> adjList;
   private final Function<Map<T, Set<T>>, Map<T, Set<T>>> mapCloneFn;
-  private final Supplier<Set<T>> setFn;
+  private final Supplier<Set<T>> newSetFn;
   private final Function<Set<T>, Set<T>> setCloneFn;
 }
