@@ -10,27 +10,31 @@ import static org.hamcrest.Matchers.equalTo;
 
 class FeatureEqualityPredicateTest {
   @Test
-  void testPredicateTrue() {
+  void testWithExpectedFeatureValues() {
     assertThat(
       new FeatureEqualityPredicate(
         Map.of("name", List.of("expected value"))
-      ).test(new Description.Fake("name", "expected value")),
+      ).test(
+        new Description.Fake("name", "expected value")
+      ),
       equalTo(true)
     );
   }
 
   @Test
-  void testPredicateFalse() {
+  void testWithUnexpectedFeatureValues() {
     assertThat(
       new FeatureEqualityPredicate(
         Map.of("name", List.of("one", "two"))
-      ).test(new Description.Fake("name", "only one")),
+      ).test(
+        new Description.Fake("name", "unexpected values")
+      ),
       equalTo(false)
     );
   }
 
   @Test
-  void testPredicateTrueWithAdditionalProperties() {
+  void testWithExpectedFeatureValuesAndAdditionalFeatures() {
     assertThat(
       new FeatureEqualityPredicate(
         Map.of("name", List.of("one", "two"))

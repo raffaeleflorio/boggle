@@ -2,7 +2,7 @@ package io.github.raffaeleflorio.boggle.infrastructure;
 
 import io.github.raffaeleflorio.boggle.domain.match.Match;
 import io.github.raffaeleflorio.boggle.domain.match.Matches;
-import io.github.raffaeleflorio.boggle.infrastructure.description.JsonAsDescription;
+import io.github.raffaeleflorio.boggle.infrastructure.description.JsonDescription;
 import io.github.raffaeleflorio.boggle.infrastructure.dice.JsonDice;
 import io.github.raffaeleflorio.boggle.infrastructure.match.MatchAsJson;
 import io.github.raffaeleflorio.boggle.infrastructure.player.JsonPlayer;
@@ -85,7 +85,7 @@ final class HttpInfrastructure extends AbstractVerticle {
   }
 
   private void createMatch(final RoutingContext ctx) {
-    reply(ctx, matches.match(new JsonAsDescription(ctx.getBodyAsJson())));
+    reply(ctx, matches.match(new JsonDescription(ctx.getBodyAsJson())));
   }
 
   private void reply(final RoutingContext ctx, final Uni<Match<CharSequence>> match) {

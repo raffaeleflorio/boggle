@@ -6,19 +6,19 @@ import io.vertx.core.json.JsonObject;
 import java.util.List;
 
 /**
- * JSON as {@link Description} without nested objects
+ * {@link Description} that animates a JSON
  *
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
-public final class JsonAsDescription implements Description {
+public final class JsonDescription implements Description {
   /**
    * Builds a description
    *
    * @param origin The JSON
    * @since 1.0.0
    */
-  public JsonAsDescription(final JsonObject origin) {
+  public JsonDescription(final JsonObject origin) {
     this.origin = origin;
   }
 
@@ -29,7 +29,7 @@ public final class JsonAsDescription implements Description {
 
   @Override
   public Description feature(final CharSequence name, final List<CharSequence> values) {
-    return new JsonAsDescription(origin.copy().put(name.toString(), values.get(0)));
+    return new JsonDescription(origin.copy().put(name.toString(), values.get(0)));
   }
 
   private final JsonObject origin;

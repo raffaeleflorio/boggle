@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A grid description
+ * An object description
  *
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
@@ -37,7 +37,7 @@ public interface Description {
    */
   final class Fake implements Description {
     /**
-     * Builds a fake with empty name and empty value
+     * Builds an empty fake
      *
      * @since 1.0.0
      */
@@ -46,7 +46,7 @@ public interface Description {
     }
 
     /**
-     * Builds a fake
+     * Builds a fake with a feature with a single value
      *
      * @param name  The feature name
      * @param value The feature value
@@ -57,28 +57,18 @@ public interface Description {
     }
 
     /**
-     * Builds a fake
+     * Builds a fake with a feature with multiple values
      *
      * @param name   The feature name
      * @param values The feature values
      * @since 1.0.0
      */
     public Fake(final CharSequence name, final List<CharSequence> values) {
-      this(Map.entry(name, values));
+      this(Map.of(name, values));
     }
 
     /**
-     * Builds a fake
-     *
-     * @param feature The feature
-     * @since 1.0.0
-     */
-    public Fake(final Map.Entry<CharSequence, List<CharSequence>> feature) {
-      this(Map.of(feature.getKey(), feature.getValue()));
-    }
-
-    /**
-     * Builds a fake
+     * Builds a fake with multiple feature
      *
      * @param features The features
      * @since 1.0.0

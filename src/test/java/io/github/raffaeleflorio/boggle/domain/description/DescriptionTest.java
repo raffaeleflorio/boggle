@@ -13,7 +13,7 @@ class DescriptionTest {
   @Nested
   class FakeTest {
     @Test
-    void testInitialFeature() {
+    void testFeature() {
       assertThat(
         new Description.Fake("name", "feature").feature("name"),
         contains("feature")
@@ -21,9 +21,9 @@ class DescriptionTest {
     }
 
     @Test
-    void testNewFeature() {
+    void testFeatureAttaching() {
       assertThat(
-        new Description.Fake("old", "xyz")
+        new Description.Fake()
           .feature("new", List.of("abc", "def"))
           .feature("new"),
         contains("abc", "def")
@@ -39,15 +39,7 @@ class DescriptionTest {
     }
 
     @Test
-    void testEmptyCtor() {
-      assertThat(
-        new Description.Fake().feature(""),
-        empty()
-      );
-    }
-
-    @Test
-    void testFeatureCleaning() {
+    void testFeatureAfterAttaching() {
       assertThat(
         new Description.Fake("name", "feature")
           .feature("any", List.of())

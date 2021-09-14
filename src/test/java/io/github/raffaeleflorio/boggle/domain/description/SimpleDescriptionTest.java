@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.contains;
 
 class SimpleDescriptionTest {
   @Test
-  void testFeatureOverwrite() {
+  void testExistingFeatureOverwrite() {
     assertThat(
       new SimpleDescription()
         .feature("a", List.of("OLD"))

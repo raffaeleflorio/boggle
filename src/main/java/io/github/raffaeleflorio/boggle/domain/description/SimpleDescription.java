@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * An immutable {@link Description} that overwrites existing feature
+ * An immutable {@link Description} that eventually overwrites existing feature
  *
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
@@ -24,8 +24,8 @@ public final class SimpleDescription implements Description {
   /**
    * Builds a description
    *
-   * @param features a features map
-   * @param cloneFn  A function to clone a map
+   * @param features The backed map
+   * @param cloneFn  The function to clone a map
    * @since 1.0.0
    */
   SimpleDescription(

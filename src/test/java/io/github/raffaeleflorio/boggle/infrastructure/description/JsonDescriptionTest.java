@@ -8,11 +8,11 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
-class JsonAsDescriptionTest {
+class JsonDescriptionTest {
   @Test
   void testLang() {
     assertThat(
-      new JsonAsDescription(
+      new JsonDescription(
         new JsonObject().put("lang", "any language")
       ).feature("lang"),
       contains("any language")
@@ -22,7 +22,7 @@ class JsonAsDescriptionTest {
   @Test
   void testDuration() {
     assertThat(
-      new JsonAsDescription(
+      new JsonDescription(
         new JsonObject().put("duration", 3)
       ).feature("duration"),
       contains("3")
@@ -32,7 +32,7 @@ class JsonAsDescriptionTest {
   @Test
   void testSize() {
     assertThat(
-      new JsonAsDescription(
+      new JsonDescription(
         new JsonObject().put("size", "any size")
       ).feature("size"),
       contains("any size")
@@ -42,7 +42,7 @@ class JsonAsDescriptionTest {
   @Test
   void testNewFeature() {
     assertThat(
-      new JsonAsDescription(new JsonObject())
+      new JsonDescription(new JsonObject())
         .feature("any", List.of("only first", "second"))
         .feature("any"),
       contains("only first")
