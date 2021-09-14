@@ -9,6 +9,7 @@ import io.smallrye.mutiny.Uni;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -38,25 +39,25 @@ public final class DeadlineSheet<T> implements Sheet<T> {
    * @since 1.0.0
    */
   public DeadlineSheet(final Sheet<T> origin, final SandTimer sandTimer) {
-    this(origin, sandTimer, new IllegalStateException("Deadline reached"));
+    this(origin, sandTimer, msg -> new IllegalStateException(msg.toString()));
   }
 
   /**
    * Builds a deadline sheet with a sand timer and a custom exception
    *
-   * @param origin    The sheet to decorate
-   * @param sandTimer The sand timer
-   * @param exception The exception to throw
+   * @param origin      The sheet to decorate
+   * @param sandTimer   The sand timer
+   * @param exceptionFn The function to build the exception to throw
    * @since 1.0.0
    */
   public DeadlineSheet(
     final Sheet<T> origin,
     final SandTimer sandTimer,
-    final RuntimeException exception
+    final Function<CharSequence, RuntimeException> exceptionFn
   ) {
     this.origin = origin;
     this.sandTimer = sandTimer;
-    this.exception = exception;
+    this.exceptionFn = exceptionFn;
   }
 
   @Override
@@ -77,7 +78,7 @@ public final class DeadlineSheet<T> implements Sheet<T> {
 
   private <X> Uni<X> beforeExpiration(final Supplier<Uni<X>> target) {
     if (sandTimer.expired()) {
-      return Uni.createFrom().failure(exception);
+      return Uni.createFrom().failure(exceptionFn.apply("Deadline reached"));
     }
     return target.get();
   }
@@ -89,5 +90,5 @@ public final class DeadlineSheet<T> implements Sheet<T> {
 
   private final Sheet<T> origin;
   private final SandTimer sandTimer;
-  private final RuntimeException exception;
+  private final Function<CharSequence, RuntimeException> exceptionFn;
 }
