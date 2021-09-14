@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 /**
  * A boggle grid
  *
- * @param <T> The grid dice mark type
+ * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
@@ -43,12 +43,13 @@ public interface Grid<T> extends Dice<T> {
   /**
    * A {@link Grid} useful for testing
    *
+   * @param <T> The word type
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
    * @since 1.0.0
    */
   final class Fake<T> implements Grid<T> {
     /**
-     * Builds a fake
+     * Builds an empty fake
      *
      * @since 1.0.0
      */

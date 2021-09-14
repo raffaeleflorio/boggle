@@ -6,8 +6,9 @@ import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import java.util.List;
 
 /**
- * A grid tagged with a language
+ * A {@link Grid} with lang feature
  *
+ * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
@@ -16,7 +17,7 @@ public final class LangGrid<T> implements Grid<T> {
    * Builds a grid
    *
    * @param origin The grid to decorate
-   * @param lang   The lang tag
+   * @param lang   The language
    * @since 1.0.0
    */
   public LangGrid(final Grid<T> origin, final CharSequence lang) {

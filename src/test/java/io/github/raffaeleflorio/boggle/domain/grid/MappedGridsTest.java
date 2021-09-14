@@ -1,7 +1,6 @@
 package io.github.raffaeleflorio.boggle.domain.grid;
 
 import io.github.raffaeleflorio.boggle.domain.description.Description;
-import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Test;
 
@@ -12,22 +11,22 @@ import static org.hamcrest.Matchers.nullValue;
 
 class MappedGridsTest {
   @Test
-  void assertMapping() {
+  void assertMappingOfExistingGrid() {
     assertThat(
       new MappedGrids<>(
         new Grids.Fake<>(x -> Uni.createFrom().item(new Grid.Fake<>())),
-        grid -> new Grid.Fake<>(new Dice.Fake<>(), x -> false, new Description.Fake("mapped", "grid"))
-      ).grid(new Description.Fake())
+        grid -> new Grid.Fake<>(new Description.Fake("mapped", "grid"))
+      ).grid(
+          new Description.Fake()
+        )
         .onItem().transform(Grid::description)
         .onItem().transform(description -> description.feature("mapped")),
-      emits(
-        contains("grid")
-      )
+      emits(contains("grid"))
     );
   }
 
   @Test
-  void assertMappingOfEmptyUni() {
+  void assertMappingOfMissingGrid() {
     assertThat(
       new MappedGrids<>(
         new Grids.Fake<>(x -> Uni.createFrom().nullItem()),

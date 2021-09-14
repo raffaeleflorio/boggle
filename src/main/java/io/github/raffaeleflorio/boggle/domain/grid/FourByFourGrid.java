@@ -3,7 +3,7 @@ package io.github.raffaeleflorio.boggle.domain.grid;
 import io.github.raffaeleflorio.boggle.domain.description.Description;
 import io.github.raffaeleflorio.boggle.domain.description.SimpleDescription;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
-import io.github.raffaeleflorio.boggle.domain.dice.StrictDiceCount;
+import io.github.raffaeleflorio.boggle.domain.dice.StrictCountDice;
 import io.github.raffaeleflorio.boggle.domain.dice.ValidatedDice;
 import io.github.raffaeleflorio.boggle.domain.graph.DFSGraph;
 import io.github.raffaeleflorio.boggle.domain.graph.Graph;
@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 /**
  * A 4x4 boggle {@link Grid}
  *
- * @param <T> The grid dice mark type
+ * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
@@ -34,7 +34,7 @@ public final class FourByFourGrid<T> implements Grid<T> {
    * Builds a 4x4 grid
    *
    * @param dice  The backed dice
-   * @param graph An empty graph
+   * @param graph The empty graph
    * @since 1.0.0
    */
   public FourByFourGrid(final Dice<T> dice, final Graph<T> graph) {
@@ -45,20 +45,19 @@ public final class FourByFourGrid<T> implements Grid<T> {
    * Builds a 4x4 grid
    *
    * @param dice    The backed dice
-   * @param graph   An empty graph
-   * @param initial An initial empty description
+   * @param graph   The empty graph
+   * @param initial The initial description
    * @since 1.0.0
    */
   FourByFourGrid(final Dice<T> dice, final Graph<T> graph, final Description initial) {
     this(
-      new StrictDiceCount<>(dice, 16),
+      new StrictCountDice<>(dice, 16),
       new UndirectedGraph<>(graph),
       initial
     );
   }
 
-  private FourByFourGrid(final ValidatedDice<T> dice, final Graph<T> graph, final Description initial
-  ) {
+  private FourByFourGrid(final ValidatedDice<T> dice, final Graph<T> graph, final Description initial) {
     this.dice = dice;
     this.graph = graph;
     this.initial = initial;
@@ -81,8 +80,7 @@ public final class FourByFourGrid<T> implements Grid<T> {
 
   private Boolean compatible(final List<T> word) {
     var graph = asGraph();
-    return IntStream
-      .range(0, word.size() - 1)
+    return IntStream.range(0, word.size() - 1)
       .allMatch(i -> graph.adjacent(word.get(i), word.get(i + 1)));
   }
 

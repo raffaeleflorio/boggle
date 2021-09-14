@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 class LangGridTest {
   @Test
-  void testDescription() {
+  void testLangFeature() {
     assertThat(
       new LangGrid<>(new Grid.Fake<>(), "a language")
         .description()
@@ -25,10 +25,7 @@ class LangGridTest {
     assertThat(
       new LangGrid<>(
         new Grid.Fake<>(
-          new Dice.Fake<>(
-            List.of(),
-            x -> List.of(1, 2, 3)
-          )
+          new Dice.Fake<>(List.of(), x -> List.of(1, 2, 3))
         ),
         "any"
       ).shuffled().values(),

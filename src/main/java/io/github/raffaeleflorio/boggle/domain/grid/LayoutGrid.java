@@ -8,8 +8,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * A grid tagged with its layout
+ * A {@link Grid} with layout feature
  *
+ * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
@@ -21,22 +22,19 @@ public final class LayoutGrid<T> implements Grid<T> {
    * @since 1.0.0
    */
   public LayoutGrid(final Grid<T> origin) {
-    this(
-      origin,
-      layout -> layout.stream().map(Object::toString).collect(Collectors.toUnmodifiableList())
-    );
+    this(origin, Object::toString);
   }
 
   /**
-   * Builds a grid
+   * Builds a grid with
    *
-   * @param origin   The grid to decorate
-   * @param layoutFn A function to build layout tag
+   * @param origin         The grid to decorate
+   * @param charSequenceFn The function to build char sequence from word type
    * @since 1.0.0
    */
-  public LayoutGrid(final Grid<T> origin, final Function<List<T>, List<CharSequence>> layoutFn) {
+  public LayoutGrid(final Grid<T> origin, final Function<T, CharSequence> charSequenceFn) {
     this.origin = origin;
-    this.layoutFn = layoutFn;
+    this.charSequenceFn = charSequenceFn;
   }
 
   @Override
@@ -46,7 +44,7 @@ public final class LayoutGrid<T> implements Grid<T> {
 
   @Override
   public Grid<T> shuffled() {
-    return new LayoutGrid<>(origin.shuffled());
+    return new LayoutGrid<>(origin.shuffled(), charSequenceFn);
   }
 
   @Override
@@ -56,9 +54,13 @@ public final class LayoutGrid<T> implements Grid<T> {
 
   @Override
   public Description description() {
-    return origin.description().feature("layout", layoutFn.apply(values()));
+    return origin.description().feature("layout", layout());
+  }
+
+  private List<CharSequence> layout() {
+    return origin.values().stream().map(charSequenceFn).collect(Collectors.toUnmodifiableList());
   }
 
   private final Grid<T> origin;
-  private final Function<List<T>, List<CharSequence>> layoutFn;
+  private final Function<T, CharSequence> charSequenceFn;
 }

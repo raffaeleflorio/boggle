@@ -17,13 +17,13 @@ public interface Grids<T> {
    * Builds asynchronously a grid from its description
    *
    * @param description The grid description
-   * @return The grid
+   * @return The grid otherwise null
    * @since 1.0.0
    */
   Uni<Grid<T>> grid(Description description);
 
   /**
-   * {@link Grid} useful for testing
+   * {@link Grids} useful for testing
    *
    * @param <T> The word type
    * @author Raffaele Florio (raffaeleflorio@protonmail.com)
@@ -31,7 +31,7 @@ public interface Grids<T> {
    */
   final class Fake<T> implements Grids<T> {
     /**
-     * Builds a fake that always emits a null grid
+     * Builds an empty repository
      *
      * @since 1.0.0
      */

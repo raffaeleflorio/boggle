@@ -1,7 +1,6 @@
 package io.github.raffaeleflorio.boggle.domain.grid;
 
 import io.github.raffaeleflorio.boggle.domain.description.Description;
-import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,22 +14,19 @@ class GridsTest {
   @Nested
   class FakeTest {
     @Test
-    void testGridWithCustomFn() {
+    void testEmptyRepo() {
       assertThat(
-        new Grids.Fake<>(
-          description -> Uni.createFrom().item(
-            new Grid.Fake<>(new Dice.Fake<>(), x -> false, description)
-          )
-        ).grid(new Description.Fake()),
-        emits(notNullValue())
+        new Grids.Fake<>().grid(new Description.Fake()),
+        emits(nullValue())
       );
     }
 
     @Test
-    void testDefaultGrid() {
+    void testFullRepo() {
       assertThat(
-        new Grids.Fake<>().grid(new Description.Fake()),
-        emits(nullValue())
+        new Grids.Fake<>(description -> Uni.createFrom().item(new Grid.Fake<>()))
+          .grid(new Description.Fake()),
+        emits(notNullValue())
       );
     }
   }

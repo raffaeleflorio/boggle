@@ -11,13 +11,11 @@ import static org.hamcrest.Matchers.equalTo;
 
 class LayoutGridTest {
   @Test
-  void testDescription() {
+  void testLayoutFeature() {
     assertThat(
       new LayoutGrid<>(
         new Grid.Fake<>(
-          new Dice.Fake<>(
-            List.of("A", "B", "C")
-          )
+          new Dice.Fake<>(List.of("A", "B", "C"))
         )
       ).description().feature("layout"),
       contains("A", "B", "C")

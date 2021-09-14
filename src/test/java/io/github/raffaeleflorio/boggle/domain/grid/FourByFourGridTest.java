@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 class FourByFourGridTest {
   @Test
-  void testDescription() {
+  void testDescriptionContainsSizeFeature() {
     assertThat(
       new FourByFourGrid<>(
         new Dice.Fake<>(
@@ -28,7 +28,7 @@ class FourByFourGridTest {
   }
 
   @Test
-  void testShuffled() {
+  void testShuffledValues() {
     assertThat(
       new FourByFourGrid<>(
         new Dice.Fake<>(

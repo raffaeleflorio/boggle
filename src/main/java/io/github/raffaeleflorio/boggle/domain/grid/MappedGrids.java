@@ -6,14 +6,15 @@ import io.smallrye.mutiny.Uni;
 import java.util.function.Function;
 
 /**
- * Mapped {@link Grids}
+ * {@link Grids} mapped according a map function
  *
+ * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
 public final class MappedGrids<T> implements Grids<T> {
   /**
-   * Builds a grids
+   * Builds mapped grids
    *
    * @param origin The grids to decorate
    * @param mapFn  The map function

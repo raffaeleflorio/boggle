@@ -61,7 +61,7 @@ class GridTest {
     }
 
     @Test
-    void testShuffledWithDice() {
+    void testShuffledValues() {
       assertThat(
         new Grid.Fake<>(
           new Dice.Fake<>(
