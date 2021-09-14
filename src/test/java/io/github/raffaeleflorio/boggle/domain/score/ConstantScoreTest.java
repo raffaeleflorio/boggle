@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 class ConstantScoreTest {
   @Test
-  void testDefaultEmission() {
+  void testZeroScoreAsDefault() {
     assertThat(
       new ConstantScore<>().score(new Dice.Fake<>()),
       emits(equalTo(0))
@@ -17,7 +17,7 @@ class ConstantScoreTest {
   }
 
   @Test
-  void testCustomEmission() {
+  void testConstantScore() {
     var expected = 42;
     assertThat(
       new ConstantScore<>(expected).score(new Dice.Fake<>()),

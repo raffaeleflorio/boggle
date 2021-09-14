@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 class IfInGridTest {
   @Test
-  void testScoreInGrid() {
+  void testScoreWithAWordCompatibleWithGrid() {
     assertThat(
       new IfInGrid<>(
         new Score.Fake<>(x -> 11),
@@ -21,7 +21,7 @@ class IfInGridTest {
   }
 
   @Test
-  void testScoreNotInGrid() {
+  void testScoreWithAWordIncompatibleWithGrid() {
     assertThat(
       new IfInGrid<>(
         new Score.Fake<>(x -> 1_000),

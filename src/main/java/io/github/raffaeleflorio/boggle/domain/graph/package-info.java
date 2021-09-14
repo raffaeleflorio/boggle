@@ -1,5 +1,5 @@
 /**
- * Objects about graphs
+ * Objects about math graphs
  *
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @see <a href="https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)">Wikipedia definition about graph</a>

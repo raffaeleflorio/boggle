@@ -5,7 +5,7 @@ import io.github.raffaeleflorio.boggle.domain.grid.Grid;
 import io.smallrye.mutiny.Uni;
 
 /**
- * A {@link Score} emitted if the word is in a grid, otherwise another score
+ * {@link Score} function that also verify word against a {@link Grid}
  *
  * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
@@ -16,7 +16,7 @@ public final class IfInGrid<T> implements Score<T> {
    * Builds a score
    *
    * @param origin The score to decorate
-   * @param grid   The grid
+   * @param grid   The grid to use
    * @since 1.0.0
    */
   public IfInGrid(final Score<T> origin, final Grid<T> grid) {
@@ -27,19 +27,31 @@ public final class IfInGrid<T> implements Score<T> {
    * Builds a score
    *
    * @param origin The score to decorate
-   * @param grid   The grid
+   * @param grid   The grid emitter to use
    * @since 1.0.0
    */
   public IfInGrid(final Score<T> origin, final Uni<Grid<T>> grid) {
-    this(origin, grid, Uni.createFrom().item(0));
+    this(origin, grid, 0);
   }
 
   /**
    * Builds a score
    *
    * @param origin The score to decorate
-   * @param grid   The grid to use
-   * @param def    The score to emit when not in grid
+   * @param grid   The grid emitter to use
+   * @param def    The score to emit when a word i snot in grid
+   * @since 1.0.0
+   */
+  public IfInGrid(final Score<T> origin, final Uni<Grid<T>> grid, final Integer def) {
+    this(origin, grid, Uni.createFrom().item(def));
+  }
+
+  /**
+   * Builds a score
+   *
+   * @param origin The score to decorate
+   * @param grid   The grid emitter to use
+   * @param def    The score emitter to use when a word is not in grid
    * @since 1.0.0
    */
   public IfInGrid(final Score<T> origin, final Uni<Grid<T>> grid, final Uni<Integer> def) {
@@ -50,9 +62,11 @@ public final class IfInGrid<T> implements Score<T> {
 
   @Override
   public Uni<Integer> score(final Dice<T> word) {
-    return grid
-      .onItem().transform(x -> x.compatible(word))
-      .onItem().transformToUni(compatible -> compatible ? origin.score(word) : def);
+    return validWord(word).chain(validWord -> validWord ? origin.score(word) : def);
+  }
+
+  private Uni<Boolean> validWord(final Dice<T> word) {
+    return grid.onItem().transform(x -> x.compatible(word));
   }
 
   private final Score<T> origin;

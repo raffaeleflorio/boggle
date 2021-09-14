@@ -4,11 +4,11 @@ import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.smallrye.mutiny.Uni;
 
 import java.util.Map;
-import java.util.function.Function;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- * Classical score function about boggle, based on word length:
+ * Classical 4x4 {@link Score} based on word length:
  * <table>
  *   <tr>
  *     <th>Word length</th>
@@ -36,61 +36,59 @@ import java.util.function.Predicate;
  *   </tr>
  * </table>
  *
- * @param <T> The dice mark type
+ * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
 public final class FourByFourScore<T> implements Score<T> {
   /**
-   * Builds a score function
+   * Builds a 4x4 score
    *
    * @since 1.0.0
    */
   public FourByFourScore() {
-    this(
-      item -> Uni.createFrom().item(item)
-    );
+    this(0);
   }
 
   /**
-   * Builds a score function
+   * Builds a 4x4 score
    *
-   * @param uniFn The function to build an Uni with one item
+   * @param def The default score
    * @since 1.0.0
    */
-  FourByFourScore(final Function<Integer, Uni<Integer>> uniFn) {
+  FourByFourScore(final Integer def) {
     this(
-      uniFn,
       Map.of(
         1, x -> x == 3 || x == 4,
         2, x -> x == 5,
         3, x -> x == 6,
         5, x -> x == 7,
         11, x -> x >= 8
-      ));
+      ),
+      Uni.createFrom().item(def)
+    );
   }
 
-  private FourByFourScore(
-    final Function<Integer, Uni<Integer>> uniFn,
-    final Map<Integer, Predicate<Integer>> scoreMap
-  ) {
-    this.uniFn = uniFn;
+  private FourByFourScore(final Map<Integer, Predicate<Integer>> scoreMap, final Uni<Integer> def) {
     this.scoreMap = scoreMap;
+    this.def = def;
   }
 
   @Override
   public Uni<Integer> score(final Dice<T> word) {
-    var size = word.values().size();
-    return uniFn.apply(
-      scoreMap.entrySet()
-        .stream()
-        .filter(entry -> entry.getValue().test(size))
-        .findAny()
-        .map(Map.Entry::getKey)
-        .orElse(0)
-    );
+    return score(word.values().size()).map(Uni.createFrom()::item).orElse(def);
   }
 
-  private final Function<Integer, Uni<Integer>> uniFn;
+  private Optional<Integer> score(final Integer length) {
+    return scoreEntry(length).map(Map.Entry::getKey);
+  }
+
+  private Optional<Map.Entry<Integer, Predicate<Integer>>> scoreEntry(final Integer length) {
+    return scoreMap.entrySet().stream()
+      .filter(entry -> entry.getValue().test(length))
+      .findAny();
+  }
+
   private final Map<Integer, Predicate<Integer>> scoreMap;
+  private final Uni<Integer> def;
 }

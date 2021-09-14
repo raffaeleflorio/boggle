@@ -12,18 +12,18 @@ class ScoreTest {
   @Nested
   class FakeTest {
     @Test
-    void testScoreWithCustomFn() {
+    void testScoreWithoutCustomFn() {
       assertThat(
-        new Score.Fake<>(x -> 42).score(new Dice.Fake<>()),
-        emits(equalTo(42))
+        new Score.Fake<>().score(new Dice.Fake<>()),
+        emits(equalTo(0))
       );
     }
 
     @Test
-    void testDefaultScore() {
+    void testScoreWithCustomFn() {
       assertThat(
-        new Score.Fake<>().score(new Dice.Fake<>()),
-        emits(equalTo(0))
+        new Score.Fake<>(x -> 42).score(new Dice.Fake<>()),
+        emits(equalTo(42))
       );
     }
   }

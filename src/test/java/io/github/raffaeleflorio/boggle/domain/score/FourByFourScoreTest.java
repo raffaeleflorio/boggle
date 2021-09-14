@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 class FourByFourScoreTest {
   @Test
-  void testZeroScoreWithZeroSide() {
+  void testScoreWithEmptyWord() {
     assertThat(
       new FourByFourScore<>().score(new Dice.Fake<>()),
       emits(equalTo(0))
@@ -19,7 +19,7 @@ class FourByFourScoreTest {
   }
 
   @Test
-  void testZeroScoreWithOneSide() {
+  void testScoreWithAWordOfLengthOfOne() {
     assertThat(
       new FourByFourScore<>().score(new Dice.Fake<>(List.of(1))),
       emits(equalTo(0))
@@ -27,7 +27,7 @@ class FourByFourScoreTest {
   }
 
   @Test
-  void testZeroScoreWithTwoSides() {
+  void testScoreWithAWordOfLengthOfTwo() {
     assertThat(
       new FourByFourScore<>().score(new Dice.Fake<>(List.of(2))),
       emits(equalTo(0))
@@ -35,7 +35,7 @@ class FourByFourScoreTest {
   }
 
   @Test
-  void testOneScoreWithThreeSides() {
+  void testScoreWithAWordOfLengthOfThree() {
     assertThat(
       new FourByFourScore<>().score(new Dice.Fake<>(List.of(1, 2, 3))),
       emits(equalTo(1))
@@ -43,7 +43,7 @@ class FourByFourScoreTest {
   }
 
   @Test
-  void testOneScoreWithFourSides() {
+  void testScoreWithAWordOfLengthOfFour() {
     assertThat(
       new FourByFourScore<>().score(new Dice.Fake<>(List.of(1, 2, 3, 4))),
       emits(equalTo(1))
@@ -51,7 +51,7 @@ class FourByFourScoreTest {
   }
 
   @Test
-  void testTwoScoreWithFiveSides() {
+  void testScoreWithAWordOfLengthOfFive() {
     assertThat(
       new FourByFourScore<>().score(new Dice.Fake<>(List.of(1, 2, 3, 4, 5))),
       emits(equalTo(2))
@@ -59,7 +59,7 @@ class FourByFourScoreTest {
   }
 
   @Test
-  void testThreeScoreWithSixSides() {
+  void testScoreWithAWordOfLengthOfSix() {
     assertThat(
       new FourByFourScore<>().score(new Dice.Fake<>(List.of(1, 2, 3, 4, 5, 6))),
       emits(equalTo(3))
@@ -67,7 +67,7 @@ class FourByFourScoreTest {
   }
 
   @Test
-  void testFiveScoreWithSevenSides() {
+  void testScoreWithAWordOfLengthOfSeven() {
     assertThat(
       new FourByFourScore<>().score(new Dice.Fake<>(List.of(1, 2, 3, 4, 5, 6, 7))),
       emits(equalTo(5))
@@ -75,7 +75,7 @@ class FourByFourScoreTest {
   }
 
   @Test
-  void testElevenScoreWithEightSides() {
+  void testScoreWithAWordOfLengthOfEigth() {
     assertThat(
       new FourByFourScore<>().score(new Dice.Fake<>(List.of(1, 2, 3, 4, 5, 6, 7, 8))),
       emits(equalTo(11))
@@ -83,7 +83,7 @@ class FourByFourScoreTest {
   }
 
   @Test
-  void testElevenScoreWithTenSides() {
+  void testScoreWithAWordOfLengthOfTen() {
     assertThat(
       new FourByFourScore<>().score(new Dice.Fake<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))),
       emits(equalTo(11))

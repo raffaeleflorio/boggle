@@ -6,7 +6,7 @@ import io.smallrye.mutiny.Uni;
 import java.util.function.Function;
 
 /**
- * An asynchronous function to calculate score
+ * An asynchronous score function
  *
  * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
@@ -17,7 +17,7 @@ public interface Score<T> {
    * Builds asynchronously a non-negative score
    *
    * @param word The word
-   * @return The score
+   * @return The score emitter
    * @since 1.0.0
    */
   Uni<Integer> score(Dice<T> word);
@@ -31,7 +31,7 @@ public interface Score<T> {
    */
   final class Fake<T> implements Score<T> {
     /**
-     * Builds a fake that always emits a score of zero
+     * Builds a fake that always emits zero
      *
      * @since 1.0.0
      */
@@ -40,7 +40,7 @@ public interface Score<T> {
     }
 
     /**
-     * Builds a fake
+     * Builds a fake with a custom score function
      *
      * @param scoreFn The score function
      * @since 1.0.0

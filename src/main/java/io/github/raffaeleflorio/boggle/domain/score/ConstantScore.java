@@ -3,17 +3,16 @@ package io.github.raffaeleflorio.boggle.domain.score;
 import io.github.raffaeleflorio.boggle.domain.dice.Dice;
 import io.smallrye.mutiny.Uni;
 
-import java.util.function.Function;
-
 /**
- * Emitter of a constant score
+ * Constant {@link Score}
  *
+ * @param <T> The word type
  * @author Raffaele Florio (raffaeleflorio@protonmail.com)
  * @since 1.0.0
  */
 public final class ConstantScore<T> implements Score<T> {
   /**
-   * Builds a constant score of zero
+   * Builds a constant zero score
    *
    * @since 1.0.0
    */
@@ -22,32 +21,23 @@ public final class ConstantScore<T> implements Score<T> {
   }
 
   /**
-   * Builds the score
+   * Builds a constant score
    *
    * @param score The score
    * @since 1.0.0
    */
   public ConstantScore(final Integer score) {
-    this(score, x -> Uni.createFrom().item(x));
+    this(Uni.createFrom().item(score));
   }
 
-  /**
-   * Builds the score
-   *
-   * @param score The score
-   * @param uniFn The function to build Uni
-   * @since 1.0.0
-   */
-  ConstantScore(final Integer score, final Function<Integer, Uni<Integer>> uniFn) {
-    this.score = score;
-    this.uniFn = uniFn;
+  private ConstantScore(final Uni<Integer> origin) {
+    this.origin = origin;
   }
 
   @Override
   public Uni<Integer> score(final Dice<T> word) {
-    return uniFn.apply(score);
+    return origin;
   }
 
-  private final Integer score;
-  private final Function<Integer, Uni<Integer>> uniFn;
+  private final Uni<Integer> origin;
 }

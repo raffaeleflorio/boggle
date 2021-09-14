@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 class IfInVocabularyTest {
   @Test
-  void testScoreInVocabulary() {
+  void testScoreWithAWordInVocabulary() {
     assertThat(
       new IfInVocabulary<>(
         new Score.Fake<>(x -> 123),
@@ -21,7 +21,7 @@ class IfInVocabularyTest {
   }
 
   @Test
-  void testScoreNotInVocabulary() {
+  void testScoreWithAWordNotInVocabulary() {
     assertThat(
       new IfInVocabulary<>(
         new Score.Fake<>(x -> 789),
