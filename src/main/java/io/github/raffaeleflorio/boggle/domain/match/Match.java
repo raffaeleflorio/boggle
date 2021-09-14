@@ -76,15 +76,6 @@ public interface Match<T> {
    */
   final class Fake<T> implements Match<T> {
     /**
-     * Builds a fake with a random id and an empty description
-     *
-     * @since 1.0.0
-     */
-    public Fake() {
-      this(UUID.randomUUID(), new Description.Fake());
-    }
-
-    /**
      * Builds a fake
      *
      * @param id          The id
@@ -93,16 +84,6 @@ public interface Match<T> {
      */
     public Fake(final UUID id, final Description description) {
       this(id, description, Multi.createFrom().empty(), x -> Uni.createFrom().nullItem(), new Grid.Fake<>());
-    }
-
-    /**
-     * Builds a fake
-     *
-     * @param score The score
-     * @since 1.0.0
-     */
-    public Fake(final Multi<Map.Entry<UUID, Integer>> score) {
-      this(score, x -> Uni.createFrom().nullItem());
     }
 
     /**
@@ -135,8 +116,11 @@ public interface Match<T> {
      */
     public Fake(final Map<UUID, Integer> scoreMap, final Map<UUID, Sheet<T>> sheetMap) {
       this(
-        Multi.createFrom().items(scoreMap.entrySet()::stream),
-        player -> Uni.createFrom().item(sheetMap.get(player))
+        UUID.randomUUID(),
+        new Description.Fake(),
+        scoreMap,
+        sheetMap,
+        new Grid.Fake<>()
       );
     }
 
