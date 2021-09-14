@@ -156,7 +156,7 @@ public interface Match<T> {
      * @since 1.0.0
      */
     public Fake(final Grid<T> grid) {
-      this(UUID.randomUUID(), new Description.Fake(), Multi.createFrom().empty(), x -> Uni.createFrom().nullItem(), grid);
+      this(UUID.randomUUID(), new Description.Fake(), Map.of(), Map.of(), grid);
     }
 
     /**
