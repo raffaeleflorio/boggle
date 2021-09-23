@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.github.raffaeleflorio</groupId>
-  <artifactId>boggle</artifactId>
+  <artifactId>oo-boggle</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <description>Object oriented boggle game with HTTP interface</description>
 
